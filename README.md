@@ -29,6 +29,8 @@ Instagram, Twitter, etc and see it all at once.
     - We could have a feature to hide the like count on other people’s posts
     - We could have a mode where you just see stuff from friends that you specify you care about and all the rest is hidden
 
+Rejected - seems like a bunch of api calls with no interesting design
+
 ### Idea 2: Events at Brown
 There should be a way for students to see all the events that are happening on a weekend. 
 For example, someone could look for all the a cappella concerts to take their parents 
@@ -47,6 +49,8 @@ on their friends/past events they’ve attended. Ideally this would change whene
 users refresh their feed, similar to how the Facebook feed works. Sponsored events 
 might appear at the top of this feed. This would be very tricky to come up with 
 a weighting algorithm for each event that is stochastic.
+
+Approved - this will only be possible if you can find a LOT of users
 
 ### Idea 3: American News Polarization Indicator
 As a country, we are becoming much more politically polarized, and the way we get our news is a major contributing factor. This website would help people become better informed about these issues by doing the following:
@@ -77,6 +81,9 @@ As a country, we are becoming much more politically polarized, and the way we ge
     - Discussion board (piazza-esque) related to the journalism project on the decline of local news and it’s political effects
 - Background: This could serve as the website for a data journalism summer project to share relevant analysis on news and polarization
 
+Approved - lots of content so may need to trim some features
+
+Note: You do not need to resubmit your final project ideas.
 
 **Mentor TA:** _Put your mentor TA's name and email here once you're assigned one!_
 
