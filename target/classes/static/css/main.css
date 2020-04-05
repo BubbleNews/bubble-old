@@ -1,0 +1,45 @@
+input[type="number"] {
+  width: 3em;
+}
+
+.timdb {
+    background-color: #87CEEB;
+}
+
+.stars {
+    background-color: #000000;
+}
+
+.index {
+    background-color: #1f389c;
+}
+
+#one {
+    color: red;
+}
+
+.star-enter {
+    font-size: 150%;
+    color: white;
+    font-family: Courier;
+}
+
+.enter {
+    font-size: 200%;
+	color: white;
+	font-family: Courier;
+}
+
+.enter2 {
+    font-size: 200%;
+    color: navy;
+    font-family: Courier;
+}
+
+a:visited {
+    color: yellow;
+}
+
+.clicked:visited {
+    color: purple;
+}
