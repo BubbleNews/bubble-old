@@ -6,10 +6,17 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+<div id="titleWrapper">
+    <h1>Bubble</h1>
+</div>
+<div id="dateWrapper">
+</div>
+<div id="graphWrapper">
 
-<h1>Bubble</h1>
+</div>
+
 
 <script src="js/jquery-2.1.1.js"></script>
-<script src="js/main.js"></script>
+<script src="https://d3js.org/d3.v5.js"></script>
 </body>
 </html>

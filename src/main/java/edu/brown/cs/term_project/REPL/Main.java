@@ -1,7 +1,7 @@
 package edu.brown.cs.term_project.REPL;
 
 import edu.brown.cs.term_project.handlers.ClusterHandler;
-import edu.brown.cs.term_project.handlers.GraphHandler;
+import edu.brown.cs.term_project.handlers.ChartHandler;
 import edu.brown.cs.term_project.handlers.HomeHandler;
 import edu.brown.cs.term_project.handlers.UpdateHandler;
 import joptsimple.OptionException;
@@ -89,7 +89,7 @@ public final class Main {
       path("/api", () -> {
         // TODO: add authentication for api calls with before()
         get("/update", UpdateHandler::handle);
-        get("/graph", GraphHandler::handle);
+        get("/chart", ChartHandler::handle);
         get("/cluster", ClusterHandler::handle);
       });
     });
