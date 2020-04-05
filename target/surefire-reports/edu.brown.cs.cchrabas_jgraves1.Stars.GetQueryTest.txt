@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: edu.brown.cs.cchrabas_jgraves1.Stars.GetQueryTest
--------------------------------------------------------------------------------
-Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s - in edu.brown.cs.cchrabas_jgraves1.Stars.GetQueryTest

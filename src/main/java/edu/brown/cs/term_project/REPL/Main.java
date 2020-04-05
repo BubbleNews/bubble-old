@@ -1,32 +1,19 @@
 package edu.brown.cs.term_project.REPL;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import
-
-import com.google.common.cache.CacheLoader;
+import edu.brown.cs.term_project.handlers.ClusterHandler;
+import edu.brown.cs.term_project.handlers.GraphHandler;
+import edu.brown.cs.term_project.handlers.HomeHandler;
+import edu.brown.cs.term_project.handlers.UpdateHandler;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import spark.ExceptionHandler;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.Spark;
-import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
-
-import com.google.common.collect.ImmutableMap;
-
 import freemarker.template.Configuration;
 
-import spark.QueryParamsMap;
+import java.io.File;
+import java.io.IOException;
+
+import static spark.Spark.*;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -65,8 +52,6 @@ public final class Main {
         runSparkServer((int) options.valueOf("port"));
       }
 
-      // Starts REPL
-
     } catch (OptionException e) {
       System.out.println("Not a correct flag");
     }
@@ -87,20 +72,26 @@ public final class Main {
   }
 
   /**.
-   * Start gui page
+   * Start gui page.
    * @param port - port to go to
    */
   private void runSparkServer(int port) {
-    Spark.port(port);
-    Spark.externalStaticFileLocation("src/main/resources/static");
-    Spark.exception(Exception.class, new ExceptionPrinter());
+    port(port);
+    externalStaticFileLocation("src/main/resources/static");
+    // Spark.exception(Exception.class, new ExceptionPrinter());
 
     FreeMarkerEngine freeMarker = createEngine();
 
+    path("/bubble", () -> {
+      // home page endpoint
+      get("/home", new HomeHandler(), freeMarker);
+      // api endpoints
+      path("/api", () -> {
+        // TODO: add authentication for api calls with before()
+        get("/update", UpdateHandler::handle);
+        get("/graph", GraphHandler::handle);
+        get("/cluster", ClusterHandler::handle);
+      });
+    });
   }
-
-
-
-
-
 }
