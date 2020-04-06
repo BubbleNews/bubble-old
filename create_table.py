@@ -6,36 +6,66 @@ conn = sqlite3.connect(PATH_TO_DATABASE)
 c = conn.cursor()
 c.execute("PRAGMA foreign_keys = ON")
 
-DROP_NAMES_QUERY = '''DROP TABLE IF EXISTS "names";'''
-DROP_SCORES_QUERY = '''DROP TABLE IF EXISTS "scores";'''
 
-CREATE_NAMES_QUERY = '''CREATE TABLE IF NOT EXISTS names (
+CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
     id INT PRIMARY KEY NOT NULL,
-    name VARCHAR(50)
+    title VARCHAR(50),
+    url VARCHAR(200),
+    date DATETIME,
+    text TEXT,
+    final_cluster_id INT
+    temp_cluster_id INT
+    FOREIGN KEY (final_cluster_id) REFERENCES clusters(id),
+    FOREIGN KEY (temp_cluster_id) REFERENCES clusters(id)
 );'''
 
-CREATE_SCORES_QUERY = '''CREATE TABLE IF NOT EXISTS scores (
-    id INT,
-    game_id INT,
-    game_date VARCHAR(50),
-    score1 INT,
-    score2 INT,
-    score3 INT,
-    score4 INT,
-    score5 INT,
-    score6 INT,
-    score7 INT,
-    score8 INT,
-    score9 INT,
-    total_score INT,
-    comments VARCHAR(1000),
-    FOREIGN KEY (id) REFERENCES names(id),
-    PRIMARY KEY (id, game_id)
+CREATE_ARTICLE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS article_entity (
+    article_id INT,
+    entity_id INT,
+    FOREIGN KEY (article_id) REFERENCES articles(id),
+    FOREIGN KEY (entity_id) REFERENCES entity(id)
 );'''
 
-INSERT_NEWSPAPER = '''INSERT OR IGNORE INTO names VALUES (?, ?);'''
-INSERT_FOLLOWER = '''INSERT OR IGNORE INTO scores VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
+CREATE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS entity (
+    id INT PRIMARY KEY NOT NULL,
+    class VARCHAR(20),
+    entity VARCHAR(50),
+    count INT
+);'''
 
+CREATE_VOCAB_QUERY = '''CREATE TABLE IF NOT EXISTS vocab (
+    word VARCHAR(50) PRIMARY KEY NOT NULL,
+    count INT
+);'''
+
+CREATE_ARTICLE_VOCAB_QUERY = '''CREATE TABLE IF NOT EXISTS article_vocab (
+    article_id INT,
+    vocab_id INT,
+    count INT,
+    FOREIGN KEY (article_id) REFERENCES articles(id),
+    FOREIGN KEY (vocab_id) REFERENCES vocab(id)
+);'''
+
+CREATE_CLUSTERS_QUERY = '''CREATE TABLE IF NOT EXISTS clusters (
+    id INT PRIMARY KEY NOT NULL,
+    title VARCHAR(50),
+    size INT,
+    day INT,
+    hour INT,
+    avg_connections DOUBLE,
+    avg_radius DOUBLE,
+    std DOUBLE,
+    intermediate_cluster BOOLEAN
+);'''
+
+CREATE_EDGES_QUERY = '''CREATE TABLE IF NOT EXISTS edges (
+    id INT PRIMARY KEY NOT NULL,
+    article_id1 INT,
+    article_id2 INT,
+    weight DOUBLE,
+    FOREIGN KEY (article_id1) REFERENCES articles(id),
+    FOREIGN KEY (article_id2) articles(id)
+);'''
 
 
 def create_tables():
@@ -46,8 +76,13 @@ def create_tables():
     3. political_following: handle, account name (all newspaper followers that follow politicians)"""
 
 
-    c.execute(CREATE_NAMES_QUERY)
-    c.execute(CREATE_SCORES_QUERY)
+    c.execute(CREATE_ARTICLES_QUERY)
+    c.execute(CREATE_ENTITY_QUERY)
+    c.execute(CREATE_VOCAB_QUERY)
+    c.execute(CREATE_ARTICLE_VOCAB_QUERY)
+    c.execute(CREATE_ARTICLE_ENTITY_QUERY)
+    c.execute(CREATE_CLUSTERS_QUERY)
+    c.execute(CREATE_EDGES_QUERY)
     conn.commit()
 
 

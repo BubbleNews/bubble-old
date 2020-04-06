@@ -4,7 +4,7 @@ import edu.brown.cs.term_project.Graph.ICluster;
 
 import java.util.Set;
 
-public class Cluster implements ICluster<Article> {
+public class Cluster { //implements ICluster<Article> {
   private String id;
   private Article headline;
   private Integer size;
@@ -13,5 +13,5 @@ public class Cluster implements ICluster<Article> {
   private double avgRadius;
   private double std;
 
-  private Cluster()
+  //public Cluster();
 }
