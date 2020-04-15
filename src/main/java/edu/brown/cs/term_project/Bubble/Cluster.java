@@ -4,7 +4,7 @@ import edu.brown.cs.term_project.Graph.ICluster;
 
 import java.util.Set;
 
-public class Cluster { //implements ICluster<Article> {
+public class Cluster implements ICluster<Article> {
   private String id;
   private Article headline;
   private Integer size;
@@ -13,5 +13,57 @@ public class Cluster { //implements ICluster<Article> {
   private double avgRadius;
   private double std;
 
-  //public Cluster();
+  public Cluster(Article headline, Set<Article> articles) {
+    this.headline = headline;
+    this.articles = articles;
+    this.size = articles.size();
+    setAvgConnections();
+    setAvgRadius();
+    setStd();
+  }
+
+  //TODO: implement these three set functions
+
+  public void setAvgConnections() {
+    this.avgConnections = 0;
+  }
+
+  public void setAvgRadius() {
+    this.avgRadius = 0;
+  }
+
+  public void setStd() {
+    this.std = 0;
+  }
+
+  @Override
+  public double getAvgConnections() {
+    return avgConnections;
+  }
+
+  @Override
+  public double getAvgRadius() {
+    return avgRadius;
+  }
+
+  public Set<Article> getNodes() {
+    return articles;
+  }
+
+  @Override
+  public double getStd() {
+    return std;
+  }
+
+  @Override
+  public Integer getSize() {
+    return size;
+  }
+
+  @Override
+  public Article getHeadNode() {
+    return headline;
+  }
+
+
 }
