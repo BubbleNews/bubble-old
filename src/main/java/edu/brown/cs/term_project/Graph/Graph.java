@@ -1,26 +1,30 @@
 package edu.brown.cs.term_project.Graph;
 
-import java.util.Set;
+import java.util.*;
 
-public class Graph<C extends ICluster<T>, T extends INode, S extends IEdge> {
-  private Set<T> nodes;
-  private Set<S> edges;
-  private double threshold;
+public abstract class Graph<C extends ICluster<T>, T extends INode, S extends IEdge> {
+  Set<T> nodes;
+  List<S> edges;
+  double threshold;
+
+  public Graph() {
+    this.nodes = new HashSet<T>();
+    this.edges = new ArrayList<S>();
+  }
 
 
-  public Graph(Set<T> nodes, Set<S> edges) {
+  public Graph(Set<T> nodes, List<S> edges) {
     this.nodes = nodes;
     this.edges = edges;
     setThreshold();
   }
 
   // TODO: implement createClusters and add them to database
-  public void createClusters() {
-  }
+  public abstract void createClusters();
 
   // TODO: implement setThreshold
-  public void setThreshold() {
-    double threshold = 0;
-    this.threshold = threshold;
-  }
+  public abstract void setThreshold();
+
+  public abstract void CreateGraph(int size);
+
 }

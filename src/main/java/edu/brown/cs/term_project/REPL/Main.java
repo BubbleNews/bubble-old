@@ -56,6 +56,7 @@ public final class Main {
       System.out.println("Not a correct flag");
     }
 
+    System.out.print("working REPL");
   }
 
   private static FreeMarkerEngine createEngine() {

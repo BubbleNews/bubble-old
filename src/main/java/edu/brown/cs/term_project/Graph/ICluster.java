@@ -1,14 +1,15 @@
 package edu.brown.cs.term_project.Graph;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ICluster<T extends INode> {
 
-  public List<T> getNodes();
+  public Set<T> getNodes();
 
   public Integer getSize();
 
-  public String getName();
+  public T getHeadNode();
 
   public double getAvgConnections();
 
