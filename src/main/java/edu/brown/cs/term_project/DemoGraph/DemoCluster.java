@@ -1,6 +1,6 @@
-package edu.brown.cs.term_project.Graph;
+package edu.brown.cs.term_project.DemoGraph;
 
-import edu.brown.cs.term_project.Bubble.Article;
+import edu.brown.cs.term_project.Graph.ICluster;
 
 import java.util.Objects;
 import java.util.Set;

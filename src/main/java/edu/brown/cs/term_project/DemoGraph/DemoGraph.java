@@ -1,4 +1,6 @@
-package edu.brown.cs.term_project.Graph;
+package edu.brown.cs.term_project.DemoGraph;
+
+import edu.brown.cs.term_project.Graph.Graph;
 
 import java.util.*;
 
