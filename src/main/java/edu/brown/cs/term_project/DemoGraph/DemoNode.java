@@ -1,7 +1,8 @@
-package edu.brown.cs.term_project.Graph;
+package edu.brown.cs.term_project.DemoGraph;
+import edu.brown.cs.term_project.Graph.INode;
+
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class DemoNode implements INode<DemoEdge> {
   private int id;
