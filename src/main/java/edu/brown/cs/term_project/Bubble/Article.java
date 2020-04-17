@@ -63,11 +63,11 @@ public class Article implements INode<Similarity>, IText {
   }
 
   // TODO: write setEntities and setWords
-  public void setEntities() {
+  public void setEntities(Set<Entity> entities) {
     this.entities = null;
   }
 
-  public void setWords() {
+  public void setWords(String text) {
     this.words = null;
   }
 }
