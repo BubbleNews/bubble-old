@@ -7,7 +7,7 @@ public interface IText<W extends IWord> {
   /**
    *
    * @param textType and integer telling which type of text (ie Entity  vs Vocab)
-   * @return
+   * @return as hashmap that maps from word to frequency in text.
    */
-  public HashMap<W, Double> getFreq(Integer textType);
+  HashMap<W, Double> getFreq(Integer textType);
 }
