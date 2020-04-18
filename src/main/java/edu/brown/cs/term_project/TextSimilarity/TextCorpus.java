@@ -12,7 +12,7 @@ public class TextCorpus<W extends IWord, T extends IText<W>> {
     this.nodes = nodes;
   }
 
-  public Double getSimilarity(T src, T dst) {
+  public Double getSimilarity(T src, T dst, Integer textType) {
     return null;
   }
 }
