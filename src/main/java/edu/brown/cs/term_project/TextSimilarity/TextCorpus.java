@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
 /**
  * This class represents a textcorpus and allows us to calculate similarity between articles.
  * @param <W> A type that implements IWord
@@ -11,7 +12,6 @@ import java.util.Set;
  */
 public class TextCorpus<W extends IWord, T extends IText<W>> {
   private HashMap<W, Integer> wordFreq;
-  private Set<T> nodes;
   private int docNum;
 
   /**
@@ -19,9 +19,8 @@ public class TextCorpus<W extends IWord, T extends IText<W>> {
    * @param wordFreq hashmap representing number of documents each word in our vocab is in
    * @param docNum number of documents used to create our vocab
    */
-  public TextCorpus(HashMap<W, Integer> wordFreq, Set<T> nodes, Integer docNum) {
+  public TextCorpus(HashMap<W, Integer> wordFreq, Integer docNum) {
     this.wordFreq = wordFreq;
-    this.nodes = nodes;
     this.docNum = docNum;
   }
 
