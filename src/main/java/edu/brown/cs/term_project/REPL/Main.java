@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.REPL;
 
+import edu.brown.cs.term_project.DemoGraph.DemoGraph;
 import edu.brown.cs.term_project.handlers.ClusterHandler;
 import edu.brown.cs.term_project.handlers.ChartHandler;
 import edu.brown.cs.term_project.handlers.HomeHandler;
@@ -57,6 +58,9 @@ public final class Main {
     }
 
     System.out.print("working REPL");
+    DemoGraph g = new DemoGraph();
+    g.createClusters2();
+
   }
 
   private static FreeMarkerEngine createEngine() {

@@ -44,12 +44,16 @@ public class Article implements INode<Similarity>, IText {
     return similarities;
   }
 
+  @Override
+  public double getDistance(INode<Similarity> dst) {
+    return 0;
+  }
+
   public void setEdges(List<Similarity> similarities) {
     this.similarities = similarities;
   }
 
   // TODO: write get similarity
-  @Override
   public Similarity getEdge(INode<Similarity> dst) {
     return null;
   }

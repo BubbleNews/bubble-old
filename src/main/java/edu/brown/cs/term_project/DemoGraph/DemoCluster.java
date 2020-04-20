@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class DemoCluster implements ICluster<DemoNode> {
+  private Integer id;
   private DemoNode head;
   private Integer size;
   private double avgConnections;
@@ -13,13 +14,19 @@ public class DemoCluster implements ICluster<DemoNode> {
   private double avgRadius;
   private double std;
 
-  public DemoCluster(DemoNode head, Set<DemoNode> nodes) {
+  public DemoCluster(Integer id, DemoNode head, Set<DemoNode> nodes) {
+    this.id = id;
     this.head = head;
     this.nodes = nodes;
     this.size = nodes.size();
     setAvgConnections();
     setAvgRadius();
     setStd();
+  }
+
+  @Override
+  public Integer getId() {
+    return id;
   }
 
   @Override
@@ -48,13 +55,41 @@ public class DemoCluster implements ICluster<DemoNode> {
   }
 
   @Override
+  public void addNode(DemoNode node) {
+    this.nodes.add(node);
+    this.size = nodes.size();
+    setAvgConnections();
+    setAvgRadius();
+    setStd();
+  }
+
+  @Override
+  public void adjustHead() {
+  }
+
+  @Override
   public DemoNode getHeadNode() {
     return head;
   }
 
   // TODO: fill in these functions
   public void setAvgRadius() {
-    this.avgRadius = 0;
+    double sum = 0;
+    int count = 0;
+    for (DemoNode n1: nodes) {
+      for (DemoNode n2: nodes) {
+        if (!n1.equals(n2)) {
+          sum += n1.getEdge(n2).getDistance();
+          count++;
+        }
+      }
+    }
+    if (count > 0) {
+      this.avgRadius = sum/count;
+    } else {
+      this.avgRadius = 0;
+    }
+
   }
 
   public void setAvgConnections() {
@@ -70,11 +105,11 @@ public class DemoCluster implements ICluster<DemoNode> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     DemoCluster that = (DemoCluster) o;
-    return Objects.equals(head, that.head);
+    return Objects.equals(id, that.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(head);
+    return Objects.hash(id);
   }
 }

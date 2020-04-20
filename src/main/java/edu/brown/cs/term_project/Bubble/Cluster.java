@@ -46,6 +46,11 @@ public class Cluster implements ICluster<Article> {
     return avgRadius;
   }
 
+  @Override
+  public Integer getId() {
+    return null;
+  }
+
   public Set<Article> getNodes() {
     return articles;
   }
@@ -53,6 +58,16 @@ public class Cluster implements ICluster<Article> {
   @Override
   public double getStd() {
     return std;
+  }
+
+  @Override
+  public void addNode(Article node) {
+
+  }
+
+  @Override
+  public void adjustHead() {
+
   }
 
   @Override
