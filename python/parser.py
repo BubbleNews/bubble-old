@@ -1,15 +1,16 @@
 import argparse
-import newspaper
+from newspaper import Article
+from newspaper.article import ArticleException
 
 
 def get_text(url):
     try:
-        article = newspaper.Article(url)
+        article = Article(url)
         article.download()
         article.parse()
         print('finished parsing')
         return article.text
-    except newspaper.article.ArticleException:
+    except ArticleException:
         print("couldn't parse: " + url)
         pass
 

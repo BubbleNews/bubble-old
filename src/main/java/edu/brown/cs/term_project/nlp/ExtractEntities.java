@@ -15,9 +15,10 @@ public final class ExtractEntities {
     throw new AssertionError("This constructor should never be called.");
   }
 
-  public void getEntities(String articleBody) {
+  public static void getEntities(String articleBody) {
     Document doc = new Document(articleBody);
-    for (Sentence sent: doc.sentences()) {
+    for (Sentence sent : doc.sentences()) {
+      System.out.println(sent);
       System.out.println(sent.nerTags());
     }
   }
