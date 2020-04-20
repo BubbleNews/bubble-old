@@ -1,4 +1,4 @@
-import argparse, newspaper
+import newspaper
 
 def newspaper_package(url):
 	try:
@@ -10,14 +10,3 @@ def newspaper_package(url):
 	except newspaper.article.ArticleException:
 		print("couldn't parse: " + url)
 		pass
-
-if __name__ == "__main__":
-	parser = argparse.ArgumentParser(description='Get the text of an article from a URL.')
-	parser.add_argument('path', help='path to text file containing list of article URLs')
-	args = parser.parse_args()
-
-	with open(args.path) as f:
-		urls = f.read().splitlines()
-
-	for url in urls:
-		print(newspaper_package(url))
