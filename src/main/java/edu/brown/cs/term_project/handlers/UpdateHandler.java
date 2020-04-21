@@ -24,7 +24,7 @@ public class UpdateHandler {
    */
   public static String handle(Request request, Response response) {
     String pythonEndpoint = "http://127.0.0.1:5000/scrape";
-    UpdateResponse updateResponse = new UpdateResponse(0, "");
+    StandardResponse updateResponse = new StandardResponse(0, "");
     try {
       String pythonResponse = sendGet(pythonEndpoint);
 
@@ -53,39 +53,5 @@ public class UpdateHandler {
         .build();
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     return response.body();
-  }
-
-  /**
-   * Class for response to a request to the Update API.
-   */
-  private static class UpdateResponse {
-    private int status; // 0 successful, 1 is error
-    private String message;
-
-    /**
-     * Constructor for the update response.
-     * @param status 0 successful, 1 error
-     * @param message error message if error
-     */
-    public UpdateResponse(int status, String message) {
-      this.status = status;
-      this.message = message;
-    }
-
-    /**
-     * Sets status.
-     * @param status new status
-     */
-    public void setStatus(int status) {
-      this.status = status;
-    }
-
-    /**
-     * Sets message.
-     * @param message new message
-     */
-    public void setMessage(String message) {
-      this.message = message;
-    }
   }
 }

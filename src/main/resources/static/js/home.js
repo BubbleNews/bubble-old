@@ -28,3 +28,10 @@ function getCluster(clusterId) {
         console.log(parsed);
     })
 }
+
+function displayChart(chart) {
+    let i;
+    for (i = 0; i < chart.clusters.length; i++) {
+
+    }
+}
