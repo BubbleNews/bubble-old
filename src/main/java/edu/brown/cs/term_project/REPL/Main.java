@@ -4,6 +4,7 @@ import edu.brown.cs.term_project.handlers.ClusterHandler;
 import edu.brown.cs.term_project.handlers.ChartHandler;
 import edu.brown.cs.term_project.handlers.HomeHandler;
 import edu.brown.cs.term_project.handlers.UpdateHandler;
+import edu.brown.cs.term_project.nlp.ExtractEntities;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -56,7 +57,7 @@ public final class Main {
       System.out.println("Not a correct flag");
     }
 
-    System.out.print("working REPL");
+    System.out.println("REPL");
   }
 
   private static FreeMarkerEngine createEngine() {
