@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.handlers;
 
+import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 
@@ -22,18 +23,29 @@ public class UpdateHandler {
    * @return a JSON response with status and message.
    */
   public static String handle(Request request, Response response) {
-    // TODO: implement update handle()
-    String uri = "http://127.0.0.1:5000/data";
-    String toReturn = "";
-
+    String pythonEndpoint = "http://127.0.0.1:5000/scrape";
+    StandardResponse updateResponse = new StandardResponse(0, "");
     try {
-      toReturn = sendGet(uri);
+      String pythonResponse = sendGet(pythonEndpoint);
+
+      // WE NEED TO PARSE THE JSON STRING INTO A LIST OF SOMETHING THEN ADD TO DB
+
+
     } catch (Exception e) {
-      toReturn = "update: error connecting to python api.";
+      // there has been an error so update response to reflect that
+      updateResponse.setStatus(1);
+      updateResponse.setMessage(e.getMessage());
     }
-    return toReturn;
+    // convert to json and return
+    return new Gson().toJson(updateResponse);
   }
 
+  /**
+   * Sends an HTTP GET request to a url.
+   * @param uri the url to send the get request to
+   * @return a json string response
+   * @throws Exception
+   */
   private static String sendGet(String uri) throws Exception {
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder()
