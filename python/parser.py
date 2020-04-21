@@ -1,4 +1,6 @@
+from __future__ import print_function
 import argparse
+import json
 from newspaper import Article
 from newspaper.article import ArticleException
 
@@ -8,11 +10,20 @@ def get_text(url):
         article = Article(url)
         article.download()
         article.parse()
-        print('finished parsing')
-        return article.text
+        return make_json(article)
     except ArticleException:
         print("couldn't parse: " + url)
         pass
+
+
+def make_json(article):
+    return json.dumps({
+        'url': article.url,
+        'title': article.title,
+        'authors': article.authors,
+        'date': article.publish_date,
+        'text': article.text
+    })
 
 
 if __name__ == "__main__":

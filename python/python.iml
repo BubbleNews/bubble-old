@@ -10,12 +10,11 @@
       <configuration sdkName="Python 2.7 virtualenv at ~/Documents/cs/cs0320/python2_venv" />
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
+  <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 2.7 (python2_venv)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Python 2.7 virtualenv at ~/Documents/cs/cs0320/python2_venv interpreter library" level="application" />
   </component>
