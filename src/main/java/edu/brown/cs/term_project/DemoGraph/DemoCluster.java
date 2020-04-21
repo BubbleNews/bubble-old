@@ -57,9 +57,17 @@ public class DemoCluster implements ICluster<DemoNode> {
   @Override
   public void addNode(DemoNode node) {
     this.nodes.add(node);
+    this.size++;
+    setAvgConnections();
+    this.avgRadius = meanRadiusNode(node);
+    setStd();
+  }
+
+  public void addNodes(DemoCluster cluster) {
+    this.nodes.addAll(cluster.getNodes());
     this.size = nodes.size();
     setAvgConnections();
-    setAvgRadius();
+    this.avgRadius = meanRadiusClusters(cluster);
     setStd();
   }
 
@@ -111,5 +119,47 @@ public class DemoCluster implements ICluster<DemoNode> {
   @Override
   public int hashCode() {
     return Objects.hash(id);
+  }
+
+
+  public double meanRadiusClusters(DemoCluster cluster2) {
+    double sum = 0;
+    int count = 0;
+    int size2 = cluster2.getNodes().size();
+    int edgeCount1 = (size*(size-1))/2;
+    int edgeCount2 = (size2*(size2-1))/2;
+    sum += avgRadius*edgeCount1;
+    count += edgeCount1;
+    sum += cluster2.getAvgRadius()*edgeCount2;
+    count += edgeCount2;
+    for (DemoNode n1: nodes) {
+      for (DemoNode n2: cluster2.getNodes()) {
+        if (!n1.equals(n2)) { // there shouldn't be any overlap
+          sum += n1.getDistance(n2);
+          count++;
+        }
+      }
+    }
+    return sum/count;
+  }
+
+  public double meanRadiusNode(DemoNode n) {
+    double sum = 0;
+    int count = 0;
+    int edgeCount1 = (size*(size-1))/2;
+    sum += avgRadius*edgeCount1;
+    count += edgeCount1;
+    for (DemoNode n1: nodes) {
+      if (!n1.equals(n)) { // there shouldn't be any overlap
+
+        sum += n1.getDistance(n);
+        count++;
+      }
+    }
+    if (count > 0) {
+      return sum/count;
+    } else {
+      return 0;
+    }
   }
 }

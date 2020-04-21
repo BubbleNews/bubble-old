@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.REPL;
 
+import edu.brown.cs.term_project.Bubble.ArticleGraph;
 import edu.brown.cs.term_project.DemoGraph.DemoGraph;
 import edu.brown.cs.term_project.handlers.ClusterHandler;
 import edu.brown.cs.term_project.handlers.ChartHandler;
@@ -57,8 +58,9 @@ public final class Main {
       System.out.println("Not a correct flag");
     }
 
-    System.out.print("working REPL");
-    DemoGraph g = new DemoGraph();
+    System.out.println("Running");
+    ArticleGraph g = new ArticleGraph();
+    g.createClusters();
     g.createClusters2();
 
   }
