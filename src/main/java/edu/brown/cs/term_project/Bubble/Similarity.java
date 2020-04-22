@@ -3,7 +3,7 @@ package edu.brown.cs.term_project.Bubble;
 import edu.brown.cs.term_project.Graph.IEdge;
 
 
-public class Similarity implements IEdge<Article>, IConnection<Article> {
+public class Similarity implements IEdge<Article> {
   private int id;
   private Article src;
   private Article dst;
