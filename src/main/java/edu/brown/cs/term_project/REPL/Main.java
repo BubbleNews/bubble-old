@@ -49,15 +49,12 @@ public final class Main {
           .defaultsTo(DEFAULT_PORT);
       OptionSet options = parser.parse(args);
 
-      if (options.has("gui")) {
-        runSparkServer((int) options.valueOf("port"));
-      }
+      runSparkServer((int) options.valueOf("port"));
+
 
     } catch (OptionException e) {
       System.out.println("Not a correct flag");
     }
-
-    System.out.println("REPL");
 
 //    String article = "On a cold morning in February 2018, a group of 30 microbiologists, zoologists and public-health experts from around the world met at the headquarters of the World Health Organization in Geneva. The group was established by the W.H.O. in 2015 to create a priority list of dangerous viruses — specifically, those for which no vaccines or drugs were already in development. The consensus, at least among those in the room, was that as populations and global travel continued to grow and development increasingly pushed into wild areas, it was almost inevitable that once-containable local outbreaks, like SARS or Ebola, could become global disasters.\n" +
 //        "“The meeting was in a big room, with all the tables arranged around the edge, facing each other,” one of the group’s members, Peter Daszak, recalled recently. “It was a very formal process. Each person was asked to present the case for including a particular disease on the list of top threats. And everything you say is being taken down, and checked factually, and recorded.”\n" +

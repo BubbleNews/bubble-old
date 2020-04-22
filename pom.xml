@@ -40,7 +40,6 @@
         jopt-simple is a command line parser.
         https://pholser.github.io/jopt-simple/.
     -->
-
     <dependency>
       <groupId>net.sf.jopt-simple</groupId>
       <artifactId>jopt-simple</artifactId>
@@ -134,50 +133,16 @@
       <version>3.30.1</version>
     </dependency>
 
-
-
-
-
-
-
-
-
-<!--    &lt;!&ndash; https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.eclipse.jetty</groupId>-->
-<!--      <artifactId>jetty-server</artifactId>-->
-<!--      <version>9.4.18.v20190429</version>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-webapp &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.eclipse.jetty</groupId>-->
-<!--      <artifactId>jetty-webapp</artifactId>-->
-<!--      <version>9.4.18.v20190429</version>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-server &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.eclipse.jetty.websocket</groupId>-->
-<!--      <artifactId>websocket-server</artifactId>-->
-<!--      <version>9.4.18.v20190429</version>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-servlet &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.eclipse.jetty.websocket</groupId>-->
-<!--      <artifactId>websocket-servlet</artifactId>-->
-<!--      <version>9.4.18.v20190429</version>-->
-<!--    </dependency>-->
-
-<!--    &lt;!&ndash; https://mvnrepository.com/artifact/org.slf4j/slf4j-api &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.slf4j</groupId>-->
-<!--      <artifactId>slf4j-api</artifactId>-->
-<!--      <version>1.7.25</version>-->
-<!--    </dependency>-->
-
-
+    <!--
+      This is a random dependency that gets rid of the error message:
+        Exception in thread "Thread-0" java.lang.NoClassDefFoundError: javax/servlet/http/HttpSessionIdListener
+      http://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
+     -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
   </dependencies>
 
   <!-- Build section -->

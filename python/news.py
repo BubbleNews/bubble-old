@@ -76,6 +76,3 @@ def clean_text(text, bad_chars):
     for char in bad_chars:
         text = text.replace(char, '')
     return text
-
-
-print(get_news())
