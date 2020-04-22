@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Article implements INode<Similarity>, IText<> {
+public class Article implements INode<Similarity>, IText {
   private int id;
   private String title;
   private String date;

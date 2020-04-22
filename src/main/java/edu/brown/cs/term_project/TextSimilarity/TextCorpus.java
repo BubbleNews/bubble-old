@@ -10,7 +10,7 @@ import java.util.Set;
  * @param <W> A type that implements IWord
  * @param <T> An article type that implements IText
  */
-public class TextCorpus<W extends IWord, T extends IText> {
+public class TextCorpus<IWord, T extends IText> {
   private HashMap<W, Integer> wordFreq;
   private int docNum;
 
@@ -33,7 +33,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * @return the cosine similarity of the two articles based on the textType
    */
   public Double getSimilarity(T src, T dst, Integer textType) {
-    Map<W, Integer> srcMap = src.getFreq(textType);
+    Map<? extends IWord, Integer> srcMap = src.getFreq(textType);
     Map<W, Integer> dstMap = dst.getFreq(textType);
     Set<W> sharedWords = srcMap.keySet();
     sharedWords.retainAll(dstMap.keySet());
