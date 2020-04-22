@@ -43,10 +43,6 @@ public class UpdateHandler {
         articles.add(gson.fromJson(jsonArray.get(i), ArticleJSON.class));
       }
 
-      for (int i = 0; i < jsonArray.size(); i++) {
-        System.out.println(articles.get(i).url);
-      }
-
       // stem words
       // add to database
 
