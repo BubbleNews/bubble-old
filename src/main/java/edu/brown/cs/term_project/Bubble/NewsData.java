@@ -2,12 +2,14 @@ package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public final class NewsData extends Database {
+  private Connection conn = null;
 
   /**
    * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and

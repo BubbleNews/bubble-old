@@ -19,7 +19,7 @@ public class Article implements INode<Similarity>, IText {
   private HashMap<Entity, Double> entities;
   private HashMap<Vocab, Double> words;
 
-  public Article(int id, String title, String date, String author, String url, List<Similarity> similarities) {
+  public Article(int id, String title, String date, String author, String url) {
     this.id = id;
     this.title = title;
     this.date = date;
