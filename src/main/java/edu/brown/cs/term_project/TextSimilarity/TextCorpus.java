@@ -10,7 +10,7 @@ import java.util.Set;
  * @param <W> A type that implements IWord
  * @param <T> An article type that implements IText
  */
-public class TextCorpus<W extends IWord, T extends IText<W>> {
+public class TextCorpus<W extends IWord, T extends IText> {
   private HashMap<W, Integer> wordFreq;
   private int docNum;
 
