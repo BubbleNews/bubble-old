@@ -22,4 +22,9 @@ public final class ExtractEntities {
       System.out.println(sent.nerTags());
     }
   }
+
+  public static String[] lemmizeText(String text) {}
+
+  public static void makeHashMap(HashMap<String, Integer>, Article)
+
 }

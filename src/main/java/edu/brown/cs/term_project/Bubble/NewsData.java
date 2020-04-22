@@ -92,7 +92,7 @@ public final class NewsData extends Database {
   }
 
   // Ian
-  public Set<Cluster> getClusters() {
+  public Set<Cluster> getClusters(Date date) {
     return null;
   }
 
