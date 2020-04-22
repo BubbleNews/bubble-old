@@ -68,6 +68,10 @@ public class Article implements INode<Similarity>, IText {
     }
   }
 
+  public void getEdges(Similarity similarity) {
+
+  }
+
   /**
    * Method to find the edge connecting this Article to another
    * @param dst - Article to find Similarity to
