@@ -33,10 +33,11 @@ public final class NewsData extends Database {
   }
 
   // Ben/John
+
   public Set<Article> getArticles(Integer hours) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT id, title, url, date_published, text\n" +
-        "FROM articles\n" +
-        "WHERE date_pulled >= date('now', '-? hours') AND date_pulled < date('now');");
+    PreparedStatement prep = conn.prepareStatement("SELECT id, title, url, date_published, text\n"
+        + "FROM articles\n"
+        + "WHERE date_pulled >= date('now', '-? hours') AND date_pulled < date('now');");
 
     prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();

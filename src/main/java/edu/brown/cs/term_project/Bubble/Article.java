@@ -3,12 +3,13 @@ package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Graph.INode;
 import edu.brown.cs.term_project.TextSimilarity.IText;
+import edu.brown.cs.term_project.TextSimilarity.IWord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Article implements INode<Similarity>, IText {
+public class Article implements INode<Similarity>, IText<> {
   private int id;
   private String title;
   private String date;
@@ -34,7 +35,7 @@ public class Article implements INode<Similarity>, IText {
   }
 
   @Override
-  public HashMap getFreq(Integer textType) {
+  public HashMap<? extends IWord, Double> getFreq(Integer textType) {
     if (textType == 0) {
       return entities;
     } else if (textType == 1) {
@@ -66,11 +67,11 @@ public class Article implements INode<Similarity>, IText {
   }
 
   public void addEdges(Similarity similarity) {
-
+    similarities.add(similarity);
   }
 
   /**
-   * Method to find the edge connecting this Article to another
+   * Method to find the edge connecting this Article to another.
    * @param dst - Article to find Similarity to
    * @return - Similarity connecting to dst
    */
@@ -107,7 +108,7 @@ public class Article implements INode<Similarity>, IText {
 
   // TODO: write setEntities and setWords
   public void setEntities() {
-    this.entities = null;
+
   }
 
   public void setWords(String text) {
