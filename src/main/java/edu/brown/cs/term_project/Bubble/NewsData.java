@@ -25,10 +25,28 @@ public final class NewsData extends Database {
 
   // TODO: Implement Database functions
 
-  // Kshitij
-  public void insertArticleEntity(Article article, Entity entity) {
 
+
+  public void insertArticleAndEntities(Article article) {
+    // CALL The three methods below
   }
+
+  /**
+   * Inserts an article into the database.
+   * @param article the article to be inserted
+   * @return the primary key of the article in the database once inserted
+   */
+  private int insertArticle(Article article) {
+    return 0;
+  }
+
+  /**
+   *
+   * @param articleKey
+   * @param entityFrequencyMap
+   */
+  private void insertEntities(int articleKey, HashMap<Entity, Double> entityFrequencyMap) {}
+
 
   public void updateWordFreq(Map<String, Integer> words) {
   }
