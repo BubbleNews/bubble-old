@@ -505,7 +505,6 @@ public class ArticleGraph extends Graph<Cluster, ArticleVertex, Similarity> {
     }
   }
 
-
 }
 
 

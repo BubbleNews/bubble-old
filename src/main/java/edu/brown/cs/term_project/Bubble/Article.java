@@ -1,62 +1,53 @@
 package edu.brown.cs.term_project.Bubble;
 
-
-import edu.brown.cs.term_project.Graph.INode;
-import edu.brown.cs.term_project.TextSimilarity.IText;
-import edu.brown.cs.term_project.TextSimilarity.IWord;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class Article implements IText {
+/**
+ * This class represents an article and its content.
+ */
+public class Article {
   private int id;
   private String title;
   private String date;
   private String author;
   private String url;
-  private HashMap<Entity, Double> entities;
-  private HashMap<Vocab, Double> words;
 
-  public Article(int id, String title, String date, String author, String url, String text) {
+  /**
+   * Creates an article.
+   * @param id unique id in database
+   * @param title Title of the article
+   * @param date Date the article was published
+   * @param author Author of the article
+   * @param url URL to the article
+   */
+  public Article(int id, String title, String date, String author, String url) {
     this.id = id;
     this.title = title;
     this.date = date;
     this.author = author;
     this.url = url;
-    setEntities();
-    setWords(text);
   }
 
+  /**
+   * Creates an article with just an id (for testing the gui)
+   * @param id unique id
+   */
   public Article(int id) {
     this.id = id;
   }
 
-  @Override
-  public Map<IWord, Double> getFreq(Integer textType) {
-    if (textType == 0) {
-      return new HashMap<>(entities);
-    } else if (textType == 1) {
-      return new HashMap<>(words);
-    } else {
-      return null;
-    }
-  }
-
+  /**
+   * Gets the id of the article.
+   * @return the id of the article
+   */
   public int getId() {
     return id;
   }
 
+  /**
+   * Gets the title of the article.
+   * @return the title of the article
+   */
   public String getTitle() {
     return title;
   }
 
-  // TODO: write setEntities and setWords
-  public void setEntities() {
-
-  }
-
-  public void setWords(String text) {
-    this.words = null;
-  }
 }

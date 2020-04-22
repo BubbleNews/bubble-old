@@ -1,17 +1,25 @@
 package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Graph.INode;
+import edu.brown.cs.term_project.TextSimilarity.IText;
+import edu.brown.cs.term_project.TextSimilarity.IWord;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ArticleVertex implements INode<Similarity> {
+public class ArticleVertex implements INode<Similarity>, IText {
   private List<Similarity> similarities;
   private Article article;
+  private Map<Entity, Double> entities;
+  private Map<ArticleWord, Double> words;
 
-  public ArticleVertex(Article article) {
+  public ArticleVertex(Article article, String text, Map<Entity, Double> entities) {
     this.similarities = new ArrayList<>();
     this.article = article;
+    this.entities = entities;
+    setWords(text);
   }
 
   @Override
@@ -76,4 +84,30 @@ public class ArticleVertex implements INode<Similarity> {
     }
     return null;
   }
+
+  private void setWords(String text) {
+    this.words = new HashMap<>();
+    String[] splitWords = text.split("");
+    for (String word: splitWords) {
+      ArticleWord articleWord = new ArticleWord(word);
+      if (words.containsKey(articleWord)) {
+        words.replace(articleWord, words.get(articleWord) + 1);
+      } else {
+        words.put(articleWord, 0.0);
+      }
+    }
+  }
+
+  @Override
+  public Map<IWord, Double> getFreq(Integer textType) {
+    if (textType == 0) {
+      return new HashMap<>(entities);
+    } else if (textType == 1) {
+      return new HashMap<>(words);
+    } else {
+      return null;
+    }
+  }
+
+
 }

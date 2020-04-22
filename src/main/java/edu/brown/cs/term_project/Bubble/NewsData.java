@@ -71,7 +71,7 @@ public final class NewsData extends Database {
     return null;
   }
 
-  public HashMap<Vocab, Double> getVocabFreq() throws SQLException {
+  public HashMap<ArticleWord, Double> getVocabFreq() throws SQLException {
     return null;
   }
 
