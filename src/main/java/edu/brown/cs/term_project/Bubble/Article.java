@@ -3,41 +3,39 @@ package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Graph.INode;
 import edu.brown.cs.term_project.TextSimilarity.IText;
+import edu.brown.cs.term_project.TextSimilarity.IWord;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
-public class Article implements INode<Similarity>, IText {
+public class Article implements INode<Similarity>, IText<> {
   private int id;
   private String title;
   private String date;
   private String author;
   private String url;
-  private List<Similarity> similarities = new ArrayList<>();
+  private List<Similarity> similarities;
   private HashMap<Entity, Double> entities;
   private HashMap<Vocab, Double> words;
 
-  public Article(int id, String title, String date, String author, String url) {
+  public Article(int id, String title, String date, String author, String url, String text) {
     this.id = id;
     this.title = title;
     this.date = date;
     this.author = author;
     this.url = url;
-    this.similarities = similarities;
+    this.similarities = new ArrayList<>();
     setEntities();
-    setWords();
+    setWords(text);
   }
 
   public Article(int id) {
     this.id = id;
-    setEntities();
-    setWords();
   }
 
   @Override
-  public HashMap getFreq(Integer textType) {
+  public HashMap<? extends IWord, Double> getFreq(Integer textType) {
     if (textType == 0) {
       return entities;
     } else if (textType == 1) {
@@ -58,18 +56,22 @@ public class Article implements INode<Similarity>, IText {
 
   /**
    * Sets edges of Article, by parsing through list of Similarities and finding the ones that include itself
-   * @param similarities - similarities to pull edges from
+   * @param newSimilarities - similarities to pull edges from
    */
-  public void setEdges(List<Similarity> similarities) {
-    for (int i = 0; i < similarities.size(); i++) {
-      if (similarities.get(i).getSource().equals(this) || similarities.get(i).getDest().equals(this)) {
-        this.similarities.add(similarities.get(i));
+  public void setEdges(List<Similarity> newSimilarities) {
+    for (Similarity similarity: newSimilarities) {
+      if (similarity.getSource().equals(this) || similarity.getDest().equals(this)) {
+        this.similarities.add(similarity);
       }
     }
   }
 
+  public void addEdges(Similarity similarity) {
+    similarities.add(similarity);
+  }
+
   /**
-   * Method to find the edge connecting this Article to another
+   * Method to find the edge connecting this Article to another.
    * @param dst - Article to find Similarity to
    * @return - Similarity connecting to dst
    */
@@ -106,10 +108,10 @@ public class Article implements INode<Similarity>, IText {
 
   // TODO: write setEntities and setWords
   public void setEntities() {
-    this.entities = null;
+
   }
 
-  public void setWords() {
+  public void setWords(String text) {
     this.words = null;
   }
 }
