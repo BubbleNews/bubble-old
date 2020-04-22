@@ -7,5 +7,5 @@ public interface INode<T extends IEdge> {
 
   public List<T> getEdges();
 
-  public T getEdge(INode<T> dst);
+  public double getDistance(INode<T> dst);
 }

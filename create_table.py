@@ -11,10 +11,10 @@ c.execute("PRAGMA foreign_keys = ON")
 
 
 CREATE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS entity (
-    id INT PRIMARY KEY NOT NULL,
     class VARCHAR(20),
     entity VARCHAR(50),
-    count INT
+    count INT,
+    PRIMARY KEY (class, entity)
 );'''
 
 CREATE_VOCAB_QUERY = '''CREATE TABLE IF NOT EXISTS vocab (
@@ -24,6 +24,7 @@ CREATE_VOCAB_QUERY = '''CREATE TABLE IF NOT EXISTS vocab (
 
 CREATE_CLUSTERS_QUERY = '''CREATE TABLE IF NOT EXISTS clusters (
     id INT PRIMARY KEY NOT NULL,
+    head INT,
     title VARCHAR(50),
     size INT,
     day INT,
@@ -31,7 +32,8 @@ CREATE_CLUSTERS_QUERY = '''CREATE TABLE IF NOT EXISTS clusters (
     avg_connections DOUBLE,
     avg_radius DOUBLE,
     std DOUBLE,
-    intermediate_cluster BOOLEAN
+    intermediate_cluster BOOLEAN,
+    FOREIGN KEY (head) REFERENCES articles(id)
 );'''
 
 CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
@@ -46,30 +48,15 @@ CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
     FOREIGN KEY (temp_cluster_id) REFERENCES clusters(id)
 );'''
 
-CREATE_ARTICLE_VOCAB_QUERY = '''CREATE TABLE IF NOT EXISTS article_vocab (
-    article_id INT,
-    vocab_id INT,
-    count INT,
-    FOREIGN KEY (article_id) REFERENCES articles(id),
-    FOREIGN KEY (vocab_id) REFERENCES vocab(id)
-);'''
-
 
 
 CREATE_ARTICLE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS article_entity (
     article_id INT,
-    entity_id INT,
+    entity_class VARCHAR(20),
+    entity_entity VARCHAR(50),
+    count INT,
     FOREIGN KEY (article_id) REFERENCES articles(id),
-    FOREIGN KEY (entity_id) REFERENCES entity(id)
-);'''
-
-CREATE_EDGES_QUERY = '''CREATE TABLE IF NOT EXISTS edges (
-    id INT PRIMARY KEY NOT NULL,
-    article_id1 INT,
-    article_id2 INT,
-    weight DOUBLE,
-    FOREIGN KEY (article_id1) REFERENCES articles(id),
-    FOREIGN KEY (article_id2) REFERENCES articles(id)
+    FOREIGN KEY (entity_class, entity_entity) REFERENCES entity(class, entity)
 );'''
 
 
@@ -85,11 +72,8 @@ def create_tables():
     c.execute(CREATE_ENTITY_QUERY)
     c.execute(CREATE_VOCAB_QUERY)
     c.execute(CREATE_CLUSTERS_QUERY)
-    c.execute(CREATE_ARTICLE_VOCAB_QUERY)
     c.execute(CREATE_ARTICLES_QUERY)
     c.execute(CREATE_ARTICLE_ENTITY_QUERY)
-    
-    c.execute(CREATE_EDGES_QUERY)
     conn.commit()
 
 
