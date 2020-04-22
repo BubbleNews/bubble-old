@@ -21,9 +21,26 @@
   <dependencies>
 
     <!--
+        stanford-nlp library is used to extract entities from text.
+        https://stanfordnlp.github.io/CoreNLP/simple.html
+    -->
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>3.9.2</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.stanford.nlp</groupId>
+      <artifactId>stanford-corenlp</artifactId>
+      <version>3.9.2</version>
+      <classifier>models</classifier>
+    </dependency>
+
+    <!--
         jopt-simple is a command line parser.
         https://pholser.github.io/jopt-simple/.
     -->
+
     <dependency>
       <groupId>net.sf.jopt-simple</groupId>
       <artifactId>jopt-simple</artifactId>
