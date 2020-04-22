@@ -1,23 +1,29 @@
 package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Graph.IEdge;
-import edu.brown.cs.term_project.TextSimilarity.IConnection;
+
 
 public class Similarity implements IEdge<Article>, IConnection<Article> {
-  private String id;
+  private int id;
   private Article src;
   private Article dst;
   private double distance;
 
-  public Similarity(String id, Article src, Article dst, double distance) {
+  public Similarity(int id, Article src, Article dst, double distance) {
     this.id = id;
     this.src= src;
     this.dst = dst;
     this.distance = distance;
   }
 
+  public Similarity(Article src, Article dst, double distance) {
+    this.src= src;
+    this.dst = dst;
+    this.distance = distance;
+  }
 
-  public String getID() {
+
+  public int getID() {
     return id;
   }
 
