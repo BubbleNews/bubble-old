@@ -1,7 +1,7 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.Cluster;
+import edu.brown.cs.term_project.Graph.Cluster;
 import spark.Request;
 import spark.Response;
 
