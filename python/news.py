@@ -1,41 +1,65 @@
 from newsapi import NewsApiClient
+from newspaper import Article
+from newspaper.article import ArticleException
 from datetime import datetime, timedelta
 import json
-from parser import get_text
 
 # key for accessing google news api
-api_key = '77d7cb4756d44e13aea4a50d033d27e3'
+API_KEY = '77d7cb4756d44e13aea4a50d033d27e3'
+MINIMUM_ARTICLE_CHAR_LENGTH = 700
+BAD_CHARS = ['\n', '\r\n']
 
-# create 
-newsapi = NewsApiClient(api_key=api_key)
+def get_news():
+    print("Connecting to Google News API...")
+    # create news api connection
+    newsapi = NewsApiClient(api_key=API_KEY)
 
-# get current time
-today = datetime.now()
-current_time = datetime(today.year, today.month, today.day, 
-                        today.hour, today.minute, today.minute)
-hour_ago = current_time + timedelta(hours=-1)
+    # get current time
+    # today = datetime.now()
+    # current_time = datetime(today.year, today.month, today.day,
+    #                         today.hour, today.minute, today.minute)
+    # hour_ago = current_time + timedelta(hours=-1)
+    #
+    # current_time = str(current_time).replace(' ', 'T')
+    # hour_ago = str(hour_ago).replace(' ', 'T')
+    #
+    # print(current_time)
+    # print(hour_ago)
 
-current_time = str(current_time).replace(' ', 'T')
-hour_ago = str(hour_ago).replace(' ', 'T')
+    #
+    num_articles = 1
+    # get top headlines
+    top_headlines = newsapi.get_top_headlines(language='en',
+                                            page_size=num_articles)
 
-print(current_time)
-print(hour_ago)
+    articles = top_headlines['articles']
+    # loop through articles and scrape article text with scraper
+    for i, article in enumerate(articles):
+        print(i)
+        url = article['url']
+        scraped_text = scrape_text(url)
+        # threshold
+        if len(scraped_text) < MINIMUM_ARTICLE_CHAR_LENGTH:
+            # text is too short so delete article
+            del articles[i]
+            with open('deleted_articles.txt', 'w') as f:
+                f.write(url)
+        else:
+            # we want text
+            article['content'] = clean_text(scraped_text, BAD_CHARS)
 
+    return json.dumps(articles)
 
+def scrape_text(url):
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        return article.text
+    except ArticleException:
+        print("couldn't parse: " + url)
 
-# get top headlines
-top_headlines = newsapi.get_top_headlines(language='en',
-                                        page_size=100)
-
-print(len(top_headlines['articles']))
-
-urls = set(map(lambda a: a['url'], top_headlines['articles']))
-
-for article in top_headlines['articles']:
-    article['content'] = get_text(article['url'])
-
-
-
-# for article in top_headlines['articles']:
-#     print(article['url'])
-    
+def clean_text(text, bad_chars):
+    for char in bad_chars:
+        text = text.replace(char, '')
+    return text

@@ -1,12 +1,11 @@
 import flask
+from news import get_news
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 @app.route('/scrape', methods=['GET'])
 def home():
-    # TODO: get data from algorithm
-    data = "Python api - data: unimplemented"
-    return data
+    return get_news()
 
 app.run()

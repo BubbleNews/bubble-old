@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.handlers;
 
+import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.Cluster;
 import spark.Request;
 import spark.Response;
@@ -20,9 +21,10 @@ public class ChartHandler {
    */
   public static String handle(Request request, Response response) {
     ChartResponse chartResponse = new ChartResponse(0, "");
-    try {
 
-    return "chart: unimplemented";
+    // TODO: get chart
+
+    return new Gson().toJson(chartResponse);
   }
 
   private static class ChartResponse extends StandardResponse {
