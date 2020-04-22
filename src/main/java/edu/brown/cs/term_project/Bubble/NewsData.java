@@ -1,6 +1,7 @@
 package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
+import edu.brown.cs.term_project.Graph.Cluster;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -87,7 +88,7 @@ public final class NewsData extends Database {
     return null;
   }
 
-  public void insertCluster(Set<Cluster> clusters) throws SQLException {
+  public static void insertClusters(Set<Cluster> clusters) throws SQLException {
   }
 
   // Ian
