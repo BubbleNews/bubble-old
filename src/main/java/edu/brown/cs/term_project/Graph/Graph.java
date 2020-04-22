@@ -25,6 +25,4 @@ public abstract class Graph<C extends ICluster<T>, T extends INode, S extends IE
   // TODO: implement setThreshold
   public abstract void setThreshold();
 
-  public abstract void CreateGraph(int size);
-
 }
