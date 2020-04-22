@@ -4,6 +4,7 @@ import edu.brown.cs.term_project.Database.Database;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public final class NewsData extends Database {
@@ -21,21 +22,26 @@ public final class NewsData extends Database {
   }
 
   // TODO: Implement Database functions
-//  public Set<Article> getArticles(Integer hours) {}
-//
-//  public HashMap<Vocab, Double> getVocabFreq() {}
-//
-//  public HashMap<Entity, Double> getEntityFreq() {}
-//
-//  public HashMap<Vocab, Double> getArticleVocabFreq() {}
-//
-//  public HashMap<Entity, Double> getArticleEntityFreq() {}
-//
-//  //[updates total vocab/entity]
-//  public void insertArticles(Set<Article> articles) {}
-//
-//  public void insertEdges(Set<Similarity> edges) {}
-//
-//  public void insertCluster(Set<Cluster> clusters) {}
+
+  // Kshitij
+  public void insertArticleEntity(Article article, Entity entity) {}
+
+  public void updateWordFreq(Map<String, Integer> words) {}
+
+  // Ben/John
+  public Set<Article> getArticles(Integer hours) {}
+
+  public HashMap<Vocab, Double> getVocabFreq() {}
+
+  public HashMap<Entity, Double> getEntityFreq() {}
+
+  public HashMap<Entity, Double> getArticleEntityFreq() {}
+
+  public Integer getMaxVocabCount() {}
+
+  public void insertCluster(Set<Cluster> clusters) {}
+
+  // Ian
+  public Set<Cluster> getClusters() {}
 
 }
