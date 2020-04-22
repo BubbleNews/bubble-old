@@ -1,26 +1,25 @@
 package edu.brown.cs.term_project.Graph;
 
-import java.util.List;
 import java.util.Set;
 
-public interface ICluster<T extends INode> {
+public interface ICluster<T extends INode<E>, E extends IEdge<T>> {
 
-  public Integer getId();
+  Integer getId();
 
-  public Set<T> getNodes();
+  Set<T> getNodes();
 
-  public Integer getSize();
+  Integer getSize();
 
-  public T getHeadNode();
+  T getHeadNode();
 
-  public double getAvgConnections();
+  double getAvgConnections();
 
-  public double getAvgRadius();
+  double getAvgRadius();
 
-  public double getStd();
+  double getStd();
 
-  public void addNode(T node);
+  void addNode(T node);
 
-  public void adjustHead();
+  void adjustHead();
 
 }

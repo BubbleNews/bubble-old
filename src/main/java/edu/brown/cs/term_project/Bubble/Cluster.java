@@ -5,18 +5,18 @@ import edu.brown.cs.term_project.Graph.ICluster;
 import java.util.Objects;
 import java.util.Set;
 
-public class Cluster implements ICluster<Article> {
+public class Cluster implements ICluster<ArticleVertex, Similarity> {
   private int id;
-  private Article headline;
+  private ArticleVertex headlineArticleVertex;
   private Integer size;
   private double avgConnections;
-  private Set<Article> articles;
+  private Set<ArticleVertex> articles;
   private double avgRadius;
   private double std;
 
-  public Cluster(Integer id, Article headline, Set<Article> articles) {
+  public Cluster(Integer id, ArticleVertex headlineArticleVertex, Set<ArticleVertex> articles) {
     this.id = id;
-    this.headline = headline;
+    this.headlineArticleVertex = headlineArticleVertex;
     this.articles = articles;
     this.size = articles.size();
     setAvgConnections();
@@ -30,7 +30,7 @@ public class Cluster implements ICluster<Article> {
   }
 
   @Override
-  public Set<Article> getNodes() {
+  public Set<ArticleVertex> getNodes() {
     return articles;
   }
 
@@ -59,7 +59,7 @@ public class Cluster implements ICluster<Article> {
    * @param node - node to add
    */
   @Override
-  public void addNode(Article node) {
+  public void addNode(ArticleVertex node) {
     this.articles.add(node);
     this.size++;
     setAvgConnections();
@@ -84,8 +84,8 @@ public class Cluster implements ICluster<Article> {
   }
 
   @Override
-  public Article getHeadNode() {
-    return headline;
+  public ArticleVertex getHeadNode() {
+    return headlineArticleVertex;
   }
 
   /**
@@ -94,8 +94,8 @@ public class Cluster implements ICluster<Article> {
   public void setAvgRadius() {
     double sum = 0;
     int count = 0;
-    for (Article n1: articles) {
-      for (Article n2: articles) {
+    for (ArticleVertex n1: articles) {
+      for (ArticleVertex n2: articles) {
         if (!n1.equals(n2)) {
           sum += n1.getEdge(n2).getDistance();
           count++;
@@ -120,8 +120,12 @@ public class Cluster implements ICluster<Article> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Cluster that = (Cluster) o;
     return Objects.equals(id, that.id);
   }
@@ -140,21 +144,23 @@ public class Cluster implements ICluster<Article> {
     double sum = 0;
     int count = 0;
     int size2 = cluster2.getNodes().size();
-    int edgeCount1 = (size*(size-1))/2;
-    int edgeCount2 = (size2*(size2-1))/2;
-    sum += avgRadius*edgeCount1; //scaling this avgRadius by number of edges
+    int edgeCount1 = (size * (size - 1)) / 2;
+    int edgeCount2 = (size2 * (size2 - 1)) / 2;
+    sum += avgRadius * edgeCount1; //scaling this avgRadius by number of edges
     count += edgeCount1;
-    sum += cluster2.getAvgRadius()*edgeCount2; //scaling cluster2's avgRadius by it's number of edges
+    sum += cluster2.getAvgRadius() * edgeCount2; //scaling cluster2's avgRadius by it's number of
+    // edges
     count += edgeCount2;
-    for (Article n1: articles) {
-      for (Article n2: cluster2.getNodes()) { //adding in radius of edges between the two clusters
+    for (ArticleVertex n1: articles) {
+      for (ArticleVertex n2: cluster2.getNodes()) { //adding in radius of edges between the two
+        // clusters
         if (!n1.equals(n2)) { // there shouldn't be any overlap
           sum += n1.getDistance(n2);
           count++;
         }
       }
     }
-    return sum/count;
+    return sum / count;
   }
 
   /**
@@ -162,13 +168,13 @@ public class Cluster implements ICluster<Article> {
    * @param n - article to combine
    * @return - double representing combined mean radius
    */
-  public double meanRadiusNode(Article n) {
+  public double meanRadiusNode(ArticleVertex n) {
     double sum = 0;
     int count = 0;
-    int edgeCount1 = (size*(size-1))/2;
-    sum += avgRadius*edgeCount1;
+    int edgeCount1 = (size * (size - 1)) / 2;
+    sum += avgRadius * edgeCount1;
     count += edgeCount1;
-    for (Article n1: articles) {
+    for (ArticleVertex n1: articles) {
       if (!n1.equals(n)) { // there shouldn't be any overlap
 
         sum += n1.getDistance(n);
@@ -176,7 +182,7 @@ public class Cluster implements ICluster<Article> {
       }
     }
     if (count > 0) {
-      return sum/count;
+      return sum / count;
     } else {
       return 0;
     }
