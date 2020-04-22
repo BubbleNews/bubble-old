@@ -1,11 +1,13 @@
 package edu.brown.cs.term_project.Graph;
 
 import java.util.List;
-import java.util.Set;
 
-public interface INode<T extends IEdge> {
 
-  public List<T> getEdges();
+public interface INode<T> {
 
-  public double getDistance(INode<T> dst);
+  List<T> getEdges();
+
+  double getDistance(INode<T> dst);
+
+  Integer getId();
 }

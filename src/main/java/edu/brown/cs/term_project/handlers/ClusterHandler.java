@@ -1,6 +1,5 @@
 package edu.brown.cs.term_project.handlers;
 
-import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.Cluster;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -43,7 +42,7 @@ public class ClusterHandler {
      * @param status  0 successful, 1 error
      * @param message error message if error
      */
-    public ClusterResponse(int status, String message) {
+    ClusterResponse(int status, String message) {
       super(status, message);
     }
 

@@ -1,11 +1,11 @@
 package edu.brown.cs.term_project.Graph;
 
-public interface IEdge<T extends INode> {
+public interface IEdge<T> {
 
 
-  public T getSource();
+  T getSource();
 
-  public T getDest();
+  T getDest();
 
-  public double getDistance();
+  double getDistance();
 }
