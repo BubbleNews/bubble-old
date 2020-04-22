@@ -45,7 +45,7 @@ public final class NewsData extends Database {
     return null;
   }
 
-  public HashMap<Entity, Double> getArticleEntityFreq() {
+  public HashMap<Entity, Double> getArticleEntityFreq(Integer articleId) {
     return null;
   }
 
