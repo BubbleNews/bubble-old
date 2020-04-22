@@ -27,6 +27,7 @@ public final class NewsData extends Database {
 
   // Kshitij
   public void insertArticleEntity(Article article, Entity entity) {
+
   }
 
   public void updateWordFreq(Map<String, Integer> words) {
