@@ -26,24 +26,39 @@ public final class NewsData extends Database {
   // TODO: Implement Database functions
 
   // Kshitij
-  public void insertArticleEntity(Article article, Entity entity) {}
+  public void insertArticleEntity(Article article, Entity entity) {
+  }
 
-  public void updateWordFreq(Map<String, Integer> words) {}
+  public void updateWordFreq(Map<String, Integer> words) {
+  }
 
   // Ben/John
-  public Set<Article> getArticles(Integer hours) {}
+  public Set<Article> getArticles(Integer hours) {
+    return null;
+  }
 
-  public HashMap<Vocab, Double> getVocabFreq() {}
+  public HashMap<Vocab, Double> getVocabFreq() {
+    return null;
+  }
 
-  public HashMap<Entity, Double> getEntityFreq() {}
+  public HashMap<Entity, Double> getEntityFreq() {
+    return null;
+  }
 
-  public HashMap<Entity, Double> getArticleEntityFreq() {}
+  public HashMap<Entity, Double> getArticleEntityFreq() {
+    return null;
+  }
 
-  public Integer getMaxVocabCount() {}
+  public Integer getMaxVocabCount() {
+    return null;
+  }
 
-  public void insertCluster(Set<Cluster> clusters) {}
+  public void insertCluster(Set<Cluster> clusters) {
+  }
 
   // Ian
-  public Set<Cluster> getClusters() {}
+  public Set<Cluster> getClusters() {
+    return null;
+  }
 
 }
