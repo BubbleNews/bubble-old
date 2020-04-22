@@ -33,12 +33,12 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * @return the cosine similarity of the two articles based on the textType
    */
   public Double getSimilarity(T src, T dst, Integer textType) {
-    Map<W, Integer> srcMap = src.getFreq(textType);
-    Map<W, Integer> dstMap = dst.getFreq(textType);
-    Set<W> sharedWords = srcMap.keySet();
+    Map<? extends IWord, Integer> srcMap = src.getFreq(textType);
+    Map<? extends IWord, Integer> dstMap = dst.getFreq(textType);
+    Set<? extends IWord> sharedWords = srcMap.keySet();
     sharedWords.retainAll(dstMap.keySet());
     double dotProduct = 0;
-    for (W w: sharedWords) {
+    for (IWord w: sharedWords) {
       dotProduct += this.getImportance(srcMap, w) * this.getImportance(dstMap, w);
     }
     return dotProduct / (Math.sqrt(this.getMagImportance(srcMap)
@@ -52,7 +52,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * @param word the word to get importance for
    * @return the importance of the word in the document
    */
-  private Double getImportance(Map<W, Integer> wordMap, W word) {
+  private Double getImportance(Map<? extends IWord, Integer> wordMap, IWord word) {
     Double normalizedTermFrequency =  wordMap.get(word) / (double) wordMap.size();
     Double inverseDocumentFrequency = docNum / (double) wordFreq.get(word);
     return normalizedTermFrequency * inverseDocumentFrequency;
@@ -63,9 +63,9 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * @param wordMap a hashmap of all the word frequencies in an article.
    * @return the sum of all the importances of the words in the article.
    */
-  private Double getMagImportance(Map<W, Integer> wordMap) {
+  private Double getMagImportance(Map<? extends IWord, Integer> wordMap) {
     double sum = 0;
-    for (W w: wordMap.keySet()) {
+    for (IWord w: wordMap.keySet()) {
       sum += this.getImportance(wordMap, w);
     }
     return sum;
