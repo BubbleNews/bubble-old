@@ -2,6 +2,7 @@ package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
 import edu.brown.cs.term_project.Graph.Cluster;
+import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,7 +55,8 @@ public final class NewsData extends Database {
 
   // Ben/John
 
-  public Set<Article> getArticles(Integer hours) throws SQLException {
+  public Set<Article> getArticles(Integer hours, TextCorpus<ArticleWord,
+      ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, title, url, date_published, text\n"
         + "FROM articles\n"
         + "WHERE date_pulled >= date('now', '-? hours') AND date_pulled < date('now');");
