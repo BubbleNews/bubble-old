@@ -33,7 +33,7 @@ public final class NewsData extends Database {
   }
 
   // Ben/John
-  public Set<Article> getArticles(Integer hours) {
+  public Set<Article> getAruticles(Integer hours) {
     return null;
   }
 
