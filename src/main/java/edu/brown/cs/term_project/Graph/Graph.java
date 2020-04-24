@@ -1,9 +1,5 @@
 package edu.brown.cs.term_project.Graph;
 
-
-import edu.brown.cs.term_project.Bubble.NewsData;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +9,7 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
   private Set<T> nodes;
   private List<S> edges;
   private double threshold;
-  private Set<Cluster> clusters;
+  private Set<Cluster<T, S>> clusters;
 
   /**
    * constructor which creates a graph from articles and their edges.
@@ -34,16 +30,13 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
 
   public void runClusters(Integer method) {
     if (method == 1) {
-      Clustering1 c1 = new Clustering1(new HashSet<T>(nodes), new ArrayList<S>(edges), threshold);
+      Clustering1<T, S> c1 = new Clustering1<>(new HashSet<>(nodes), new ArrayList<>(edges),
+          threshold);
       clusters = c1.createClusters();
     } else if (method == 2) {
-      Clustering2 c2 = new Clustering2(new HashSet<T>(nodes), new ArrayList<S>(edges), threshold);
+      Clustering2<T, S> c2 = new Clustering2<>(new HashSet<>(nodes), new ArrayList<>(edges),
+          threshold);
       clusters = c2.createClusters();
-    }
-    try {
-      NewsData.insertClusters(clusters);
-    } catch (SQLException e) {
-      System.err.println("SQL Exception: " + e);
     }
   }
 
@@ -57,5 +50,7 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
     // twice the number of nodes
   }
 
-
+  public Set<Cluster<T, S>> getClusters() {
+    return clusters;
+  }
 }

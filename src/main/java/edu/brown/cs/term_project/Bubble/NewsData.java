@@ -2,16 +2,20 @@ package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
 import edu.brown.cs.term_project.Graph.Cluster;
-import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Date;
+import java.util.Calendar;
 
 public final class NewsData extends Database {
-  private Connection conn = null;
+  private static Connection conn = null;
 
   /**
    * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and
@@ -25,7 +29,6 @@ public final class NewsData extends Database {
     super(filename);
   }
 
-  // TODO: Implement Database functions
 
 
 
@@ -104,11 +107,9 @@ public final class NewsData extends Database {
   }
 
   public Map<Entity, Double> getArticleEntityFreq(Integer articleId) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("Select entity.entity, entity.class, "
-        + "article_entity.count "
-        + "FROM entity "
-        + "JOIN article_entity ON article_entity.entity = entity.id "
-        + "WHERE article_entity.article = ?;");
+    PreparedStatement prep = conn.prepareStatement("SELECT entity_class, entity_entity, count\n"
+        + "FROM article_entity\n"
+        + "WHERE article_id = ?;");
     prep.setInt(1, articleId);
     ResultSet rs = prep.executeQuery();
     Map<Entity, Double> articleEntityFreq = new HashMap<>();
@@ -126,7 +127,64 @@ public final class NewsData extends Database {
     return rs.getInt(1);
   }
 
-  public static void insertClusters(Set<Cluster> clusters) throws SQLException {
+  public static void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
+    Calendar rightNow = Calendar.getInstance();
+    int hour = rightNow.get(Calendar.HOUR_OF_DAY);
+    Boolean finalCluster = (hour == 23);
+    for (Cluster<ArticleVertex, Similarity> c: clusters) {
+      insertCluster(c, hour, finalCluster);
+      int clusterId = getClusterId(c.getHeadNode().getId());
+      for (ArticleVertex a: c.getNodes()) {
+        updateArticle(clusterId, a.getId(), finalCluster);
+      }
+    }
+
+  }
+
+  public static void insertCluster(Cluster<ArticleVertex, Similarity> c, int hour, boolean finalCluster) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("INSERT INTO clusters (head, title, size, day, hour, avg_connections, avg_radius, std, intermediate_cluster)\n"
+        + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
+    prep.setInt(1, c.getHeadNode().getId());
+    prep.setString(2, c.getHeadNode().getArticle().getTitle());
+    prep.setInt(3, c.getSize());
+    prep.setInt(4, hour);
+    prep.setDouble(5, c.getAvgConnections());
+    prep.setDouble(6, c.getAvgRadius());
+    prep.setDouble(7, c.getStd());
+    prep.setBoolean(8, finalCluster);
+    prep.execute();
+    prep.close();
+  }
+
+  public static int getClusterId(int head) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("SELECT id\n"
+        + "FROM clusters \n"
+        + "WHERE head = ?;");
+    prep.setInt(1, head);
+    ResultSet rs = prep.executeQuery();
+    if (rs.next()) {
+      return rs.getInt(1);
+    }
+    throw new NullPointerException();
+  }
+
+  public static void updateArticle(int clusterId, int articleId, boolean finalCluster) throws SQLException {
+    PreparedStatement prep;
+    if (finalCluster) {
+      prep = conn.prepareStatement("UPDATE articles\n"
+          + "SET final_cluster_id = ?\n"
+          + "WHERE id = ?;");
+      prep.setInt(1, clusterId);
+      prep.setInt(2, articleId);
+    } else {
+      prep = conn.prepareStatement("UPDATE articles\n"
+          + "SET temp_cluster_id = ?\n"
+          + "WHERE id = ?;");
+      prep.setInt(1, clusterId);
+      prep.setInt(2, articleId);
+    }
+    prep.execute();
+    prep.close();
   }
 
   // Ian

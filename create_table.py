@@ -27,7 +27,7 @@ CREATE_CLUSTERS_QUERY = '''CREATE TABLE IF NOT EXISTS clusters (
     head INT,
     title VARCHAR(50),
     size INT,
-    day INT,
+    day DATE,
     hour INT,
     avg_connections DOUBLE,
     avg_radius DOUBLE,
@@ -81,7 +81,6 @@ def create_tables():
 def main():
     # Create tables
     create_tables()
-
 
 
 
