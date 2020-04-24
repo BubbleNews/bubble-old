@@ -47,47 +47,83 @@ public final class NewsData extends Database {
    * @param articleKey
    * @param entityFrequencyMap
    */
-  private void insertEntities(int articleKey, HashMap<Entity, Double> entityFrequencyMap) {}
+  private void insertEntities(int articleKey, HashMap<Entity, Double> entityFrequencyMap) {
+
+  }
 
 
   public void updateWordFreq(Map<String, Integer> words) {
+
   }
 
   // Ben/John
 
-  public Set<Article> getArticles(Integer hours, TextCorpus<ArticleWord,
-      ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT id, title, url, date_published, text\n"
-        + "FROM articles\n"
+  public Set<ArticleVertex> getArticleVertices(Integer hours) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("SELECT id, title, date_published, author, "
+        + "url, text "
+        + "FROM articles "
         + "WHERE date_pulled >= date('now', '-? hours') AND date_pulled < date('now');");
-
     prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();
-
     Set<Article> articles = new HashSet<>();
+    Map<Integer, String> articleText = new HashMap<>();
     while (rs.next()) {
-      //Article article = new Article(rs.getInt(1), );
-      //ways.add(new Way(loc, endLoc, rs.getString(3)));
+      articles.add(new Article(rs.getInt(1), rs.getString(2),
+          rs.getString(3), rs.getString(4), rs.getString(5)));
+      articleText.put(rs.getInt(1), rs.getString(6));
     }
     rs.close();
     prep.close();
-    return null;
+    Set<ArticleVertex> articleVertices = new HashSet<>();
+    for (Article article: articles) {
+      articleVertices.add(new ArticleVertex(article, articleText.get(article.getId()),
+          this.getArticleEntityFreq(article.getId())));
+    }
+    return articleVertices;
   }
 
-  public HashMap<ArticleWord, Double> getVocabFreq() throws SQLException {
-    return null;
+  public Map<ArticleWord, Double> getVocabFreq() throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("Select word, count FROM vocab;");
+    ResultSet rs = prep.executeQuery();
+    Map<ArticleWord, Double> words = new HashMap<>();
+    while (rs.next()) {
+      words.put(new ArticleWord(rs.getString(1)), rs.getDouble(2));
+    }
+    return words;
   }
 
-  public HashMap<Entity, Double> getEntityFreq() throws SQLException {
-    return null;
+  public Map<Entity, Double> getEntityFreq() throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("Select entity, class, count FROM entity;");
+    ResultSet rs = prep.executeQuery();
+    Map<Entity, Double> words = new HashMap<>();
+    while (rs.next()) {
+      words.put(new Entity(rs.getString(1), rs.getString(2)),
+          rs.getDouble(3));
+    }
+    return words;
   }
 
-  public HashMap<Entity, Double> getArticleEntityFreq(Integer articleId) throws SQLException {
-    return null;
+  public Map<Entity, Double> getArticleEntityFreq(Integer articleId) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("Select entity.entity, entity.class, "
+        + "article_entity.count "
+        + "FROM entity "
+        + "JOIN article_entity ON article_entity.entity = entity.id "
+        + "WHERE article_entity.article = ?;");
+    prep.setInt(1, articleId);
+    ResultSet rs = prep.executeQuery();
+    Map<Entity, Double> articleEntityFreq = new HashMap<>();
+    while (rs.next()) {
+      articleEntityFreq.put(new Entity(rs.getString(1), rs.getString(2)),
+          rs.getDouble(3));
+    }
+    return articleEntityFreq;
   }
 
   public Integer getMaxVocabCount() throws SQLException {
-    return null;
+    PreparedStatement prep = conn.prepareStatement("SELECT MAX(count) FROM vocab;");
+    ResultSet rs = prep.executeQuery();
+    rs.next();
+    return rs.getInt(1);
   }
 
   public static void insertClusters(Set<Cluster> clusters) throws SQLException {
