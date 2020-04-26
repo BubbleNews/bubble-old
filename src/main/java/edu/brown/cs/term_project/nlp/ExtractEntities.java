@@ -23,8 +23,10 @@ public final class ExtractEntities {
     }
   }
 
-  public static String[] lemmizeText(String text) {}
+  public static String[] lemmizeText(String text) {
+    return null;
+  }
 
-  public static void makeHashMap(HashMap<String, Integer>, Article)
+  //public static void makeHashMap(HashMap<String, Integer>, Article)
 
 }
