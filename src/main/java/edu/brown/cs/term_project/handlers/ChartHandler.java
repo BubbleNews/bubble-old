@@ -1,17 +1,19 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Graph.Cluster;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 /**
  * A class for handling requests to the /chart API.
  */
-public class ChartHandler {
+public final class ChartHandler {
 
   /**
    * Handles a request to the /chart API.
@@ -21,15 +23,55 @@ public class ChartHandler {
    */
   public static String handle(Request request, Response response) {
     ChartResponse chartResponse = new ChartResponse(0, "");
+    try {
+      QueryParamsMap qm = request.queryMap();
+      String dateString = qm.value("date");
+      if (dateString == null || dateString.equals("")) {
+        // no date passed in, so get most recent/current chart
+        List<ChartCluster> clusters = mockClusters();
+        // sort by size
+        Comparator<ChartCluster> compareBySize =
+            (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
 
-    // TODO: get chart
+        clusters.sort(compareBySize);
 
+        chartResponse.setClusters(clusters);
+
+      } else {
+        // get finalized clusters from a certain date
+        List<ChartCluster> clusters = mockClusters();
+      }
+
+    } catch (Exception e) {
+      chartResponse.setErrorMessage(e.getMessage());
+    }
     return new Gson().toJson(chartResponse);
+  }
+
+  private static List<ChartCluster> mockClusters() {
+    List<ChartCluster> toReturn = new ArrayList<>();
+    return toReturn;
+  }
+
+  private static class ChartCluster {
+    private int clusterId;
+    private String headline;
+    private int size;
+
+    ChartCluster(int clusterId, String headline, int size) {
+      this.clusterId = clusterId;
+      this.headline = headline;
+      this.size = size;
+    }
+
+    public int getSize() {
+      return size;
+    }
   }
 
   private static class ChartResponse extends StandardResponse {
     private Date date;
-    private List<Cluster> clusters; // list of clusters in a chart
+    private List<ChartCluster> clusters;
 
     /**
      * Constructor for the response.
@@ -37,7 +79,7 @@ public class ChartHandler {
      * @param status  0 successful, 1 error
      * @param message error message if error
      */
-    public ChartResponse(int status, String message) {
+    ChartResponse(int status, String message) {
       super(status, message);
     }
 
@@ -53,8 +95,9 @@ public class ChartHandler {
      * Sets the list of clusters in the chart.
      * @param clusters the clusters
      */
-    public void setClusters(List<Cluster> clusters) {
+    public void setClusters(List<ChartCluster> clusters) {
       this.clusters = clusters;
     }
   }
 }
+

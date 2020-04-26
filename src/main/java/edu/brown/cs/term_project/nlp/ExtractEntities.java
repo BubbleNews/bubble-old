@@ -2,6 +2,8 @@ package edu.brown.cs.term_project.nlp;
 
 import edu.stanford.nlp.simple.*;
 
+import java.util.HashMap;
+
 /**
  * Utility class that extracts the entities from an article using the stanford core NLP library.
  * https://stanfordnlp.github.io/CoreNLP/simple.html
@@ -27,6 +29,6 @@ public final class ExtractEntities {
     return null;
   }
 
-  //public static void makeHashMap(HashMap<String, Integer>, Article)
+  //public static void makeHashMap(HashMap<String, Integer>, Article) {}
 
 }

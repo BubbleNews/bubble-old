@@ -32,4 +32,13 @@ public class StandardResponse {
   public void setMessage(String message) {
     this.message = message;
   }
+
+  /**
+   * Sets an error message and status to error.
+   * @param message the error message.
+   */
+  public void setErrorMessage(String message) {
+    this.status = 1;
+    this.message = message;
+  }
 }
