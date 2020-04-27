@@ -37,8 +37,8 @@ public class Similarity implements IEdge<ArticleVertex> {
     // Should be between 0 and 1, the higher it is, the more highly weighted entities are
     final double entityWeight = .5;
     final double divideZeroShift = .00001;
-    this.distance = 1 / (((1 - entityWeight) * wordCorpus.getSimilarity(this.src, this.dst, 0))
-        + (entityWeight * entityCorpus.getSimilarity(this.src, this.dst, 1)) + divideZeroShift);
+    this.distance = 1 / ((entityWeight * entityCorpus.getSimilarity(this.src, this.dst, 0))
+        + ((1 - entityWeight) * wordCorpus.getSimilarity(this.src, this.dst, 1)) + divideZeroShift);
   }
 
 }

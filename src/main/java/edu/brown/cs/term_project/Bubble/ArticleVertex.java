@@ -87,13 +87,13 @@ public class ArticleVertex implements INode<Similarity>, IText {
 
   private void setWords(String text) {
     this.words = new HashMap<>();
-    String[] splitWords = text.split("");
+    String[] splitWords = text.split(" ");
     for (String word: splitWords) {
       ArticleWord articleWord = new ArticleWord(word);
       if (words.containsKey(articleWord)) {
         words.replace(articleWord, words.get(articleWord) + 1);
       } else {
-        words.put(articleWord, 0.0);
+        words.put(articleWord, 1.0);
       }
     }
   }

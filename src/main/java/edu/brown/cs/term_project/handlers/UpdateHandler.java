@@ -124,13 +124,16 @@ public class UpdateHandler {
     TextCorpus<Entity, ArticleVertex> entityCorpus =
         new TextCorpus<>(entityMap, maxCount);
     ArrayList<Similarity> edges = new ArrayList<>();
+    System.out.println("Article Size: " + pulledArticles.size());
     for (ArticleVertex a1: pulledArticles) {
       for (ArticleVertex a2: pulledArticles) {
         if (a1.getId() < a2.getId()) {
+
           Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus);
           a1.addEdge(tempEdge);
           a2.addEdge(tempEdge);
           edges.add(tempEdge);
+          System.out.println(a1.getId() + " - " + a2.getId() + " : " + tempEdge.getDistance());
         }
       }
     }
@@ -161,7 +164,7 @@ public class UpdateHandler {
     ArrayList<ArticleJSON> testList = new ArrayList<>();
     testList.add(testArticle);
     NewsData db = new NewsData("data/bubble.db");
-    processJSONArticles(testList, db);
+    //processJSONArticles(testList, db);
     clusterArticles(db);
   }
 }

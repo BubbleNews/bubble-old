@@ -53,7 +53,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
    */
   private Double getImportance(Map<? extends IWord, Double> wordMap, IWord word) {
     Double normalizedTermFrequency =  wordMap.get(word) / (double) wordMap.size();
-    Double inverseDocumentFrequency = docNum / (double) wordFreq.get(word);
+    Double inverseDocumentFrequency = docNum / wordFreq.get(word);
     return normalizedTermFrequency * inverseDocumentFrequency;
   }
 

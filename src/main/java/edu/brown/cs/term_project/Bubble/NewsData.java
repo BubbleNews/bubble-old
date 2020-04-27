@@ -53,14 +53,13 @@ public final class NewsData extends Database {
   private int insertArticle(ArticleJSON article) throws SQLException {
     PreparedStatement prep = conn.prepareStatement(
         "INSERT into articles (title, url, author, date_published, date_pulled,"
-            + " text) VALUES (?, ?, ?, ?, ?, ?);"
+            + " text) VALUES (?, ?, ?, ?, DATETIME('now'), ?);"
     );
     prep.setString(1, article.getTitle());
     prep.setString(2, article.getUrl());
     prep.setString(3, article.getAuthors()[0]);
     prep.setDate(4, new java.sql.Date(Instant.parse(article.getTimePublished()).toEpochMilli()));
-    prep.setDate(5, new java.sql.Date((new java.util.Date()).getTime()));
-    prep.setString(6, article.getContent());
+    prep.setString(5, article.getContent());
     prep.execute();
     prep.close();
     // get id of article
@@ -159,7 +158,8 @@ public final class NewsData extends Database {
     PreparedStatement prep = conn.prepareStatement("SELECT id, title, date_published, author, "
         + "url, text "
         + "FROM articles "
-        + "WHERE date_pulled >= date('now', '-24 hours') AND date_pulled < date('now');");
+        //+ "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < DATETIME('now');"
+        );
     //prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();
     Set<Article> articles = new HashSet<>();
@@ -208,7 +208,7 @@ public final class NewsData extends Database {
     ResultSet rs = prep.executeQuery();
     Map<Entity, Double> articleEntityFreq = new HashMap<>();
     while (rs.next()) {
-      articleEntityFreq.put(new Entity(rs.getString(1), rs.getString(2)),
+      articleEntityFreq.put(new Entity(rs.getString(2), rs.getString(1)),
           rs.getDouble(3));
     }
     return articleEntityFreq;

@@ -48,7 +48,8 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
   public void setThreshold() {
     System.out.println(nodes.size());
     System.out.println(edges.size());
-    this.threshold = 2.0 * nodes.size() / edges.size(); //set so that number of edges will be
+    this.threshold = Math.min(2.0 * nodes.size() / edges.size(), 1); //set so that number of edges
+    // will be
     // twice the number of nodes
   }
 
