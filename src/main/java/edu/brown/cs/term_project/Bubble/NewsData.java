@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,11 +57,7 @@ public final class NewsData extends Database {
     );
     prep.setString(1, article.getTitle());
     prep.setString(2, article.getUrl());
-    // format date
-    String timePublished = article.getTimePublished();
-    timePublished = timePublished.replace('T', ' ');
-    timePublished = timePublished.substring(0, 16);
-    prep.setDate(3, new java.sql.Date(Date.valueOf(timePublished).getTime()));
+    prep.setDate(3, new java.sql.Date(Instant.parse(article.getTimePublished()).getEpochSecond()));
     prep.setDate(4, new java.sql.Date((new java.util.Date()).getTime()));
     prep.setString(5, article.getContent());
     prep.execute();
@@ -277,9 +274,33 @@ public final class NewsData extends Database {
     prep.close();
   }
 
+
+
   // Ian
   public Set<Cluster> getClusters(Date date) {
     return null;
+  }
+
+  public static void main(String[] args) throws Exception {
+    ArticleJSON testArticle = new ArticleJSON(new String[]{"Kayla Suazo"},
+        "23 Top-Rated Cleaning Products That Are Popular For A Reason",
+        "So good, they have *a ton* of 4- and 5-star reviews.",
+        "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
+            + "that-are-popular-for-a-reason",
+        "2020-04-27T17:22:24.963019Z",
+        "all you have to do be let it sit for 15 minute and wipe -- minimal work on you "
+            + "part . check out BuzzFeed 's full write-up on this Feed-N-Wax Wood Polish to learn "
+            + "more!and ! it have 4,700 + positive review on amazon.promising review : `` OMG ! "
+            + "this be the most amazing product ! we inherit some antique furniture from the '30s"
+            + " that have be in storage forever ... it be dry and dirty and not much to look at ."
+            + " I use this product on it and the oak wood literally come alive show the beautiful"
+            + " grain and texture of the wood . I have since use it on my oak kitchen cabinet and"
+            + " they look AMAZING ! I will never use anything else other than this product on my "
+            + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
+            + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
+        );
+    NewsData db = new NewsData("data/bubble.db");
+    db.insertArticle(testArticle);
   }
 
 }
