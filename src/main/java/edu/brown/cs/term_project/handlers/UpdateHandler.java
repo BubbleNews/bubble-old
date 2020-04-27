@@ -1,6 +1,8 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
+import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.nlp.TextProcessing;
 import spark.Request;
 import spark.Response;
 
@@ -9,9 +11,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
@@ -27,14 +29,16 @@ public class UpdateHandler {
    *
    * @param request  the request
    * @param response the response
+   * @param db the database
    * @return a JSON response with status and message.
    */
-  public static String handle(Request request, Response response) {
+  public static String handle(Request request, Response response, NewsData db) {
     String pythonEndpoint = "http://127.0.0.1:5000/scrape";
     StandardResponse updateResponse = new StandardResponse(0, "");
     try {
+      // send the get request to the python endpoint
       String pythonResponse = sendGet(pythonEndpoint);
-
+      // parse the response
       Gson gson = new Gson();
       JsonParser parser = new JsonParser();
       JsonArray jsonArray = parser.parse(pythonResponse).getAsJsonArray();
@@ -42,13 +46,8 @@ public class UpdateHandler {
       for (int i = 0; i < jsonArray.size(); i++) {
         articles.add(gson.fromJson(jsonArray.get(i), ArticleJSON.class));
       }
-
-      // stem words
-      // add to database
-
-      // WE NEED TO PARSE THE JSON STRING INTO A LIST OF SOMETHING THEN ADD TO DB
-
-
+      // process the articles
+      processJSONArticles(articles, db);
     } catch (Exception e) {
       // there has been an error so update response to reflect that
       updateResponse.setStatus(1);
@@ -72,6 +71,26 @@ public class UpdateHandler {
         .build();
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     return response.body();
+  }
+
+  /**
+   * Method that processes the JSONArticles, adding the data to the appropriate
+   * tables in the database.
+   * @param jsonArticles a list of articles in the form ArticleJSON∂
+   * @param db the database to add to
+   */
+  private static void processJSONArticles(List<ArticleJSON> jsonArticles, NewsData db) {
+    // keep track of total number of articles each word has occurred in
+    HashMap<String, Integer> occurenceMap = new HashMap<>();
+    for (ArticleJSON article: jsonArticles) {
+      String[] lemmizedText = TextProcessing.lemmizeText(article.content);
+      TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedText);
+
+
+
+    }
+    // update vocab counts in database
+    db.updateVocabCounts(occurenceMap);
   }
 
 

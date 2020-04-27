@@ -1,6 +1,7 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
+import edu.brown.cs.term_project.Bubble.NewsData;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -19,9 +20,10 @@ public final class ChartHandler {
    * Handles a request to the /chart API.
    * @param request the request
    * @param response the response
+   * @param db the news databse
    * @return a JSON response with chart made up of list of clusters
    */
-  public static String handle(Request request, Response response) {
+  public static String handle(Request request, Response response, NewsData db) {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
       QueryParamsMap qm = request.queryMap();

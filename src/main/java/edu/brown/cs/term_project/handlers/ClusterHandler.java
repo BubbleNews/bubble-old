@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.handlers;
 
+import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Graph.Cluster;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -14,9 +15,10 @@ public class ClusterHandler {
    * Handles a request to the /cluster API.
    * @param request the request
    * @param response the response
+   * @param db the news database
    * @return a JSON response with the list of articles in a cluster
    */
-  public static String handle(Request request, Response response) {
+  public static String handle(Request request, Response response, NewsData db) {
     ClusterResponse clusterResponse = new ClusterResponse(0, "");
     try {
       QueryParamsMap qm = request.queryMap();

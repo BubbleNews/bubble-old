@@ -38,7 +38,8 @@ public final class NewsData extends Database {
    * @param article the article to be inserted
    * @return the primary key of the article in the database once inserted
    */
-  private int insertArticle(Article article) {
+  private int insertArticle(Article article) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("");
     return 0;
   }
 
@@ -52,7 +53,7 @@ public final class NewsData extends Database {
   }
 
 
-  public void updateWordFreq(Map<String, Integer> words) {
+  public void updateVocabCounts(Map<String, Integer> vocabOccurrenceMap) {
 
   }
 

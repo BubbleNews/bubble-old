@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.REPL;
 
+import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.handlers.ClusterHandler;
 import edu.brown.cs.term_project.handlers.ChartHandler;
 import edu.brown.cs.term_project.handlers.HomeHandler;
@@ -7,11 +8,14 @@ import edu.brown.cs.term_project.handlers.UpdateHandler;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import spark.Request;
+import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static spark.Spark.*;
 
@@ -21,12 +25,15 @@ import static spark.Spark.*;
 public final class Main {
   private static final int DEFAULT_PORT = 4567;
 
+  private static NewsData DATABASE;
+
   /**
    * The initial method called when execution begins.
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    DATABASE = new NewsData("data/bubble.db");
     new Main(args).run();
   }
 
@@ -100,9 +107,15 @@ public final class Main {
       // api endpoints
       path("/api", () -> {
         // TODO: add authentication for api calls with before()
-        get("/update", UpdateHandler::handle);
-        get("/chart", ChartHandler::handle);
-        get("/cluster", ClusterHandler::handle);
+        get("/update", (Request request, Response response) -> {
+          return UpdateHandler.handle(request, response, DATABASE);
+        });
+        get("/chart", (Request request, Response response) -> {
+          return ChartHandler.handle(request, response, DATABASE);
+        });
+        get("/cluster", (Request request, Response response) -> {
+          return ClusterHandler.handle(request, response, DATABASE);
+        });
       });
     });
   }
