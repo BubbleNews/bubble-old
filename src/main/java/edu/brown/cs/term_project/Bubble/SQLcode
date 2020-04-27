@@ -30,3 +30,13 @@ get article entity
 SELECT entity_class, entity_entity, count
 FROM article_entity
 WHERE article_id = ?;
+
+
+SELECT id
+FROM clusters
+WHERE head = ?;
+
+
+UPDATE articles
+SET final_cluster_id = ?
+WHERE id = ?;

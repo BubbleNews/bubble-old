@@ -125,7 +125,7 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
   }
 
   /**
-   * Method to calculate the mean radius of the combination of this cluster and another
+   * Method to calculate the mean radius of the combination of this cluster and another.
    * @param cluster2 - cluster to combine
    * @return - double representing combined mean radius
    */
