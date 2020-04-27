@@ -55,8 +55,8 @@ public final class NewsData extends Database {
     );
     prep.setString(1, article.getTitle());
     prep.setString(2, article.getUrl());
-//    prep.setDate(3, article.getTimePublished());
-//    prep.setDate(4, new Date());
+    prep.setDate(3, new java.sql.Date(Date.valueOf(article.getTimePublished()).getTime()));
+    prep.setDate(4, new java.sql.Date((new java.util.Date()).getTime()));
     prep.setString(5, article.getContent());
     prep.execute();
     prep.close();
