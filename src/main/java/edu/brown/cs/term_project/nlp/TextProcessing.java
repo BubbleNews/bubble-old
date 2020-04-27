@@ -1,6 +1,7 @@
 package edu.brown.cs.term_project.nlp;
 
 import edu.brown.cs.term_project.Bubble.Article;
+import edu.brown.cs.term_project.Bubble.Entity;
 import edu.stanford.nlp.simple.*;
 
 import java.util.HashMap;
@@ -20,12 +21,21 @@ public final class TextProcessing {
     throw new AssertionError("This constructor should never be called.");
   }
 
-  public static void getEntities(String articleBody) {
+  /**
+   * Gets the entity frequencies for a text string.
+   * @param articleBody the string text of an article
+   * @return a hashmap of entities and the number of times they occurred in an article.
+   */
+  public static HashMap<Entity, Integer> getEntityFrequencies(String articleBody) {
+    HashMap<Entity, Integer> entityFrequencies = new HashMap<>();
     Document doc = new Document(articleBody);
     for (Sentence sent : doc.sentences()) {
       System.out.println(sent);
       System.out.println(sent.nerTags());
     }
+    //TODO: implement
+
+    return entityFrequencies;
   }
 
   public static String[] lemmizeText(String text) {

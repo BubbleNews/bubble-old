@@ -2,16 +2,19 @@ package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
 import edu.brown.cs.term_project.Graph.Cluster;
+import org.joda.time.DateTime;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Calendar;
 
 public final class NewsData extends Database {
@@ -29,11 +32,15 @@ public final class NewsData extends Database {
     super(filename);
   }
 
-
-
-
-  public void insertArticleAndEntities(Article article) {
-    // CALL The three methods below
+  /**
+   * Inserts an article and the entities of that article given by frequency map.
+   * @param article the article to insert
+   * @param entityFrequencyMap the frequency map for that article
+   * @throws SQLException if there was a database error
+   */
+  public void insertArticleAndEntities(ArticleJSON article, HashMap<Entity, Integer> entityFrequencyMap) throws SQLException {
+    int articleId = insertArticle(article);
+    insertEntities(articleId, entityFrequencyMap);
   }
 
   /**
@@ -41,23 +48,98 @@ public final class NewsData extends Database {
    * @param article the article to be inserted
    * @return the primary key of the article in the database once inserted
    */
-  private int insertArticle(Article article) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("");
-    return 0;
+  private int insertArticle(ArticleJSON article) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement(
+        "INSERT into articles (title, url, date_published, date_pulled,"
+            + " text) VALUES (?, ?, ?, ?, ?);"
+    );
+    prep.setString(1, article.getTitle());
+    prep.setString(2, article.getUrl());
+//    prep.setDate(3, article.getTimePublished());
+//    prep.setDate(4, new Date());
+    prep.setString(5, article.getContent());
+    prep.execute();
+    prep.close();
+    // get id of article
+    prep = conn.prepareStatement("SELECT last_insert_rowid();");
+    ResultSet rs = prep.executeQuery();
+    int lastInsertedId = -1;
+    while (rs.next()) {
+      lastInsertedId = rs.getInt(1);
+    }
+    if (lastInsertedId == -1) {
+      throw new RuntimeException("Somehow article was not inserted?");
+    }
+    return lastInsertedId;
   }
 
   /**
-   *
-   * @param articleKey
-   * @param entityFrequencyMap
+   * Inserts every entity in the frequency map with the given article id.
+   * @param articleId the id in the database of the article to which entities belong
+   * @param entityFrequencyMap a map of number of times each entity was found in
+   *                           the article whose id is articleId
    */
-  private void insertEntities(int articleKey, HashMap<Entity, Double> entityFrequencyMap) {
+  private void insertEntities(int articleId, HashMap<Entity, Integer> entityFrequencyMap) throws SQLException {
+    for (Entity entity: entityFrequencyMap.keySet()) {
+      insertEntity(articleId, entity, entityFrequencyMap.get(entity));
+    }
+  }
 
+  /**
+   * Inserts an entity into both the entity and article_entity tables, incrementing
+   * the overall number of occurrences in entity by 1 and inserting the per article
+   * frequency in article_entity.
+   * @param articleId the id of the article in which the entity was found
+   * @param entity the entity to be inserted
+   * @param numOccurrences the number of occurrences of that entity in the article of articleId
+   * @throws SQLException if there is an error inserting/updating into the database
+   */
+  private void insertEntity(int articleId, Entity entity, int numOccurrences) throws SQLException {
+    // first insert into entity
+    PreparedStatement prep = conn.prepareStatement(
+        "BEGIN TRANSACTION;"
+            + "    INSERT OR IGNORE INTO entity (class, entity, count)"
+            + "    VALUES ((?), (?), 0);"
+            + "    UPDATE entity SET count = count + 1 WHERE entity = (?) AND class = (?);"
+            + "    INSERT INTO article_entity (article_id, entity_class, entity_entity, count)"
+            + "    VALUES ((?), (?), (?), (?));"
+            + "COMMIT;"
+    );
+    prep.setString(1, entity.getClassType());
+    prep.setString(2, entity.getWord());
+    prep.setString(3, entity.getWord());
+    prep.setString(4, entity.getClassType());
+    prep.setInt(5, articleId);
+    prep.setString(6, entity.getClassType());
+    prep.setString(7, entity.getWord());
+    prep.setInt(8, numOccurrences);
+    prep.execute();
+    prep.close();
   }
 
 
-  public void updateVocabCounts(Map<String, Integer> vocabOccurrenceMap) {
-
+  /**
+   * Updates the vocab count in the database by incrementing the count column
+   * of the vocab table by the number of articles that a word appeared in
+   * in the batch of articles being added.
+   * @param vocabOccurrenceMap a map of word to number of occurrences
+   * @throws SQLException if an SQL exception occurred
+   */
+  public void updateVocabCounts(Map<String, Integer> vocabOccurrenceMap) throws SQLException {
+    for (String word: vocabOccurrenceMap.keySet()) {
+      // if word is not in vocab table, insert then update, else ignore then update
+      PreparedStatement prep = conn.prepareStatement(
+          "BEGIN TRANSACTION;"
+              + "    INSERT OR IGNORE INTO vocab (word, count)"
+              + "    VALUES ((?), 0);"
+              + "    UPDATE vocab SET count = count + 4 WHERE word = (?);"
+              + "COMMIT;"
+      );
+      prep.setString(1, word);
+      prep.setInt(2, vocabOccurrenceMap.get(word));
+      prep.execute();
+      prep.close();
+    }
   }
 
   // Ben/John

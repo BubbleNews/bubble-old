@@ -1,6 +1,8 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
+import edu.brown.cs.term_project.Bubble.ArticleJSON;
+import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.nlp.TextProcessing;
 import spark.Request;
@@ -10,6 +12,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,40 +81,25 @@ public class UpdateHandler {
    * tables in the database.
    * @param jsonArticles a list of articles in the form ArticleJSON∂
    * @param db the database to add to
+   * @throws SQLException if error occurred adding to database
    */
-  private static void processJSONArticles(List<ArticleJSON> jsonArticles, NewsData db) {
+  private static void processJSONArticles(List<ArticleJSON> jsonArticles, NewsData db) throws SQLException {
     // keep track of total number of articles each word has occurred in
     HashMap<String, Integer> occurenceMap = new HashMap<>();
     for (ArticleJSON article: jsonArticles) {
-      String[] lemmizedText = TextProcessing.lemmizeText(article.content);
+      // get entities for the given article body
+      HashMap<Entity, Integer> entityFrequencies =
+          TextProcessing.getEntityFrequencies(article.getContent());
+      // lemmize text
+      String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
+      // change the content field of the article object to be the lemmized text
+      article.setContent(String.join(" ", lemmizedText));
+      // insert article and its entities into the database
+      db.insertArticleAndEntities(article, entityFrequencies);
+      // add to the total batch word occurrence map
       TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedText);
-
-
-
     }
     // update vocab counts in database
     db.updateVocabCounts(occurenceMap);
   }
-
-
-  private static class ArticleJSON {
-
-    private String[] authors;
-    private String title;
-    private String description;
-    public String url;
-    private String timePublished;
-    private String content;
-
-    private ArticleJSON(String[] authors, String title, String description, String url,
-                        String timePublished, String content) {
-      this.authors = authors;
-      this.title = title;
-      this.description = description;
-      this.url = url;
-      this.timePublished = timePublished;
-      this.content = content;
-    }
-  }
-
 }
