@@ -61,7 +61,9 @@ public final class NewsData extends Database {
     prep.execute();
     prep.close();
     // get id of article
-    prep = conn.prepareStatement("SELECT last_insert_rowid();");
+    prep = conn.prepareStatement("SELECT last_insert_rowid()\n"
+        + "FROM articles\n"
+        + "LIMIT 1;");
     ResultSet rs = prep.executeQuery();
     int lastInsertedId = -1;
     while (rs.next()) {
