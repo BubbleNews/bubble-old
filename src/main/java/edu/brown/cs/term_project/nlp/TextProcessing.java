@@ -4,9 +4,7 @@ import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.stanford.nlp.simple.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Utility class that extracts the entities from an article using the stanford core NLP library.
@@ -32,14 +30,27 @@ public final class TextProcessing {
     for (Sentence sent : doc.sentences()) {
       System.out.println(sent);
       System.out.println(sent.nerTags());
+      List<String> entityTypes = sent.nerTags();
+      for (int i = 0; i < entityTypes.size(); i++) {
+        Entity entity = new Entity(sent.word(i), entityTypes.get(i));
+        if (entityFrequencies.containsKey(entity)) {
+          entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
+        } else {
+          entityFrequencies.put(entity, 1);
+        }
+      }
     }
-    //TODO: implement
 
     return entityFrequencies;
   }
 
   public static String[] lemmizeText(String text) {
-    return new String[0];
+    List<String> lemmas = new ArrayList<>();
+    Document doc = new Document(text);
+    for (Sentence sent : doc.sentences()) {
+      lemmas.addAll(sent.lemmas());
+    }
+    return (String[]) lemmas.toArray();
   }
 
   /**
