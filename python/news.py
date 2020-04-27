@@ -53,11 +53,11 @@ def get_news():
 
 def make_article_json(article, scraped_title, scraped_authors, scraped_text):
     return {
-        'author': scraped_authors,
+        'authors': scraped_authors,
         'title': scraped_title,
         'description': article['description'],
         'url': article['url'],
-        'time_published': article['publishedAt'],
+        'timePublished': article['publishedAt'],
         'content': scraped_text
     }
 

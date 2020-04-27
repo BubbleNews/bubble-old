@@ -35,29 +35,36 @@ public class UpdateHandler {
    * @param db the database
    * @return a JSON response with status and message.
    */
-  public static String handle(Request request, Response response, NewsData db) {
-    String pythonEndpoint = "http://127.0.0.1:5000/scrape";
+  public static String handle(Request request, Response response, NewsData db) throws Exception {
     StandardResponse updateResponse = new StandardResponse(0, "");
-    try {
-      // send the get request to the python endpoint
-      String pythonResponse = sendGet(pythonEndpoint);
-      // parse the response
-      Gson gson = new Gson();
-      JsonParser parser = new JsonParser();
-      JsonArray jsonArray = parser.parse(pythonResponse).getAsJsonArray();
-      List<ArticleJSON> articles = new ArrayList<>();
-      for (int i = 0; i < jsonArray.size(); i++) {
-        articles.add(gson.fromJson(jsonArray.get(i), ArticleJSON.class));
-      }
-      // process the articles
-      processJSONArticles(articles, db);
-    } catch (Exception e) {
-      // there has been an error so update response to reflect that
-      updateResponse.setStatus(1);
-      updateResponse.setMessage(e.getMessage());
-    }
-    // convert to json and return
+//    try {
+
+//    } catch (Exception e) {
+//      // there has been an error so update response to reflect that
+//      updateResponse.setStatus(1);
+//      updateResponse.setMessage(e.getMessage());
+//    }
+//    // convert to json and return
     return new Gson().toJson(updateResponse);
+  }
+
+  private static void getAndProcessNews(NewsData db) throws Exception {
+    String pythonEndpoint = "http://127.0.0.1:5000/scrape";
+    // send the get request to the python endpoint
+    System.out.println("Calling python scraper to get news...");
+    String pythonResponse = sendGet(pythonEndpoint);
+    // parse the response
+    System.out.println("Parsing articles received from scraper...");
+    Gson gson = new Gson();
+    JsonParser parser = new JsonParser();
+    JsonArray jsonArray = parser.parse(pythonResponse).getAsJsonArray();
+    List<ArticleJSON> articles = new ArrayList<>();
+    for (int i = 0; i < jsonArray.size(); i++) {
+      articles.add(gson.fromJson(jsonArray.get(i), ArticleJSON.class));
+    }
+    // process the articles
+    processJSONArticles(articles, db);
+    // TODO: cluster
   }
 
   /**
@@ -84,22 +91,32 @@ public class UpdateHandler {
    * @throws SQLException if error occurred adding to database
    */
   private static void processJSONArticles(List<ArticleJSON> jsonArticles, NewsData db) throws SQLException {
+    System.out.println("Processing JSON articles...");
     // keep track of total number of articles each word has occurred in
     HashMap<String, Integer> occurenceMap = new HashMap<>();
     for (ArticleJSON article: jsonArticles) {
+      System.out.println("Processing article: " + article.getUrl());
+      System.out.println("Getting entities...");
       // get entities for the given article body
       HashMap<Entity, Integer> entityFrequencies =
           TextProcessing.getEntityFrequencies(article.getContent());
       // lemmize text
+      System.out.println("Lemmizing...");
       String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
       // change the content field of the article object to be the lemmized text
       article.setContent(String.join(" ", lemmizedText));
       // insert article and its entities into the database
+      System.out.println("Inserting article and entities...");
       db.insertArticleAndEntities(article, entityFrequencies);
       // add to the total batch word occurrence map
       TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedText);
     }
     // update vocab counts in database
+    System.out.println("Updating vocab occurrences in database...");
     db.updateVocabCounts(occurenceMap);
+  }
+
+  public static void main(String[] args) throws Exception {
+    getAndProcessNews(new NewsData("data/bubble.db"));
   }
 }

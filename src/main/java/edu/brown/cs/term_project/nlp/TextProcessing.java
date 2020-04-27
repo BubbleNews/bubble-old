@@ -28,8 +28,6 @@ public final class TextProcessing {
     HashMap<Entity, Integer> entityFrequencies = new HashMap<>();
     Document doc = new Document(articleBody);
     for (Sentence sent : doc.sentences()) {
-      System.out.println(sent);
-      System.out.println(sent.nerTags());
       List<String> entityTypes = sent.nerTags();
       for (int i = 0; i < entityTypes.size(); i++) {
         Entity entity = new Entity(sent.word(i), entityTypes.get(i));
@@ -50,7 +48,7 @@ public final class TextProcessing {
     for (Sentence sent : doc.sentences()) {
       lemmas.addAll(sent.lemmas());
     }
-    return (String[]) lemmas.toArray();
+    return lemmas.toArray(new String[0]);
   }
 
   /**

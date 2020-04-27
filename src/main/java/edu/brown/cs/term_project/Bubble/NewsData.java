@@ -18,7 +18,7 @@ import java.sql.Date;
 import java.util.Calendar;
 
 public final class NewsData extends Database {
-  private static Connection conn = null;
+  private Connection conn;
 
   /**
    * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and
@@ -30,6 +30,7 @@ public final class NewsData extends Database {
    */
   public NewsData(String filename) throws SQLException, ClassNotFoundException {
     super(filename);
+    conn = super.getConn();
   }
 
   /**
@@ -55,7 +56,11 @@ public final class NewsData extends Database {
     );
     prep.setString(1, article.getTitle());
     prep.setString(2, article.getUrl());
-    prep.setDate(3, new java.sql.Date(Date.valueOf(article.getTimePublished()).getTime()));
+    // format date
+    String timePublished = article.getTimePublished();
+    timePublished = timePublished.replace('T', ' ');
+    timePublished = timePublished.substring(0, 16);
+    prep.setDate(3, new java.sql.Date(Date.valueOf(timePublished).getTime()));
     prep.setDate(4, new java.sql.Date((new java.util.Date()).getTime()));
     prep.setString(5, article.getContent());
     prep.execute();
@@ -212,7 +217,7 @@ public final class NewsData extends Database {
     return rs.getInt(1);
   }
 
-  public static void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
+  public void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
     Calendar rightNow = Calendar.getInstance();
     int hour = rightNow.get(Calendar.HOUR_OF_DAY);
     Boolean finalCluster = (hour == 23);
@@ -226,7 +231,7 @@ public final class NewsData extends Database {
 
   }
 
-  public static void insertCluster(Cluster<ArticleVertex, Similarity> c, int hour, boolean finalCluster) throws SQLException {
+  public void insertCluster(Cluster<ArticleVertex, Similarity> c, int hour, boolean finalCluster) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO clusters (head, title, size, day, hour, avg_connections, avg_radius, std, intermediate_cluster)\n"
         + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
     prep.setInt(1, c.getHeadNode().getId());
@@ -241,7 +246,7 @@ public final class NewsData extends Database {
     prep.close();
   }
 
-  public static int getClusterId(int head) throws SQLException {
+  public int getClusterId(int head) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id\n"
         + "FROM clusters \n"
         + "WHERE head = ?;");
@@ -253,7 +258,7 @@ public final class NewsData extends Database {
     throw new NullPointerException();
   }
 
-  public static void updateArticle(int clusterId, int articleId, boolean finalCluster) throws SQLException {
+  public void updateArticle(int clusterId, int articleId, boolean finalCluster) throws SQLException {
     PreparedStatement prep;
     if (finalCluster) {
       prep = conn.prepareStatement("UPDATE articles\n"

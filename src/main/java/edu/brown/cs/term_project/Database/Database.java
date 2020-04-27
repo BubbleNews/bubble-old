@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public abstract class Database {
-  private Connection conn = null;
+  private Connection conn;
 
   /**
    * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and
@@ -20,5 +20,13 @@ public abstract class Database {
     Class.forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + filename;
     this.conn = DriverManager.getConnection(urlToDB);
+  }
+
+  /**
+   * Getter for connection.
+   * @return connection to a database
+   */
+  public Connection getConn() {
+    return conn;
   }
 }
