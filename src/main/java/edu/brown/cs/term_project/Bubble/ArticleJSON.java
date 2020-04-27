@@ -9,8 +9,8 @@ public class ArticleJSON {
   private String timePublished;
   private String content;
 
-  ArticleJSON(String[] authors, String title, String description, String url,
-              String timePublished, String content) {
+  public ArticleJSON(String[] authors, String title, String description, String url,
+                     String timePublished, String content) {
     this.authors = authors;
     this.title = title;
     this.description = description;

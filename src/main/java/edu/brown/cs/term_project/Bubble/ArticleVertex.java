@@ -67,7 +67,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
     }
   }
 
-  public void addEdges(Similarity similarity) {
+  public void addEdge(Similarity similarity) {
     similarities.add(similarity);
   }
 

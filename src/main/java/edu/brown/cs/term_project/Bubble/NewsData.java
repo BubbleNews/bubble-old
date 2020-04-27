@@ -52,14 +52,15 @@ public final class NewsData extends Database {
    */
   private int insertArticle(ArticleJSON article) throws SQLException {
     PreparedStatement prep = conn.prepareStatement(
-        "INSERT into articles (title, url, date_published, date_pulled,"
-            + " text) VALUES (?, ?, ?, ?, ?);"
+        "INSERT into articles (title, url, author, date_published, date_pulled,"
+            + " text) VALUES (?, ?, ?, ?, ?, ?);"
     );
     prep.setString(1, article.getTitle());
     prep.setString(2, article.getUrl());
-    prep.setDate(3, new java.sql.Date(Instant.parse(article.getTimePublished()).getEpochSecond()));
-    prep.setDate(4, new java.sql.Date((new java.util.Date()).getTime()));
-    prep.setString(5, article.getContent());
+    prep.setString(3, article.getAuthors()[0]);
+    prep.setDate(4, new java.sql.Date(Instant.parse(article.getTimePublished()).toEpochMilli()));
+    prep.setDate(5, new java.sql.Date((new java.util.Date()).getTime()));
+    prep.setString(6, article.getContent());
     prep.execute();
     prep.close();
     // get id of article
@@ -100,25 +101,28 @@ public final class NewsData extends Database {
    */
   private void insertEntity(int articleId, Entity entity, int numOccurrences) throws SQLException {
     // first insert into entity
-    PreparedStatement prep = conn.prepareStatement(
-        "BEGIN TRANSACTION;"
-            + "    INSERT OR IGNORE INTO entity (class, entity, count)"
-            + "    VALUES ((?), (?), 0);"
-            + "    UPDATE entity SET count = count + 1 WHERE entity = (?) AND class = (?);"
-            + "    INSERT INTO article_entity (article_id, entity_class, entity_entity, count)"
-            + "    VALUES ((?), (?), (?), (?));"
-            + "COMMIT;"
-    );
+    PreparedStatement prep = conn.prepareStatement("INSERT OR IGNORE INTO entity (class, entity, "
+            + "count) VALUES (?, ?, 0);");
     prep.setString(1, entity.getClassType());
     prep.setString(2, entity.getWord());
-    prep.setString(3, entity.getWord());
-    prep.setString(4, entity.getClassType());
-    prep.setInt(5, articleId);
-    prep.setString(6, entity.getClassType());
-    prep.setString(7, entity.getWord());
-    prep.setInt(8, numOccurrences);
     prep.execute();
     prep.close();
+
+    PreparedStatement prep2 = conn.prepareStatement("UPDATE entity SET count = count + 1 WHERE "
+        + "entity = ? AND class = ?;");
+    prep2.setString(1, entity.getWord());
+    prep2.setString(2, entity.getClassType());
+    prep2.execute();
+    prep2.close();
+
+    PreparedStatement prep3 = conn.prepareStatement("INSERT INTO article_entity (article_id, "
+        + "entity_class, entity_entity, count) VALUES (?, ?, ?, ?);");
+    prep3.setInt(1, articleId);
+    prep3.setString(2, entity.getClassType());
+    prep3.setString(3, entity.getWord());
+    prep3.setInt(4, numOccurrences);
+    prep3.execute();
+    prep3.close();
   }
 
 
@@ -133,16 +137,19 @@ public final class NewsData extends Database {
     for (String word: vocabOccurrenceMap.keySet()) {
       // if word is not in vocab table, insert then update, else ignore then update
       PreparedStatement prep = conn.prepareStatement(
-          "BEGIN TRANSACTION;"
-              + "    INSERT OR IGNORE INTO vocab (word, count)"
-              + "    VALUES ((?), 0);"
-              + "    UPDATE vocab SET count = count + 4 WHERE word = (?);"
-              + "COMMIT;"
+              "    INSERT OR IGNORE INTO vocab (word, count)"
+              + "    VALUES (?, 0);"
       );
       prep.setString(1, word);
-      prep.setInt(2, vocabOccurrenceMap.get(word));
       prep.execute();
       prep.close();
+
+      PreparedStatement prep2 = conn.prepareStatement(
+          "    UPDATE vocab SET count = count + ? WHERE word = ?;");
+      prep2.setInt(1, vocabOccurrenceMap.get(word));
+      prep2.setString(2, word);
+      prep2.execute();
+      prep2.close();
     }
   }
 
@@ -152,8 +159,8 @@ public final class NewsData extends Database {
     PreparedStatement prep = conn.prepareStatement("SELECT id, title, date_published, author, "
         + "url, text "
         + "FROM articles "
-        + "WHERE date_pulled >= date('now', '-? hours') AND date_pulled < date('now');");
-    prep.setInt(1, hours);
+        + "WHERE date_pulled >= date('now', '-24 hours') AND date_pulled < date('now');");
+    //prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();
     Set<Article> articles = new HashSet<>();
     Map<Integer, String> articleText = new HashMap<>();

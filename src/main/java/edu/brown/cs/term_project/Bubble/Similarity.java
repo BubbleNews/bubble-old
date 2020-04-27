@@ -5,22 +5,17 @@ import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
 
 public class Similarity implements IEdge<ArticleVertex> {
-  private int id;
   private ArticleVertex src;
   private ArticleVertex dst;
   private double distance;
 
-  public Similarity(int id, ArticleVertex src, ArticleVertex dst, TextCorpus<ArticleWord,
+  public Similarity(ArticleVertex src, ArticleVertex dst, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus) {
-    this.id = id;
     this.src = src;
     this.dst = dst;
     this.setDistance(wordCorpus, entityCorpus);
   }
 
-  public int getID() {
-    return id;
-  }
 
   @Override
   public ArticleVertex getDest() {
