@@ -1,7 +1,32 @@
 $(document).ready(() => {
+    // add date selector
+    addDate();
+    // add on click to date button
+    $('#dateButton').click(function() {
+        dateClickHandler();
+    });
     // get current chart
     getChart();
-})
+});
+
+function addDate() {
+    const today = new Date().toISOString().split('T')[0];
+    const dateHtml = '<input type="date" id="date" name="trip-start"'
+        + ' value="' + today + '">';
+    $('#dateWrapper').prepend(dateHtml);
+}
+
+function dateClickHandler() {
+    const date = new Date($('#date').val());
+    console.log(date);
+    // check if date is later than today
+    if (date > new Date()) {
+        alert('Cannot view news from the future.')
+        return;
+    } else {
+        // getChart(date)
+    }
+}
 
 function getChart(date) {
     let chartUrl = 'api/chart';
