@@ -24,7 +24,8 @@ function dateClickHandler() {
         alert('Cannot view news from the future.')
         return;
     } else {
-        // getChart(date)
+        $("#clusters").empty();
+        getChart(date);
     }
 }
 
@@ -50,8 +51,8 @@ function appendCluster(cluster) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
-        + " class='cluster" + classNum + "' style='height: "
-        + 15*cluster.size + "px;'>"
+        + " class='cluster cluster" + classNum + "' style='height: "
+        + 5*cluster.size + "px; font-size: " + 3*cluster.size  + "px;'>"
         + "<p>" + cluster.headline + "</p>"
         + "</div>";
     $('#clusters').append(clusterHtml)

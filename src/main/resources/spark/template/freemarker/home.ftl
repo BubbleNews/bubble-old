@@ -16,6 +16,9 @@
 
 
 <div id="graphWrapper">
+    <div id="clusters">
+
+    </div>
 </div>
 
 <!--- scripts --->
