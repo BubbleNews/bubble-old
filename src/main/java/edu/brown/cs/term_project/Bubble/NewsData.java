@@ -4,6 +4,7 @@ import edu.brown.cs.term_project.Database.Database;
 import edu.brown.cs.term_project.Graph.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.handlers.ChartHandler;
+import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 
 import javax.xml.transform.Result;
@@ -11,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -287,16 +289,15 @@ public final class NewsData extends Database {
 
     /**
      * Gets the clusters for a given day. This will be passed to the front end.
-     * @param date the date to search for (java.sql.Date, NOT java.util.Date)
+     * @param date the date to search for (java.util.Date)
      * @param intermediate_cluster true if date is today, false otherwise
      * @return a set of cluster objects
      * @throws SQLException only thrown if the database is malformed
      */
-    public Set<ChartCluster> getClusters(Date date, boolean intermediate_cluster) throws SQLException {
-        String query = "SELECT id, title, size FROM clusters WHERE day = ? AND intermediate_cluster = ?";
+    public Set<ChartCluster> getClusters(Date date) throws SQLException {
+        String query = "SELECT id, title, size FROM clusters WHERE day = ?";
         try (PreparedStatement prep = conn.prepareStatement(query)) {
             prep.setDate(1, date);
-            prep.setBoolean(2, intermediate_cluster);
             try (ResultSet rs = prep.executeQuery()) {
                 Set<ChartCluster> clusters = new HashSet<>();
                 clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));

@@ -44,14 +44,11 @@ public final class ChartHandler {
         // get finalized clusters from a certain date
         List<ChartCluster> clusters = mockClusters();
 
-        // This is what Kshitij did
-        // convert date from string to Java.util.Date object
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = dateFormatter.parse(dateString);
-        boolean intermediate_clusters = isToday(date);
+        java.util.Date date = dateFormatter.parse(dateString);
 
         // query database for clusters from given date
-        Set<ChartCluster> relevantClusters = db.getClusters(new java.sql.Date(date.getTime()), intermediate_clusters);
+        Set<ChartCluster> relevantClusters = db.getClusters(new java.sql.Date(date.getTime()));
       }
 
     } catch (Exception e) {
@@ -62,7 +59,7 @@ public final class ChartHandler {
 
   // Checks if input date is the same as today's date
   private static boolean isToday(Date date) {
-    return DateUtils.isSameDay(date, Calendar.getInstance().getTime());
+
   }
 
   private static List<ChartCluster> mockClusters() {
