@@ -1,0 +1,37 @@
+#date {
+    margin: auto;
+}
+
+#dateWrapper {
+    text-align: center;
+}
+
+#titleWrapper {
+    margin: auto;
+    text-align: center;
+}
+
+.cluster {
+    margin: auto;
+    width: 90%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cluster0 {
+    background-color: lightblue;
+}
+
+.cluster1 {
+    background-color: lightsalmon;
+}
+
+.cluster2 {
+    background-color: lightseagreen;
+}
+
+.cluster3 {
+    background-color: lightpink;
+}

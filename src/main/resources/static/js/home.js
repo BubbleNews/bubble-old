@@ -1,7 +1,33 @@
 $(document).ready(() => {
+    // add date selector
+    addDate();
+    // add on click to date button
+    $('#dateButton').click(function() {
+        dateClickHandler();
+    });
     // get current chart
     getChart();
-})
+});
+
+function addDate() {
+    const today = new Date().toISOString().split('T')[0];
+    const dateHtml = '<input type="date" id="date" name="trip-start"'
+        + ' value="' + today + '">';
+    $('#dateWrapper').prepend(dateHtml);
+}
+
+function dateClickHandler() {
+    const date = new Date($('#date').val());
+    console.log(date);
+    // check if date is later than today
+    if (date > new Date()) {
+        alert('Cannot view news from the future.')
+        return;
+    } else {
+        $("#clusters").empty();
+        getChart(date);
+    }
+}
 
 function getChart(date) {
     let chartUrl = 'api/chart';
@@ -25,8 +51,8 @@ function appendCluster(cluster) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
-        + " class='cluster" + classNum + "' style='height: "
-        + 15*cluster.size + "px;'>"
+        + " class='cluster cluster" + classNum + "' style='height: "
+        + 5*cluster.size + "px; font-size: " + 3*cluster.size  + "px;'>"
         + "<p>" + cluster.headline + "</p>"
         + "</div>";
     $('#clusters').append(clusterHtml)
