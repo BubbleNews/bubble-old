@@ -29,12 +29,17 @@ function dateClickHandler() {
     }
 }
 
+function stringifyDate(date) {
+    const originalMonth = date.getMonth() + 1;
+    const month = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
+    return date.getFullYear() + '-' + month + '-' + date.getDate();
+}
+
 function getChart(date) {
+    const dateStr = stringifyDate(date);
     let chartUrl = 'api/chart';
     // update request url with date if needed
-    if (date != null && date != '') {
-        chartUrl += '?date=' + date;
-    }
+    chartUrl += '?date=' + dateStr;
     // send get request
     $.get(chartUrl, function(data) {
         const parsed = JSON.parse(data);

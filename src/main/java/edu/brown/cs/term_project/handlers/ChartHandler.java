@@ -31,11 +31,11 @@ public final class ChartHandler {
       // get date object
       QueryParamsMap qm = request.queryMap();
       String dateString = qm.value("date");
-      SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-      java.util.Date date = dateFormatter.parse(dateString);
+
+      System.out.println(dateString);
 
       // query database for clusters from given date
-      List<ChartCluster> clusters = db.getClusters(new java.sql.Date(date.getTime()));
+      List<ChartCluster> clusters = db.getClusters(dateString);
 
       // sort by size
       Comparator<ChartCluster> compareBySize =

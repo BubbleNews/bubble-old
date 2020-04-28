@@ -286,17 +286,20 @@ public final class NewsData extends Database {
     /**
      * Gets the clusters for a given day. This will be passed to the front end.
      * @param date the date to search for (java.util.Date)
-     * @param intermediate_cluster true if date is today, false otherwise
      * @return a set of cluster objects
      * @throws SQLException only thrown if the database is malformed
      */
-    public List<ChartCluster> getClusters(Date date) throws SQLException {
+    public List<ChartCluster> getClusters(String date) throws SQLException {
         String query = "SELECT id, title, size FROM clusters WHERE day = ?";
         try (PreparedStatement prep = conn.prepareStatement(query)) {
-            prep.setDate(1, date);
+            prep.setString(1, date);
             try (ResultSet rs = prep.executeQuery()) {
                 List<ChartCluster> clusters = new ArrayList<>();
-                clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+                while (rs.next()) {
+                    System.out.println("hello");
+                    clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+                }
+                System.out.println(clusters);
                 return clusters;
             }
         }
@@ -321,7 +324,7 @@ public final class NewsData extends Database {
                         + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
         );
         NewsData db = new NewsData("data/bubble.db");
-        db.insertArticle(testArticle);
+//        db.insertArticle(testArticle);
     }
 
 }
