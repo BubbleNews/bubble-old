@@ -1,6 +1,5 @@
 package edu.brown.cs.term_project.TextSimilarity;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,7 +10,7 @@ import java.util.Set;
  * @param <T> An article type that implements IText
  */
 public class TextCorpus<W extends IWord, T extends IText> {
-  private HashMap<W, Integer> wordFreq;
+  private Map<W, Double> wordFreq;
   private int docNum;
 
   /**
@@ -19,7 +18,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * @param wordFreq hashmap representing number of documents each word in our vocab is in
    * @param docNum number of documents used to create our vocab
    */
-  public TextCorpus(HashMap<W, Integer> wordFreq, Integer docNum) {
+  public TextCorpus(Map<W, Double> wordFreq, Integer docNum) {
     this.wordFreq = wordFreq;
     this.docNum = docNum;
   }
@@ -54,7 +53,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
    */
   private Double getImportance(Map<? extends IWord, Double> wordMap, IWord word) {
     Double normalizedTermFrequency =  wordMap.get(word) / (double) wordMap.size();
-    Double inverseDocumentFrequency = docNum / (double) wordFreq.get(word);
+    Double inverseDocumentFrequency = docNum / wordFreq.get(word);
     return normalizedTermFrequency * inverseDocumentFrequency;
   }
 

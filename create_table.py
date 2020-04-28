@@ -40,6 +40,7 @@ CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
     id INTEGER PRIMARY KEY,
     title VARCHAR(50),
     url VARCHAR(200),
+    author VARCHAR(50),
     date_published DATETIME,
     date_pulled DATETIME,
     text TEXT,

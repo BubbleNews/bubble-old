@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,17 +52,13 @@ public final class NewsData extends Database {
    */
   private int insertArticle(ArticleJSON article) throws SQLException {
     PreparedStatement prep = conn.prepareStatement(
-        "INSERT into articles (title, url, date_published, date_pulled,"
-            + " text) VALUES (?, ?, ?, ?, ?);"
+        "INSERT into articles (title, url, author, date_published, date_pulled,"
+            + " text) VALUES (?, ?, ?, ?, DATETIME('now'), ?);"
     );
     prep.setString(1, article.getTitle());
     prep.setString(2, article.getUrl());
-    // format date
-    String timePublished = article.getTimePublished();
-    timePublished = timePublished.replace('T', ' ');
-    timePublished = timePublished.substring(0, 16);
-    prep.setDate(3, new java.sql.Date(Date.valueOf(timePublished).getTime()));
-    prep.setDate(4, new java.sql.Date((new java.util.Date()).getTime()));
+    prep.setString(3, article.getAuthors()[0]);
+    prep.setDate(4, new java.sql.Date(Instant.parse(article.getTimePublished()).toEpochMilli()));
     prep.setString(5, article.getContent());
     prep.execute();
     prep.close();
@@ -103,25 +100,28 @@ public final class NewsData extends Database {
    */
   private void insertEntity(int articleId, Entity entity, int numOccurrences) throws SQLException {
     // first insert into entity
-    PreparedStatement prep = conn.prepareStatement(
-        "BEGIN TRANSACTION;"
-            + "    INSERT OR IGNORE INTO entity (class, entity, count)"
-            + "    VALUES ((?), (?), 0);"
-            + "    UPDATE entity SET count = count + 1 WHERE entity = (?) AND class = (?);"
-            + "    INSERT INTO article_entity (article_id, entity_class, entity_entity, count)"
-            + "    VALUES ((?), (?), (?), (?));"
-            + "COMMIT;"
-    );
+    PreparedStatement prep = conn.prepareStatement("INSERT OR IGNORE INTO entity (class, entity, "
+            + "count) VALUES (?, ?, 0);");
     prep.setString(1, entity.getClassType());
     prep.setString(2, entity.getWord());
-    prep.setString(3, entity.getWord());
-    prep.setString(4, entity.getClassType());
-    prep.setInt(5, articleId);
-    prep.setString(6, entity.getClassType());
-    prep.setString(7, entity.getWord());
-    prep.setInt(8, numOccurrences);
     prep.execute();
     prep.close();
+
+    PreparedStatement prep2 = conn.prepareStatement("UPDATE entity SET count = count + 1 WHERE "
+        + "entity = ? AND class = ?;");
+    prep2.setString(1, entity.getWord());
+    prep2.setString(2, entity.getClassType());
+    prep2.execute();
+    prep2.close();
+
+    PreparedStatement prep3 = conn.prepareStatement("INSERT INTO article_entity (article_id, "
+        + "entity_class, entity_entity, count) VALUES (?, ?, ?, ?);");
+    prep3.setInt(1, articleId);
+    prep3.setString(2, entity.getClassType());
+    prep3.setString(3, entity.getWord());
+    prep3.setInt(4, numOccurrences);
+    prep3.execute();
+    prep3.close();
   }
 
 
@@ -136,16 +136,19 @@ public final class NewsData extends Database {
     for (String word: vocabOccurrenceMap.keySet()) {
       // if word is not in vocab table, insert then update, else ignore then update
       PreparedStatement prep = conn.prepareStatement(
-          "BEGIN TRANSACTION;"
-              + "    INSERT OR IGNORE INTO vocab (word, count)"
-              + "    VALUES ((?), 0);"
-              + "    UPDATE vocab SET count = count + 4 WHERE word = (?);"
-              + "COMMIT;"
+              "    INSERT OR IGNORE INTO vocab (word, count)"
+              + "    VALUES (?, 0);"
       );
       prep.setString(1, word);
-      prep.setInt(2, vocabOccurrenceMap.get(word));
       prep.execute();
       prep.close();
+
+      PreparedStatement prep2 = conn.prepareStatement(
+          "    UPDATE vocab SET count = count + ? WHERE word = ?;");
+      prep2.setInt(1, vocabOccurrenceMap.get(word));
+      prep2.setString(2, word);
+      prep2.execute();
+      prep2.close();
     }
   }
 
@@ -155,8 +158,9 @@ public final class NewsData extends Database {
     PreparedStatement prep = conn.prepareStatement("SELECT id, title, date_published, author, "
         + "url, text "
         + "FROM articles "
-        + "WHERE date_pulled >= date('now', '-? hours') AND date_pulled < date('now');");
-    prep.setInt(1, hours);
+        //+ "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < DATETIME('now');"
+        );
+    //prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();
     Set<Article> articles = new HashSet<>();
     Map<Integer, String> articleText = new HashMap<>();
@@ -204,7 +208,7 @@ public final class NewsData extends Database {
     ResultSet rs = prep.executeQuery();
     Map<Entity, Double> articleEntityFreq = new HashMap<>();
     while (rs.next()) {
-      articleEntityFreq.put(new Entity(rs.getString(1), rs.getString(2)),
+      articleEntityFreq.put(new Entity(rs.getString(2), rs.getString(1)),
           rs.getDouble(3));
     }
     return articleEntityFreq;
@@ -277,9 +281,33 @@ public final class NewsData extends Database {
     prep.close();
   }
 
+
+
   // Ian
   public Set<Cluster> getClusters(Date date) {
     return null;
+  }
+
+  public static void main(String[] args) throws Exception {
+    ArticleJSON testArticle = new ArticleJSON(new String[]{"Kayla Suazo"},
+        "23 Top-Rated Cleaning Products That Are Popular For A Reason",
+        "So good, they have *a ton* of 4- and 5-star reviews.",
+        "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
+            + "that-are-popular-for-a-reason",
+        "2020-04-27T17:22:24.963019Z",
+        "all you have to do be let it sit for 15 minute and wipe -- minimal work on you "
+            + "part . check out BuzzFeed 's full write-up on this Feed-N-Wax Wood Polish to learn "
+            + "more!and ! it have 4,700 + positive review on amazon.promising review : `` OMG ! "
+            + "this be the most amazing product ! we inherit some antique furniture from the '30s"
+            + " that have be in storage forever ... it be dry and dirty and not much to look at ."
+            + " I use this product on it and the oak wood literally come alive show the beautiful"
+            + " grain and texture of the wood . I have since use it on my oak kitchen cabinet and"
+            + " they look AMAZING ! I will never use anything else other than this product on my "
+            + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
+            + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
+        );
+    NewsData db = new NewsData("data/bubble.db");
+    db.insertArticle(testArticle);
   }
 
 }

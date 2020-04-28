@@ -30,9 +30,11 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
 
   public void runClusters(Integer method) {
     if (method == 1) {
+      System.out.println("Clustering Method 1");
       Clustering1<T, S> c1 = new Clustering1<>(new HashSet<>(nodes), new ArrayList<>(edges),
           threshold);
       clusters = c1.createClusters();
+      System.out.println(clusters.size());
     } else if (method == 2) {
       Clustering2<T, S> c2 = new Clustering2<>(new HashSet<>(nodes), new ArrayList<>(edges),
           threshold);
@@ -46,7 +48,8 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
   public void setThreshold() {
     System.out.println(nodes.size());
     System.out.println(edges.size());
-    this.threshold = 2.0 * nodes.size() / edges.size(); //set so that number of edges will be
+    this.threshold = Math.min(2.0 * nodes.size() / edges.size(), 1); //set so that number of edges
+    // will be
     // twice the number of nodes
   }
 

@@ -5,12 +5,12 @@ public class ArticleJSON {
   private String[] authors;
   private String title;
   private String description;
-  public String url;
+  private String url;
   private String timePublished;
   private String content;
 
-  private ArticleJSON(String[] authors, String title, String description, String url,
-                      String timePublished, String content) {
+  public ArticleJSON(String[] authors, String title, String description, String url,
+                     String timePublished, String content) {
     this.authors = authors;
     this.title = title;
     this.description = description;

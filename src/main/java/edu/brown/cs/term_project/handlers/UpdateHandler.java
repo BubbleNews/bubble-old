@@ -1,9 +1,9 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.ArticleJSON;
-import edu.brown.cs.term_project.Bubble.Entity;
-import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.Bubble.*;
+import edu.brown.cs.term_project.Graph.Graph;
+import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 import edu.brown.cs.term_project.nlp.TextProcessing;
 import spark.Request;
 import spark.Response;
@@ -13,9 +13,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -64,7 +62,7 @@ public class UpdateHandler {
     }
     // process the articles
     processJSONArticles(articles, db);
-    // TODO: cluster
+
   }
 
   /**
@@ -116,7 +114,57 @@ public class UpdateHandler {
     db.updateVocabCounts(occurenceMap);
   }
 
+  private static void clusterArticles(NewsData db) throws SQLException {
+    Set<ArticleVertex> pulledArticles = db.getArticleVertices(24);
+    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
+    Map<Entity, Double> entityMap = db.getEntityFreq();
+    int maxCount = db.getMaxVocabCount();
+    TextCorpus<ArticleWord, ArticleVertex> wordCorpus =
+        new TextCorpus<>(vocabMap, maxCount);
+    TextCorpus<Entity, ArticleVertex> entityCorpus =
+        new TextCorpus<>(entityMap, maxCount);
+    ArrayList<Similarity> edges = new ArrayList<>();
+    System.out.println("Article Size: " + pulledArticles.size());
+    for (ArticleVertex a1: pulledArticles) {
+      for (ArticleVertex a2: pulledArticles) {
+        if (a1.getId() < a2.getId()) {
+
+          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus);
+          a1.addEdge(tempEdge);
+          a2.addEdge(tempEdge);
+          edges.add(tempEdge);
+          System.out.println(a1.getId() + " - " + a2.getId() + " : " + tempEdge.getDistance());
+        }
+      }
+    }
+
+    Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
+    graph.runClusters(1);
+    db.insertClusters(graph.getClusters());
+  }
+
   public static void main(String[] args) throws Exception {
-    getAndProcessNews(new NewsData("data/bubble.db"));
+    ArticleJSON testArticle = new ArticleJSON(new String[]{"Kayla Suazo"},
+        "23 Top-Rated Cleaning Products That Are Popular For A Reason",
+        "So good, they have *a ton* of 4- and 5-star reviews.",
+        "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
+            + "that-are-popular-for-a-reason",
+        "2020-04-27T17:22:24.963019Z",
+        "all you have to do be let it sit for 15 minute and wipe -- minimal work on you "
+            + "part . check out BuzzFeed 's full write-up on this Feed-N-Wax Wood Polish to learn "
+            + "more!and ! it have 4,700 + positive review on amazon.promising review : `` OMG ! "
+            + "this be the most amazing product ! we inherit some antique furniture from the '30s"
+            + " that have be in storage forever ... it be dry and dirty and not much to look at ."
+            + " I use this product on it and the oak wood literally come alive show the beautiful"
+            + " grain and texture of the wood . I have since use it on my oak kitchen cabinet and"
+            + " they look AMAZING ! I will never use anything else other than this product on my "
+            + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
+            + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
+    );
+    ArrayList<ArticleJSON> testList = new ArrayList<>();
+    testList.add(testArticle);
+    NewsData db = new NewsData("data/bubble.db");
+    //processJSONArticles(testList, db);
+    clusterArticles(db);
   }
 }
