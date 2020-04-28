@@ -19,6 +19,12 @@ public class ArticleJSON {
     this.content = content;
   }
 
+  public ArticleJSON(String title, String url, String timePublished) {
+    this.title = title;
+    this.url = url;
+    this.timePublished = timePublished;
+  }
+
   public String[] getAuthors() {
     return authors;
   }

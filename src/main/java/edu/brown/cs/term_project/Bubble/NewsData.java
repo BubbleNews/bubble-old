@@ -3,20 +3,14 @@ package edu.brown.cs.term_project.Bubble;
 import edu.brown.cs.term_project.Database.Database;
 import edu.brown.cs.term_project.Graph.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
-import edu.brown.cs.term_project.handlers.ChartHandler;
-import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.DateTime;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.sql.Date;
 
 public final class NewsData extends Database {
     private Connection conn;
@@ -126,6 +120,29 @@ public final class NewsData extends Database {
         prep3.setInt(4, numOccurrences);
         prep3.execute();
         prep3.close();
+    }
+
+    public List<ArticleJSON> getArticlesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
+        // build sql statement
+        String statement = "SELECT title, url, date_published FROM articles WHERE ";
+        if (isTemporary) {
+            statement += "temp_cluster_id";
+        } else {
+            statement += "final_cluster_id";
+        }
+        statement += " = (?)";
+        PreparedStatement prep = conn.prepareStatement(statement);
+        prep.setInt(1, clusterId);
+        ResultSet rs = prep.executeQuery();
+        List<ArticleJSON> articles = new ArrayList<>();
+        while (rs.next()) {
+            String title = rs.getString(1);
+            String url = rs.getString(2);
+            String datePublished = rs.getString(3);
+            ArticleJSON a = new ArticleJSON(title, url, datePublished);
+            articles.add(a);
+        }
+        return articles;
     }
 
 

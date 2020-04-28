@@ -1,12 +1,14 @@
+let currentlyOpenClusterId = null;
+
 $(document).ready(() => {
     // add date selector
     addDate();
     // add on click to date button
     $('#dateButton').click(function() {
-        dateClickHandler();
+        dateClickHandler(new Date());
     });
     // get current chart
-    getChart();
+    getChart(new Date());
 });
 
 function addDate() {
@@ -56,25 +58,22 @@ function appendCluster(cluster) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
-        + " class='cluster cluster" + classNum + "' style='height: "
-        + 5*cluster.size + "px; font-size: " + 3*cluster.size  + "px;'>"
+        + " class='cluster cluster" + classNum + "'>"
         + "<p>" + cluster.headline + "</p>"
         + "</div>";
-    $('#clusters').append(clusterHtml)
+    $('#clusters').append(clusterHtml);
     // add a click function to get clusters
     $('#' + cluster.clusterId).click(function() {
         getCluster(cluster.clusterId);
-        // mock alert
-        let articles = '';
-        let i;
-        for (i = 0; i < cluster.size; i++) {
-            articles += 'Article ' + i + '\n';
-        }
-        console.log(articles);
     })
 }
 
 function getCluster(clusterId) {
+    $('.articlesWrapper').remove();
+    if (clusterId == currentlyOpenClusterId) {
+        currentlyOpenClusterId = null;
+        return;
+    }
     let clusterUrl = 'api/cluster';
     // add id to cluster base url
     clusterUrl += '?id=' + clusterId;
@@ -82,7 +81,20 @@ function getCluster(clusterId) {
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
         // TODO: do something with parsed cluster response
-        console.log(parsed);
-    })
+        const divId = clusterId + 'articles';
+        const articlesHtml = '<div id="' + divId + '" class="articlesWrapper"></div>';
+        $('#' + clusterId).append(articlesHtml);
+        const articles = parsed.articles;
+        let i;
+        for (i = 0; i < articles.length; i++) {
+            const article = articles[i]
+            const articleHTML = '<div id="' + divId + i  + '" class="article">'
+                + ' <a href="' + article.url + '" target="_blank">'
+                + article.title + '</a></div>';
+            $('#' + clusterId + 'articles').append(articleHTML);
+        }
+        currentlyOpenClusterId = clusterId;
+    });
 }
+
 

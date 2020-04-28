@@ -1,3 +1,18 @@
+.article {
+    border: solid;
+    padding: 30px;
+    width: 90%;
+    background-color: antiquewhite;
+    margin: auto;
+}
+
+.articlesWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    padding: 20px;
+}
+
 #date {
     margin: auto;
 }
@@ -16,6 +31,7 @@
     width: 90%;
     text-align: center;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -34,4 +50,8 @@
 
 .cluster3 {
     background-color: lightpink;
+}
+
+#graphWrapper {
+    padding: 20px;
 }

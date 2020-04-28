@@ -43,11 +43,18 @@ public final class ChartHandler {
       clusters.sort(compareBySize);
 
       // pass to front handler
-      chartResponse.setClusters(clusters);
+      chartResponse.setClusters(mockClusters());
     } catch (Exception e) {
       chartResponse.setErrorMessage(e.getMessage());
     }
     return new Gson().toJson(chartResponse);
+  }
+
+  private static List<ChartCluster> mockClusters() {
+    List<ChartCluster> clusters = new ArrayList<>();
+    clusters.add(new ChartCluster(3, "Coronavirus", 10));
+    clusters.add(new ChartCluster(2, "Trump", 20));
+    return clusters;
   }
 
   private static class ChartResponse extends StandardResponse {
