@@ -2,14 +2,15 @@ package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.Graph.ChartCluster;
+import freemarker.template.SimpleDate;
+import org.apache.commons.lang3.time.DateUtils;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * A class for handling requests to the /chart API.
@@ -20,7 +21,7 @@ public final class ChartHandler {
    * Handles a request to the /chart API.
    * @param request the request
    * @param response the response
-   * @param db the news databse
+   * @param db the news database
    * @return a JSON response with chart made up of list of clusters
    */
   public static String handle(Request request, Response response, NewsData db) {
@@ -42,6 +43,12 @@ public final class ChartHandler {
       } else {
         // get finalized clusters from a certain date
         List<ChartCluster> clusters = mockClusters();
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date date = dateFormatter.parse(dateString);
+
+        // query database for clusters from given date
+        Set<ChartCluster> relevantClusters = db.getClusters(new java.sql.Date(date.getTime()));
       }
 
     } catch (Exception e) {
@@ -50,25 +57,14 @@ public final class ChartHandler {
     return new Gson().toJson(chartResponse);
   }
 
+  // Checks if input date is the same as today's date
+  private static boolean isToday(Date date) {
+
+  }
+
   private static List<ChartCluster> mockClusters() {
     List<ChartCluster> toReturn = new ArrayList<>();
     return toReturn;
-  }
-
-  private static class ChartCluster {
-    private int clusterId;
-    private String headline;
-    private int size;
-
-    ChartCluster(int clusterId, String headline, int size) {
-      this.clusterId = clusterId;
-      this.headline = headline;
-      this.size = size;
-    }
-
-    public int getSize() {
-      return size;
-    }
   }
 
   private static class ChartResponse extends StandardResponse {
