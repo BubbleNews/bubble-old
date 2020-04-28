@@ -1,40 +1,36 @@
-from newsapi import NewsApiClient
+import json
+
 from newspaper import Article
 from newspaper.article import ArticleException
-from datetime import datetime, timedelta
-import json
+from newsapi import NewsApiClient
 
 # key for accessing google news api
 API_KEY = '77d7cb4756d44e13aea4a50d033d27e3'
+NEWS_API = NewsApiClient(api_key=API_KEY)
 MINIMUM_ARTICLE_CHAR_LENGTH = 700
 BAD_CHARS = ['\r', '\n']
+DOMAINS = 'apnews.com,time.com,wsj.com,politico.com,washingtonpost.com,' \
+          'nytimes.com,vox.com,usatoday.com,npr.org,theatlantic.com'
 
 
-def get_news():
+# return comma separated list of sources
+# def get_sources():
+#     source_ids = []
+#     sources = NEWS_API.get_sources(language='en', country='us')
+#     for source in sources['sources']:
+#         source_ids.append(source['id'].encode('ascii'))
+#     return ','.join(source_ids)
+
+
+def get_news(start_date, end_date, num_articles=100):
     print("Connecting to Google News API...")
-    # create news api connection
-    newsapi = NewsApiClient(api_key=API_KEY)
-
-    # get current time
-    # today = datetime.now()
-    # current_time = datetime(today.year, today.month, today.day,
-    #                         today.hour, today.minute, today.minute)
-    # hour_ago = current_time + timedelta(hours=-1)
-    #
-    # current_time = str(current_time).replace(' ', 'T')
-    # hour_ago = str(hour_ago).replace(' ', 'T')
-    #
-    # print(current_time)
-    # print(hour_ago)
-
-    #
-    num_articles = 10
-    # get top headlines
-    top_headlines = newsapi.get_top_headlines(language='en',
-                                              page_size=num_articles)
+    top_headlines = NEWS_API.get_everything(from_param=start_date,
+                                            to=end_date,
+                                            language='en',
+                                            domains=DOMAINS,
+                                            page_size=num_articles,)
 
     articles_json = []
-
     articles = top_headlines['articles']
     # loop through articles and scrape article text with scraper
     for i, article in enumerate(articles):
@@ -47,7 +43,8 @@ def get_news():
             with open('deleted_articles.txt', 'w') as f:
                 f.write(url)
         else:
-            articles_json.append(make_article_json(article, scraped_title, scraped_authors, clean_text(scraped_text, BAD_CHARS)))
+            articles_json.append(
+                make_article_json(article, scraped_title, scraped_authors, clean_text(scraped_text, BAD_CHARS)))
     return json.dumps(articles_json)
 
 
@@ -76,3 +73,15 @@ def clean_text(text, bad_chars):
     for char in bad_chars:
         text = text.replace(char, '')
     return text
+
+# get current time
+# today = datetime.now()
+# current_time = datetime(today.year, today.month, today.day,
+#                         today.hour, today.minute, today.minute)
+# hour_ago = current_time + timedelta(hours=-1)
+#
+# current_time = str(current_time).replace(' ', 'T')
+# hour_ago = str(hour_ago).replace(' ', 'T')
+#
+# print(current_time)
+# print(hour_ago)
