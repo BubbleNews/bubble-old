@@ -15,12 +15,8 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.sql.Date;
-import java.util.Calendar;
 
 public final class NewsData extends Database {
     private Connection conn;
@@ -294,12 +290,12 @@ public final class NewsData extends Database {
      * @return a set of cluster objects
      * @throws SQLException only thrown if the database is malformed
      */
-    public Set<ChartCluster> getClusters(Date date) throws SQLException {
+    public List<ChartCluster> getClusters(Date date) throws SQLException {
         String query = "SELECT id, title, size FROM clusters WHERE day = ?";
         try (PreparedStatement prep = conn.prepareStatement(query)) {
             prep.setDate(1, date);
             try (ResultSet rs = prep.executeQuery()) {
-                Set<ChartCluster> clusters = new HashSet<>();
+                List<ChartCluster> clusters = new ArrayList<>();
                 clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
                 return clusters;
             }

@@ -9,6 +9,7 @@ import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -27,44 +28,26 @@ public final class ChartHandler {
   public static String handle(Request request, Response response, NewsData db) {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
+      // get date object
       QueryParamsMap qm = request.queryMap();
       String dateString = qm.value("date");
-      if (dateString == null || dateString.equals("")) {
-        // no date passed in, so get most recent/current chart
-        List<ChartCluster> clusters = mockClusters();
-        // sort by size
-        Comparator<ChartCluster> compareBySize =
-            (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
+      SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+      java.util.Date date = dateFormatter.parse(dateString);
 
-        clusters.sort(compareBySize);
+      // query database for clusters from given date
+      List<ChartCluster> clusters = db.getClusters(new java.sql.Date(date.getTime()));
 
-        chartResponse.setClusters(clusters);
+      // sort by size
+      Comparator<ChartCluster> compareBySize =
+              (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
+      clusters.sort(compareBySize);
 
-      } else {
-        // get finalized clusters from a certain date
-        List<ChartCluster> clusters = mockClusters();
-
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date date = dateFormatter.parse(dateString);
-
-        // query database for clusters from given date
-        Set<ChartCluster> relevantClusters = db.getClusters(new java.sql.Date(date.getTime()));
-      }
-
+      // pass to front handler
+      chartResponse.setClusters(clusters);
     } catch (Exception e) {
       chartResponse.setErrorMessage(e.getMessage());
     }
     return new Gson().toJson(chartResponse);
-  }
-
-  // Checks if input date is the same as today's date
-  private static boolean isToday(Date date) {
-
-  }
-
-  private static List<ChartCluster> mockClusters() {
-    List<ChartCluster> toReturn = new ArrayList<>();
-    return toReturn;
   }
 
   private static class ChartResponse extends StandardResponse {
