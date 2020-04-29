@@ -29,7 +29,7 @@
 }
 
 .article {
-    padding: 30px;
+    padding: 10px;
     width: 90%;
     background-color: antiquewhite;
     border-style: solid;
@@ -38,11 +38,37 @@
     margin: 10px;
 }
 
+.sourceDate {
+    background: lightsteelblue;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 0px 10px;
+}
+
+.clusterSize {
+    background: lightyellow;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 0px 10px;
+    margin: 10px;
+    border: goldenrod;
+    border-style: solid;
+    color: goldenrod;
+}
+
 .articlesWrapper {
     display: flex;
     flex-direction: column;
     width: 90%;
     padding: 20px;
+}
+
+#sourcesWrapper {
+    background-color:lightsalmon;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    display:inline-table;
 }
 
 h1 {
@@ -61,12 +87,8 @@ p {
 h4 {
     font-family: 'Helvetica', sans-serif;
     text-align: center;
-    text-decoration: underline;
-    text-underline-position: under;
-    color: lightsalmon;
-    -webkit-text-stroke: white;
-    -webkit-text-stroke-width: .04em;
-    font-size: 1.5em;
+    color: lightcyan;
+    font-size: 1em;
 }
 
 #date {
@@ -92,7 +114,9 @@ h4 {
     border-style: solid;
     border-color: white;
     border-radius:20px;
-    margin: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .cluster, h3 {
