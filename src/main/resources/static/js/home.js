@@ -69,6 +69,8 @@ function stringifyDate(date) {
 }
 
 function getChart(date) {
+    // clear messages
+    $('.message').hide();
     const dateStr = stringifyDate(date);
     console.log(dateStr);
     let chartUrl = 'api/chart';
@@ -83,7 +85,9 @@ function getChart(date) {
         const clusters = parsed.clusters;
 
         if (clusters.length == 0) {
+            $('#chartMessage').empty();
             $('#chartMessage').append('<p>No data found for this date.</p>');
+            $('#chartMessage').show();
             return;
         }
 
