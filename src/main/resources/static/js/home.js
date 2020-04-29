@@ -54,7 +54,10 @@ function dateClickHandler() {
     console.log(date);
     // check if date is later than today
     if (date > new Date()) {
-        alert('Cannot view news from the future.')
+        $("#clusters").empty();
+        $('#chartMessage').empty();
+        $('#chartMessage').append('<p>Cannot find articles from the future.</p>');
+        $('#chartMessage').show();
         return;
     } else {
         $("#clusters").empty();
@@ -86,7 +89,7 @@ function getChart(date) {
 
         if (clusters.length == 0) {
             $('#chartMessage').empty();
-            $('#chartMessage').append('<p>No data found for this date.</p>');
+            $('#chartMessage').append('<p>No articles stored for this date.</p>');
             $('#chartMessage').show();
             return;
         }
