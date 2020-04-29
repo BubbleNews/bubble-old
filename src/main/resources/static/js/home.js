@@ -98,7 +98,8 @@ function appendCluster(cluster, color) {
         "<div id=" + cluster.clusterId
         + " class='cluster cluster" + classNum + "'"
         + "style='background-color:" + color + ";'>"
-        + "<h2>" + cluster.headline + "</h2>"
+        + "<h2>" + cluster.headline
+        + "<div class='clusterSize'>" + cluster.size + "</div></h2>"
         + "</div>";
     $('#clusters').append(clusterHtml);
     // add a click function to get clusters
@@ -133,8 +134,9 @@ function getCluster(clusterId) {
                 articleHTML += "style='display: none;'";
             }
             articleHTML += '> <h3><a href="' + article.url + '" target="_blank">'
-                + article.title + '</a>'
-                + ' | ' + article.sourceName + ' | ' + article.timePublished.slice(0, 16) + '</h3></div>';
+                + article.title + '</a></h3>'
+                + '<div class="sourceDate"><h3>' + article.sourceName + ' | '
+                + article.timePublished.slice(0, 16) + ' UTC</h3></div></div>';
             $('#' + clusterId + 'articles').append(articleHTML);
         }
         currentlyOpenClusterId = clusterId;
