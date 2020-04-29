@@ -58,10 +58,12 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
         addNodes.add(src);
         addNodes.add(dst);
         Cluster newCluster = new Cluster(count, src, addNodes);
-        tempClusters.put(src.getId(), newCluster);
-        tempClusters.put(dst.getId(), newCluster);
-        count++;
-        System.out.println("Make: " + src.getId() + " : " + dst.getId());
+        if (newCluster.getAvgRadius() < radiusThreshold / 3.0) {
+          tempClusters.put(src.getId(), newCluster);
+          tempClusters.put(dst.getId(), newCluster);
+          count++;
+          System.out.println("Make: " + src.getId() + " : " + dst.getId());
+        }
       }
     } // add cluster in tempClusters to clusters
     tempClusters.forEach((k, v) -> {

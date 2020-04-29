@@ -31,8 +31,8 @@ public class NewsLoader {
     this.pythonEndpoint = pythonEndpoint;
   }
 
-  public void executeBatches(int numBatches, int articlesPerBatch, int step) throws Exception {
-    Instant endTime = Instant.now();
+  public void executeBatches(int numBatches, int articlesPerBatch, int step, int stepBack) throws Exception {
+    Instant endTime = Instant.now().minus(stepBack, ChronoUnit.HOURS);
     Duration hour = Duration.ofHours(1);
     Instant startTime = endTime.minus(step, ChronoUnit.HOURS);
     for (int i = 0; i < numBatches; i++) {
@@ -137,6 +137,6 @@ public class NewsLoader {
 //    Date now = new Date();
 //    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(5, 100, 1);
+    loader.executeBatches(24, 100, 1, 39);
   }
 }

@@ -35,7 +35,7 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
       Clustering1<T, S> c1 = new Clustering1<>(new HashSet<>(nodes), new ArrayList<>(edges),
           threshold);
       clusters = c1.createClusters();
-      System.out.println(clusters.size());
+      System.out.println("NUMBER: " + clusters.size());
     } else if (method == 2) {
       Clustering2<T, S> c2 = new Clustering2<>(new HashSet<>(nodes), new ArrayList<>(edges),
           threshold);
