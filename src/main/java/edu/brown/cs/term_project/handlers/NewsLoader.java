@@ -19,6 +19,8 @@ import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 
+import static edu.brown.cs.term_project.handlers.HTTPRequests.sendGet;
+
 
 public class NewsLoader {
   private NewsData db;
