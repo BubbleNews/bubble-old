@@ -27,16 +27,12 @@ public class ArticleJSON {
     this.timePublished = timePublished;
   }
 
-  public String[] getAuthors() {
-    return authors;
+  public String getSourceName() {
+    return sourceName;
   }
 
   public String getTitle() {
     return title;
-  }
-
-  public String getDescription() {
-    return description;
   }
 
   public String getUrl() {

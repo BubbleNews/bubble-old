@@ -15,8 +15,7 @@ def scrape():
 
 @app.route('/sources', methods=['GET'])
 def get_sources():
-    domains = DOMAINS.split(',')
-    return json.dumps(domains)
+    return DOMAINS
 
 
 app.run()

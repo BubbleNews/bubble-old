@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static edu.brown.cs.term_project.handlers.HTTPRequests.sendGet;
+
 
 public class NewsLoader {
   private NewsData db;
@@ -87,23 +89,6 @@ public class NewsLoader {
     String strDate = dateFormat.format(date);
     System.out.println(strDate);
     return strDate.replace(' ', 'T');
-  }
-
-
-  /**
-   * Sends an HTTP GET request to the python endpoint.
-   *
-   ** @return a json string response
-   * @throws Exception
-   */
-  private String sendGet(String url) throws Exception {
-
-    HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(url))
-        .build();
-    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    return response.body();
   }
 
   /**

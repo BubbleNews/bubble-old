@@ -48,18 +48,19 @@ public final class NewsData extends Database {
      */
     private int insertArticle(ArticleJSON article) throws SQLException {
         PreparedStatement prep = conn.prepareStatement(
-                "INSERT into articles (title, url, date_published, date_pulled,"
-                        + " text) VALUES (?, ?, ?, DATETIME('now'), ?);"
+                "INSERT into articles (source, title, url, date_published, date_pulled,"
+                        + " text) VALUES (?, ?, ?, ?, DATETIME('now'), ?);"
         );
-        prep.setString(1, article.getTitle());
-        prep.setString(2, article.getUrl());
+        prep.setString(1, article.getSourceName());
+        prep.setString(2, article.getTitle());
+        prep.setString(3, article.getUrl());
 
         String datePublished = article.getTimePublished();
         datePublished = datePublished
             .replace('T', ' ')
             .substring(0, Math.min(19, datePublished.length()));
-        prep.setString(3, datePublished);
-        prep.setString(4, article.getContent());
+        prep.setString(4, datePublished);
+        prep.setString(5, article.getContent());
         prep.execute();
         prep.close();
         // get id of article
@@ -344,9 +345,8 @@ public final class NewsData extends Database {
                         + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
                         + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
         );
-        NewsData db = new NewsData("data/bubble.db");
-//        db.insertArticle(testArticle);
-        db.getClusters("2020-04-27");
+        NewsData db = new NewsData("data/backloaded.db");
+        db.insertArticle(testArticle);
     }
 
 }

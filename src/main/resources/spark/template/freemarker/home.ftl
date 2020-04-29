@@ -14,8 +14,15 @@
     <button id="dateButton" type="button">Show</button>
 </div>
 
-
 <div id="graphWrapper">
+    <div id="sourcesWrapper">
+        <p>Click to Toggle Source</p>
+        <div id="sources">
+            <#list sourceList as source> 
+                <button type="button" class="sourceToggle">${source}</button>
+            </#list>
+        </div>
+    </div>
     <div id="clusters">
     </div>
 </div>
