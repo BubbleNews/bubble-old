@@ -20,21 +20,21 @@ $(document).ready(() => {
     $('.sourceToggle').click(function() {
         const button = $(this);
         // check if source currently being shown or not
-        if (sourceMap.get(button.text)) {
+        if (sourceMap.get(button.text())) {
             // filter out source
-            $('.' + button.text).hide();
-            sourceMap.set(button.text, false);
+            $('.' + button.text()).hide();
+            sourceMap.set(button.text(), false);
             button.css("background-color", "palevioletred");
         } else {
             // show results from source
-            $('.' + button.text).show();
-            sourceMap.set(button.text, true);
+            $('.' + button.text()).show();
+            sourceMap.set(button.text(), true);
             button.css("background-color", "lightgreen");
         }
     });
 
     $('.sourceToggle').each(function(index, element) {
-        const source = $(this).text;
+        const source = $(this).text();
         sourceMap.set(source, true);
     });
 });
@@ -82,7 +82,7 @@ function getChart(date) {
         let colorInd = 0;
         let i;
         for (i = 0; i < clusters.length; i++) {
-            if (colorInd > colors.length) {
+            if (colorInd >= colors.length) {
                 colorInd = 0;
             }
             appendCluster(clusters[i], colors[colorInd]);
@@ -91,7 +91,7 @@ function getChart(date) {
     })
 }
 
-function appendCluster(cluster, num, color) {
+function appendCluster(cluster, color) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
@@ -126,7 +126,8 @@ function getCluster(clusterId) {
         let i;
         for (i = 0; i < articles.length; i++) {
             const article = articles[i]
-            const articleHTML = '<div id="' + divId + i  + '" class="article">'
+            const articleHTML = '<div id="' + divId + i  + '" class="article ' + article.sourceName
+                + '">'
                 + ' <a href="' + article.url + '" target="_blank">'
                 + article.title + '</a></div>';
             $('#' + clusterId + 'articles').append(articleHTML);
