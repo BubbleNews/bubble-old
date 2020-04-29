@@ -33,7 +33,7 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/backloaded big Cluster 1.db");
+    DATABASE = new NewsData("data/2 days data.db");
     new Main(args).run();
   }
 
@@ -54,7 +54,7 @@ public final class Main {
       parser.accepts("port").withRequiredArg().ofType(Integer.class)
           .defaultsTo(DEFAULT_PORT);
       OptionSet options = parser.parse(args);
-
+j
       runSparkServer((int) options.valueOf("port"));
 
 
