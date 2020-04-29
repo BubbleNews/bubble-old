@@ -2,6 +2,7 @@ package edu.brown.cs.term_project.Bubble;
 
 public class ArticleJSON {
 
+  private String sourceName;
   private String[] authors;
   private String title;
   private String description;
@@ -9,8 +10,9 @@ public class ArticleJSON {
   private String timePublished;
   private String content;
 
-  public ArticleJSON(String[] authors, String title, String description, String url,
+  public ArticleJSON(String sourceName, String[] authors, String title, String description, String url,
                      String timePublished, String content) {
+    this.sourceName = sourceName;
     this.authors = authors;
     this.title = title;
     this.description = description;
