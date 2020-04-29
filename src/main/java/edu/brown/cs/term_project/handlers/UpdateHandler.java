@@ -52,7 +52,7 @@ public class UpdateHandler {
 
 
   public static void main(String[] args) throws Exception {
-    ArticleJSON testArticle = new ArticleJSON(new String[]{"Kayla Suazo"},
+    ArticleJSON testArticle = new ArticleJSON("BuzzFeed", new String[]{"Kayla Suazo"},
         "23 Top-Rated Cleaning Products That Are Popular For A Reason",
         "So good, they have *a ton* of 4- and 5-star reviews.",
         "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
