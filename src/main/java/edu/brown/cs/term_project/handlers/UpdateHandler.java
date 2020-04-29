@@ -42,14 +42,9 @@ public class UpdateHandler {
 //      updateResponse.setStatus(1);
 //      updateResponse.setMessage(e.getMessage());
 //    }
-//    // convert to json and return
+//    // convert to particles.json and return
     return new Gson().toJson(updateResponse);
   }
-
-
-
-
-
 
   public static void main(String[] args) throws Exception {
     ArticleJSON testArticle = new ArticleJSON("BuzzFeed", new String[]{"Kayla Suazo"},

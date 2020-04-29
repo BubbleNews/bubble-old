@@ -69,6 +69,7 @@ public final class ChartHandler {
      */
     ChartResponse(int status, String message) {
       super(status, message);
+      clusters = new ArrayList<>();
     }
 
     /**

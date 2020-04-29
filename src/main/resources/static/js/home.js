@@ -3,6 +3,11 @@ let currentlyOpenClusterId = null;
 const sourceMap = new Map()
 
 $(document).ready(() => {
+
+    /* startup particlejs */
+    particlesJS.load('particles-js', '../json/particles.json', function() {
+        console.log('callback - particles.js config loaded');
+    });
     // add date selector
     addDate();
     // add on click to date button
@@ -14,22 +19,23 @@ $(document).ready(() => {
 
     $('.sourceToggle').click(function() {
         const button = $(this);
+        const cleanSource = cleanSourceName(button.text());
         // check if source currently being shown or not
-        if (sourceMap.get(button.text)) {
+        if (sourceMap.get(cleanSource)) {
             // filter out source
-            $('.' + button.text).hide();
-            sourceMap.set(button.text, false);
+            $('.' + cleanSource).hide();
+            sourceMap.set(cleanSource, false);
             button.css("background-color", "palevioletred");
         } else {
             // show results from source
-            $('.' + button.text).show();
-            sourceMap.set(button.text, true);
+            $('.' + cleanSource).show();
+            sourceMap.set(cleanSource, true);
             button.css("background-color", "lightgreen");
         }
     });
 
     $('.sourceToggle').each(function(index, element) {
-        const source = $(this).text;
+        const source = cleanSourceName($(this).text());
         sourceMap.set(source, true);
     });
 });
@@ -38,17 +44,20 @@ $(document).ready(() => {
 
 function addDate() {
     const today = new Date().toISOString().split('T')[0];
-    const dateHtml = '<input type="date" id="date" name="trip-start"'
-        + ' value="' + today + '">';
-    $('#dateWrapper').prepend(dateHtml);
+    $('#date').val(today);
 }
 
 function dateClickHandler() {
-    const date = new Date($('#date').val());
+    const dateVal = $('#date').val();
+    const dateArr = dateVal.split('-').map(x => parseInt(x));
+    const date = new Date(dateArr[0], dateArr[1] - 1, dateArr[2]);
     console.log(date);
     // check if date is later than today
     if (date > new Date()) {
-        alert('Cannot view news from the future.')
+        $("#clusters").empty();
+        $('#chartMessage').empty();
+        $('#chartMessage').append('<p>Cannot find articles from the future.</p>');
+        $('#chartMessage').show();
         return;
     } else {
         $("#clusters").empty();
@@ -63,8 +72,13 @@ function stringifyDate(date) {
 }
 
 function getChart(date) {
+    // clear messages
+    $('.message').hide();
     const dateStr = stringifyDate(date);
+    console.log(dateStr);
     let chartUrl = 'api/chart';
+    let colors = ["LightCoral", "LightCyan", "LightGreen", "LightYellow", "LightSalmon", "LightPink",
+    "LightSkyBlue", "LavenderBlush", "LightSeaGreen"];
     // update request url with date if needed
     chartUrl += '?date=' + dateStr;
     // send get request
@@ -72,19 +86,34 @@ function getChart(date) {
         const parsed = JSON.parse(data);
         // TODO: do something with parsed chart response
         const clusters = parsed.clusters;
+
+        if (clusters.length == 0) {
+            $('#chartMessage').empty();
+            $('#chartMessage').append('<p>No articles stored for this date.</p>');
+            $('#chartMessage').show();
+            return;
+        }
+
+        let colorInd = 0;
         let i;
         for (i = 0; i < clusters.length; i++) {
-            appendCluster(clusters[i], i);
+            if (colorInd >= colors.length) {
+                colorInd = 0;
+            }
+            appendCluster(clusters[i], colors[colorInd]);
+            colorInd++;
         }
     })
 }
 
-function appendCluster(cluster, num) {
-    const classNum = num % 4;
+function appendCluster(cluster, color) {
+    const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
-        + " class='cluster cluster" + classNum + "'>"
-        + "<p>" + cluster.headline + "</p>"
+        + " class='cluster cluster" + classNum + "'"
+        + "style='background-color:" + color + ";'>"
+        + "<h2>" + cluster.headline
+        + "<div class='clusterSize'>" + cluster.size + "</div></h2>"
         + "</div>";
     $('#clusters').append(clusterHtml);
     // add a click function to get clusters
@@ -112,14 +141,24 @@ function getCluster(clusterId) {
         const articles = parsed.articles;
         let i;
         for (i = 0; i < articles.length; i++) {
-            const article = articles[i]
-            const articleHTML = '<div id="' + divId + i  + '" class="article">'
-                + ' <a href="' + article.url + '" target="_blank">'
-                + article.title + '</a></div>';
+            const article = articles[i];
+            let cleanSource = cleanSourceName(article.sourceName);
+            let articleHTML = '<div id="' + divId + i  + '" class="article ' + cleanSource + '"';
+            if (!sourceMap.get(cleanSource)) {
+                articleHTML += "style='display: none;'";
+            }
+            articleHTML += '> <h3><a href="' + article.url + '" target="_blank">'
+                + article.title + '</a></h3>'
+                + '<div class="sourceDate"><h3>' + article.sourceName + ' | '
+                + article.timePublished.slice(0, 16) + ' UTC</h3></div></div>';
             $('#' + clusterId + 'articles').append(articleHTML);
         }
         currentlyOpenClusterId = clusterId;
     });
+}
+
+function cleanSourceName(sourceName) {
+    return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }
 
 

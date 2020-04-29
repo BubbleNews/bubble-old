@@ -29,6 +29,21 @@ public final class NewsData extends Database {
     }
 
     /**
+     * Gets the set of sources in the database.
+     * @return the set of sources
+     * @throws SQLException if error occurs
+     */
+    public Set<String> getSources() throws SQLException {
+        Set<String> sources = new HashSet<String>();
+        PreparedStatement prep = conn.prepareStatement("SELECT DISTINCT source from articles");
+        ResultSet rs = prep.executeQuery();
+        while (rs.next()) {
+            sources.add(rs.getString(1));
+        }
+        return sources;
+    }
+
+    /**
      * Inserts an article and the entities of that article given by frequency map.
      *
      * @param article            the article to insert
@@ -133,15 +148,13 @@ public final class NewsData extends Database {
 
     public List<ArticleJSON> getArticlesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
         // build sql statement
-        String statement = "SELECT title, url, date_published FROM articles WHERE ";
+        String statement = "SELECT title, url, date_published, source FROM articles WHERE ";
         if (isTemporary) {
             statement += "temp_cluster_id";
         } else {
             statement += "final_cluster_id";
         }
         statement += " = (?)";
-        System.out.println(clusterId);
-        System.out.println(statement);
         PreparedStatement prep = conn.prepareStatement(statement);
         prep.setInt(1, clusterId);
         ResultSet rs = prep.executeQuery();
@@ -150,7 +163,8 @@ public final class NewsData extends Database {
             String title = rs.getString(1);
             String url = rs.getString(2);
             String datePublished = rs.getString(3);
-            ArticleJSON a = new ArticleJSON(title, url, datePublished);
+            String source = rs.getString(4);
+            ArticleJSON a = new ArticleJSON(source, title, url, datePublished);
             articles.add(a);
         }
         return articles;
@@ -319,16 +333,16 @@ public final class NewsData extends Database {
      * @throws SQLException only thrown if the database is malformed
      */
     public List<ChartCluster> getClusters(String date) throws SQLException {
-//        String query = "SELECT id, title, size FROM clusters WHERE day = ?";
-        String query = "SELECT id, title, size FROM clusters";
+        System.out.println(date);
+        String query = "SELECT id, title, size FROM clusters WHERE day = ?";
+//        String query = "SELECT id, title, size FROM clusters";
         PreparedStatement prep = conn.prepareStatement(query);
-//        prep.setString(1, date);
+        prep.setString(1, date);
         ResultSet rs = prep.executeQuery();
         List<ChartCluster> clusters = new ArrayList<>();
         while (rs.next()) {
             clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
         }
-        System.out.println(clusters);
         return clusters;
     }
 

@@ -1,9 +1,61 @@
+#chartMessageWrapper {
+    margin: auto;
+    font-size: 30px;
+}
+
+#date {
+    font-size: 40px;
+}
+
+#dateAndButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#dateButton {
+    margin-top: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 30px;
+}
+
+#particles-js {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -10;
+    top: 0;
+    left: 0;
+    background-color: lightskyblue;
+}
+
 .article {
-    border: solid;
-    padding: 30px;
+    padding: 10px;
     width: 90%;
     background-color: antiquewhite;
-    margin: auto;
+    border-style: solid;
+    border-color: white;
+    border-radius:20px;
+    margin: 10px;
+}
+
+.sourceDate {
+    background: lightsteelblue;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 0px 10px;
+}
+
+.clusterSize {
+    background: lightyellow;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 0px 10px;
+    margin: 10px;
+    border: goldenrod;
+    border-style: solid;
+    color: goldenrod;
 }
 
 .articlesWrapper {
@@ -11,6 +63,34 @@
     flex-direction: column;
     width: 90%;
     padding: 20px;
+}
+
+#sourcesWrapper {
+    background-color:lightsalmon;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: white;
+    display:inline-table;
+}
+
+h1 {
+    font-family: 'Helvetica', sans-serif;
+    font-size: xxx-large;
+}
+
+h2 {
+    font-family: 'Helvetica', sans-serif;
+}
+
+p {
+    font-family: 'Helvetica', sans-serif;
+}
+
+h4 {
+    font-family: 'Helvetica', sans-serif;
+    text-align: center;
+    color: lightcyan;
+    font-size: 1em;
 }
 
 #date {
@@ -27,35 +107,43 @@
 }
 
 .cluster {
-    margin: auto;
     width: 90%;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-style: solid;
+    border-color: white;
+    border-radius:20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-.cluster0 {
-    background-color: lightblue;
+.cluster, h3 {
+    font-family: 'Helvetica', sans-serif;
+    text-decoration: none;
+    font-size: 20px;
 }
 
-.cluster1 {
-    background-color: lightsalmon;
-}
-
-.cluster2 {
-    background-color: lightseagreen;
-}
-
-.cluster3 {
-    background-color: lightpink;
+.cluster, a {
+    font-family: 'Helvetica', sans-serif;
+    text-decoration: none;
+    font-size: 20px;
 }
 
 #graphWrapper {
     padding: 20px;
     display: flex;
     flex-direction: row;
+}
+
+.message {
+    background-color: white;
+    border-radius:20px;
+    padding: 10px;
+    margin: auto;
 }
 
 #sources {
@@ -65,4 +153,12 @@
 
 .sourceToggle {
     background-color: lightgreen;
+    border-width:0;
+    padding: 10px;
+    margin: 5px;
+    border-radius:5px;
+}
+
+.sourceToggle:focus {
+    outline-width: 0
 }

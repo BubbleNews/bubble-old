@@ -33,7 +33,7 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/backloaded.db");
+    DATABASE = new NewsData("data/backloaded big Cluster 1.db");
     new Main(args).run();
   }
 
@@ -103,7 +103,7 @@ public final class Main {
 
     path("/bubble", () -> {
       // home page endpoint
-      get("/home", new HomeHandler(), freeMarker);
+      get("/home", new HomeHandler(DATABASE), freeMarker);
       // api endpoints
       path("/api", () -> {
         // TODO: add authentication for api calls with before()
