@@ -33,7 +33,7 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/backloaded Cluster 2.db");
+    DATABASE = new NewsData("data/backloaded big Cluster 1.db");
     new Main(args).run();
   }
 
