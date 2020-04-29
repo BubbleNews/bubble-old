@@ -1,8 +1,6 @@
 from __future__ import print_function
 
 import json
-import dateutil.parser
-
 from newspaper import Article
 from newspaper.article import ArticleException
 from newsapi import NewsApiClient
