@@ -9,11 +9,13 @@
 }
 
 .article {
-    border: solid;
     padding: 30px;
     width: 90%;
     background-color: antiquewhite;
-    margin: auto;
+    border-style: solid;
+    border-color: white;
+    border-radius:20px;
+    margin: 10px;
 }
 
 .articlesWrapper {
@@ -36,6 +38,17 @@ p {
     font-family: 'Helvetica', sans-serif;
 }
 
+h4 {
+    font-family: 'Helvetica', sans-serif;
+    text-align: center;
+    text-decoration: underline;
+    text-underline-position: under;
+    color: lightsalmon;
+    -webkit-text-stroke: white;
+    -webkit-text-stroke-width: .04em;
+    font-size: 1.5em;
+}
+
 #date {
     margin: auto;
 }
@@ -50,7 +63,6 @@ p {
 }
 
 .cluster {
-    margin: auto;
     width: 90%;
     text-align: center;
     display: flex;
@@ -58,6 +70,15 @@ p {
     justify-content: center;
     align-items: center;
     border-style: solid;
+    border-color: white;
+    border-radius:20px;
+    margin: 10px;
+}
+
+.cluster, h3 {
+    font-family: 'Helvetica', sans-serif;
+    text-decoration: none;
+    font-size: 20px;
 }
 
 .cluster, a {
@@ -79,6 +100,10 @@ p {
 
 .sourceToggle {
     background-color: lightgreen;
+    border-width:0;
+    padding: 10px;
+    margin: 5px;
+    border-radius:5px;
 }
 
 .sourceToggle:focus {

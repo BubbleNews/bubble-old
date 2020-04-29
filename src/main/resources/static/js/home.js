@@ -70,8 +70,8 @@ function stringifyDate(date) {
 function getChart(date) {
     const dateStr = stringifyDate(date);
     let chartUrl = 'api/chart';
-    let colors = ["Crimson", "Cyan", "BlueViolet", "Coral", "GreenYellow", "SandyBrown", "Yellow",
-        "SkyBlue", "Olive"];
+    let colors = ["LightCoral", "LightCyan", "LightGreen", "LightYellow", "LightSalmon", "LightPink",
+    "LightSkyBlue", "LavenderBlush", "LightSeaGreen"];
     // update request url with date if needed
     chartUrl += '?date=' + dateStr;
     // send get request
@@ -126,10 +126,12 @@ function getCluster(clusterId) {
         let i;
         for (i = 0; i < articles.length; i++) {
             const article = articles[i]
+            // Change article Time splice to start at 11 for just time
             const articleHTML = '<div id="' + divId + i  + '" class="article ' + article.sourceName
                 + '">'
-                + ' <a href="' + article.url + '" target="_blank">'
-                + article.title + '</a></div>';
+                + '<h3><a href="' + article.url + '" target="_blank">'
+                + article.title + '</a>'
+                + ' | ' + article.sourceName + ' | ' + article.timePublished.slice(0, 16) + '</h3></div>';
             $('#' + clusterId + 'articles').append(articleHTML);
         }
         currentlyOpenClusterId = clusterId;

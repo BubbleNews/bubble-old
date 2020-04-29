@@ -6,11 +6,10 @@
     <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
-<div id="titleWrapper">
-    <h1>Bubble</h1>
-</div>
-
 <div id="particles-js"></div>
+<div id="titleWrapper">
+    <h1 style="color: LightCoral">Bubble</h1>
+</div>
 
 <div id="dateWrapper">
     <button id="dateButton" type="button">Show</button>
@@ -18,7 +17,7 @@
 
 <div id="graphWrapper">
     <div id="sourcesWrapper">
-        <p>Click to Toggle Source</p>
+        <h4>Visible Sources</h4>
         <div id="sources">
             <#list sourceList as source>
                 <button type="button" class="sourceToggle">${source}</button>
