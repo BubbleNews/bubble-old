@@ -129,7 +129,7 @@ public final class NewsData extends Database {
 
     public List<ArticleJSON> getArticlesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
         // build sql statement
-        String statement = "SELECT title, url, date_published FROM articles WHERE ";
+        String statement = "SELECT title, url, date_published, source FROM articles WHERE ";
         if (isTemporary) {
             statement += "temp_cluster_id";
         } else {
@@ -146,7 +146,8 @@ public final class NewsData extends Database {
             String title = rs.getString(1);
             String url = rs.getString(2);
             String datePublished = rs.getString(3);
-            ArticleJSON a = new ArticleJSON(title, url, datePublished);
+            String source = rs.getString(4);
+            ArticleJSON a = new ArticleJSON(source, title, url, datePublished);
             articles.add(a);
         }
         return articles;
