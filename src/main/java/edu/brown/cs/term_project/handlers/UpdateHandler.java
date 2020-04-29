@@ -42,7 +42,7 @@ public class UpdateHandler {
 //      updateResponse.setStatus(1);
 //      updateResponse.setMessage(e.getMessage());
 //    }
-//    // convert to json and return
+//    // convert to particles.json and return
     return new Gson().toJson(updateResponse);
   }
 
@@ -69,7 +69,7 @@ public class UpdateHandler {
    * Sends an HTTP GET request to a url.
    *
    * @param uri the url to send the get request to
-   * @return a json string response
+   * @return a particles.json string response
    * @throws Exception
    */
   private static String sendGet(String uri) throws Exception {

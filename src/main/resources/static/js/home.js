@@ -1,6 +1,11 @@
 let currentlyOpenClusterId = null;
 
 $(document).ready(() => {
+
+    /* startup particlejs */
+    particlesJS.load('particles-js', '../json/particles.json', function() {
+        console.log('callback - particles.js config loaded');
+    });
     // add date selector
     addDate();
     // add on click to date button
@@ -40,6 +45,8 @@ function stringifyDate(date) {
 function getChart(date) {
     const dateStr = stringifyDate(date);
     let chartUrl = 'api/chart';
+    let colors = ["Crimson", "Cyan", "BlueViolet", "Coral", "GreenYellow", "SandyBrown", "Yellow",
+        "SkyBlue", "Olive"];
     // update request url with date if needed
     chartUrl += '?date=' + dateStr;
     // send get request
@@ -47,19 +54,25 @@ function getChart(date) {
         const parsed = JSON.parse(data);
         // TODO: do something with parsed chart response
         const clusters = parsed.clusters;
+        let colorInd = 0;
         let i;
         for (i = 0; i < clusters.length; i++) {
-            appendCluster(clusters[i]);
+            if (colorInd > colors.length) {
+                colorInd = 0;
+            }
+            appendCluster(clusters[i], colors[colorInd]);
+            colorInd++;
         }
     })
 }
 
-function appendCluster(cluster) {
+function appendCluster(cluster, color) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
-        + " class='cluster cluster" + classNum + "'>"
-        + "<p>" + cluster.headline + "</p>"
+        + " class='cluster cluster" + classNum + "'"
+        + "style='background-color:" + color + ";'>"
+        + "<h2>" + cluster.headline + "</h2>"
         + "</div>";
     $('#clusters').append(clusterHtml);
     // add a click function to get clusters
