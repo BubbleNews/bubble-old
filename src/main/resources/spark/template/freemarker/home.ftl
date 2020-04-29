@@ -19,7 +19,7 @@
 </div>
 
 <div id="graphWrapper">
-    <div id="sourcesWrapper">
+    <div id="sourcesWrapper" class="sidePanel">
         <h4>Visible Sources</h4>
         <div id="sources">
             <#list sourceList as source>
@@ -33,6 +33,16 @@
         </div>
     </div>
     <div id="clusters">
+    </div>
+    <div id="reclusterWrapper" class="sidePanel">
+        <h4>Clustering Parameters</h4>
+        <div id="clusterParameters">
+            <p>Edge Percentage Threshold</p>
+            <input type="number" id="edgeThreshold" min="0" max="100" value="75">
+            <p>Entity vs Vocab Weight</p>
+            <input type="range" min="0" max="1" step="0.1">
+            <button type="button" style="margin: auto;">Recluster</button>
+        </div>
     </div>
 </div>
 
