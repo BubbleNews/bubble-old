@@ -88,6 +88,10 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
   }
 
 
+  // For find clusters, if big enough increase from previous avg radius - to avg radius betweeen
+  // new nodes and exisiting ones throw out
+
+
   /**
    * Method to optimally divide node into n clusters.
    * @param clusterNodes - the head nodes to start each cluster with

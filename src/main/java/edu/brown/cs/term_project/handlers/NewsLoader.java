@@ -53,10 +53,8 @@ public class NewsLoader {
     requestParams.put("numArticles", Integer.toString(numArticles));
     String url = addParameters(pythonEndpoint, requestParams);
     // send request
-    System.out.println("Calling python scraper to get news...");
     String pythonResponse = sendGet(url);
     // parse the response
-    System.out.println("Parsing articles received from scraper...");
     Gson gson = new Gson();
     JsonParser parser = new JsonParser();
     JsonArray jsonArray = parser.parse(pythonResponse).getAsJsonArray();
@@ -139,7 +137,8 @@ public class NewsLoader {
   }
 
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/backloaded.db"), "http://127.0.0.1:5000/scrape");
+    NewsLoader loader = new NewsLoader(new NewsData("data/backloaded.db"), "http://127.0.0" +
+        ".1:5000/scrape");
 //    Date now = new Date();
 //    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);

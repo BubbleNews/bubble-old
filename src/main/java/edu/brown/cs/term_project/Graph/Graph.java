@@ -25,6 +25,7 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
     System.out.println("edges: " + edges.size());
     setThreshold(); // set threshold based on node count
     System.out.println("thresh: " + threshold);
+    ClusterMethods.setRadiusThreshold(nodes);
   }
 
 
@@ -48,7 +49,7 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
   public void setThreshold() {
     System.out.println(nodes.size());
     System.out.println(edges.size());
-    this.threshold = Math.min(2.0 * nodes.size() / edges.size(), 1); //set so that number of edges
+    this.threshold = Math.min(1.0 * nodes.size() / edges.size(), 1); //set so that number of edges
     // will be
     // twice the number of nodes
   }

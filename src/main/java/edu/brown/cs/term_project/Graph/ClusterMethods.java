@@ -64,7 +64,7 @@ public final class ClusterMethods {
             setRadiusThreshold(Set<T> articles) {
     double graphMeanRadius = ClusterMethods.meanRadiusSet(articles);
     System.out.println("mean Radius: " + graphMeanRadius);
-    final double normalGraphMeanRadius = .5; //experiment
+    final double normalGraphMeanRadius = 10; //experiment
     final double percentCurrent = .5; //experiment - how much to use current graph in threshold
     final double percentFullGraph = 1.2; //experiment -- how many times tighter clusters should be
     // than normal graph

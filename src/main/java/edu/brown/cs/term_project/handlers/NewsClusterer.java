@@ -10,6 +10,7 @@ import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,13 +34,22 @@ public class NewsClusterer {
           a1.addEdge(tempEdge);
           a2.addEdge(tempEdge);
           edges.add(tempEdge);
-          System.out.println(a1.getId() + " - " + a2.getId() + " : " + tempEdge.getDistance());
         }
       }
     }
 
+    edges.sort(Comparator.comparingDouble(Similarity::getDistance));
+    int size = edges.size();
+    for (int i = 0; i < size; i++) {
+      if (i < 25 || i > (size - 25)) {
+        Similarity tempEdge = edges.get(i);
+        System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
+            + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());
+      }
+    }
+
     Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
-    graph.runClusters(1);
+    graph.runClusters(2);
     db.insertClusters(graph.getClusters());
   }
 
