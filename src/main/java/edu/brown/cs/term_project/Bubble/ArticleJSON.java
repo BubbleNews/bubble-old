@@ -21,7 +21,8 @@ public class ArticleJSON {
     this.content = content;
   }
 
-  public ArticleJSON(String title, String url, String timePublished) {
+  public ArticleJSON(String sourceName, String title, String url, String timePublished) {
+    this.sourceName = sourceName;
     this.title = title;
     this.url = url;
     this.timePublished = timePublished;
