@@ -44,13 +44,13 @@ $(document).ready(() => {
 
 function addDate() {
     const today = new Date().toISOString().split('T')[0];
-    const dateHtml = '<input type="date" id="date" name="trip-start"'
-        + ' value="' + today + '">';
-    $('#dateWrapper').prepend(dateHtml);
+    $('#date').val(today);
 }
 
 function dateClickHandler() {
-    const date = new Date($('#date').val());
+    const dateVal = $('#date').val();
+    const dateArr = dateVal.split('-').map(x => parseInt(x));
+    const date = new Date(dateArr[0], dateArr[1] - 1, dateArr[2]);
     console.log(date);
     // check if date is later than today
     if (date > new Date()) {
@@ -70,6 +70,7 @@ function stringifyDate(date) {
 
 function getChart(date) {
     const dateStr = stringifyDate(date);
+    console.log(dateStr);
     let chartUrl = 'api/chart';
     let colors = ["LightCoral", "LightCyan", "LightGreen", "LightYellow", "LightSalmon", "LightPink",
     "LightSkyBlue", "LavenderBlush", "LightSeaGreen"];
@@ -80,6 +81,12 @@ function getChart(date) {
         const parsed = JSON.parse(data);
         // TODO: do something with parsed chart response
         const clusters = parsed.clusters;
+
+        if (clusters.length == 0) {
+            $('#chartMessage').append('<p>No data found for this date.</p>');
+            return;
+        }
+
         let colorInd = 0;
         let i;
         for (i = 0; i < clusters.length; i++) {

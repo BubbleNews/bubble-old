@@ -1,3 +1,23 @@
+#chartMessageWrapper {
+}
+
+#date {
+    font-size: 40px;
+}
+
+#dateAndButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#dateButton {
+    margin-top: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 30px;
+}
+
 #particles-js {
     width: 100%;
     height: 100%;
@@ -91,6 +111,13 @@ h4 {
     padding: 20px;
     display: flex;
     flex-direction: row;
+}
+
+.message {
+    background-color: white;
+    border-radius:20px;
+    padding: 10px;
+    margin: auto;
 }
 
 #sources {

@@ -12,7 +12,10 @@
 </div>
 
 <div id="dateWrapper">
-    <button id="dateButton" type="button">Show</button>
+    <div id="dateAndButton">
+        <input type="date" id="date">
+        <button id="dateButton" type="button">Show</button>
+    </div>
 </div>
 
 <div id="graphWrapper">
@@ -22,6 +25,11 @@
             <#list sourceList as source>
                 <button type="button" class="sourceToggle">${source}</button>
             </#list>
+        </div>
+    </div>
+    <div id="chartMessageWrapper">
+        <div id="chartMessage" class="message">
+
         </div>
     </div>
     <div id="clusters">
