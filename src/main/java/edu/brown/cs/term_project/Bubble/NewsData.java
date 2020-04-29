@@ -29,6 +29,21 @@ public final class NewsData extends Database {
     }
 
     /**
+     * Gets the set of sources in the database.
+     * @return the set of sources
+     * @throws SQLException if error occurs
+     */
+    public Set<String> getSources() throws SQLException {
+        Set<String> sources = new HashSet<String>();
+        PreparedStatement prep = conn.prepareStatement("SELECT DISTINCT source from articles");
+        ResultSet rs = prep.executeQuery();
+        while (rs.next()) {
+            sources.add(rs.getString(1));
+        }
+        return sources;
+    }
+
+    /**
      * Inserts an article and the entities of that article given by frequency map.
      *
      * @param article            the article to insert
@@ -136,8 +151,6 @@ public final class NewsData extends Database {
             statement += "final_cluster_id";
         }
         statement += " = (?)";
-        System.out.println(clusterId);
-        System.out.println(statement);
         PreparedStatement prep = conn.prepareStatement(statement);
         prep.setInt(1, clusterId);
         ResultSet rs = prep.executeQuery();
@@ -324,7 +337,6 @@ public final class NewsData extends Database {
         while (rs.next()) {
             clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
         }
-        System.out.println(clusters);
         return clusters;
     }
 

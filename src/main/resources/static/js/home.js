@@ -19,22 +19,23 @@ $(document).ready(() => {
 
     $('.sourceToggle').click(function() {
         const button = $(this);
+        const cleanSource = cleanSourceName(button.text());
         // check if source currently being shown or not
-        if (sourceMap.get(button.text())) {
+        if (sourceMap.get(cleanSource)) {
             // filter out source
-            $('.' + button.text()).hide();
-            sourceMap.set(button.text(), false);
+            $('.' + cleanSource).hide();
+            sourceMap.set(cleanSource, false);
             button.css("background-color", "palevioletred");
         } else {
             // show results from source
-            $('.' + button.text()).show();
-            sourceMap.set(button.text(), true);
+            $('.' + cleanSource).show();
+            sourceMap.set(cleanSource, true);
             button.css("background-color", "lightgreen");
         }
     });
 
     $('.sourceToggle').each(function(index, element) {
-        const source = $(this).text();
+        const source = cleanSourceName($(this).text());
         sourceMap.set(source, true);
     });
 });
@@ -125,15 +126,22 @@ function getCluster(clusterId) {
         const articles = parsed.articles;
         let i;
         for (i = 0; i < articles.length; i++) {
-            const article = articles[i]
-            const articleHTML = '<div id="' + divId + i  + '" class="article ' + article.sourceName
-                + '">'
-                + ' <a href="' + article.url + '" target="_blank">'
+            const article = articles[i];
+            let cleanSource = cleanSourceName(article.sourceName);
+            let articleHTML = '<div id="' + divId + i  + '" class="article ' + cleanSource + '"';
+            if (!sourceMap.get(cleanSource)) {
+                articleHTML += "style='display: none;'";
+            }
+            articleHTML += '> <a href="' + article.url + '" target="_blank">'
                 + article.title + '</a></div>';
             $('#' + clusterId + 'articles').append(articleHTML);
         }
         currentlyOpenClusterId = clusterId;
     });
+}
+
+function cleanSourceName(sourceName) {
+    return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }
 
 
