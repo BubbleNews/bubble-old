@@ -7,18 +7,15 @@ import edu.brown.cs.term_project.Bubble.ArticleJSON;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.nlp.TextProcessing;
-import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.DateTime;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,19 +30,20 @@ public class NewsLoader {
   }
 
   public void executeBatches(int numBatches, int articlesPerBatch, int step) throws Exception {
-    Date initialEndTime = new Date();
-    Date initialStartTime = DateUtils.addHours(initialEndTime, -1 * step);
+    Instant endTime = Instant.now();
+    Duration hour = Duration.ofHours(1);
+    Instant startTime = endTime.minus(step, ChronoUnit.HOURS);
     for (int i = 0; i < numBatches; i++) {
-      Date endTime = DateUtils.addHours(initialEndTime, -1 * i * step);
-      Date startTime = DateUtils.addHours(initialStartTime, -1 * i * step);
       System.out.println("Start: " + startTime);
       System.out.println("End: " + endTime);
       System.out.println("Getting batch...");
       loadArticlesBatch(startTime, endTime, articlesPerBatch);
+      endTime = startTime;
+      startTime = endTime.minus(step, ChronoUnit.HOURS);
     }
   }
 
-  public void loadArticlesBatch(Date startTime, Date endTime, int numArticles) throws Exception {
+  public void loadArticlesBatch(Instant startTime, Instant endTime, int numArticles) throws Exception {
     // make request
     HashMap<String, String> requestParams = new HashMap<>();
     requestParams.put("startTime", formatDate(startTime));
@@ -81,14 +79,9 @@ public class NewsLoader {
     return sb.toString();
   }
 
-  private String formatDate(Date date) {
-    System.out.println(date.toString());
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-    String strDate = dateFormat.format(date);
-    System.out.println(strDate);
-    return strDate.replace(' ', 'T');
+  private String formatDate(Instant date) {
+    return date.truncatedTo(ChronoUnit.SECONDS).toString().replace("Z", "");
   }
-
 
   /**
    * Sends an HTTP GET request to the python endpoint.
@@ -143,6 +136,6 @@ public class NewsLoader {
 //    Date now = new Date();
 //    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(20, 100, 2);
+    loader.executeBatches(5, 100, 1);
   }
 }
