@@ -65,12 +65,13 @@
     padding: 20px;
 }
 
-#sourcesWrapper {
+.sidePanel {
     background-color:lightsalmon;
     border-radius: 10px;
     border-style: solid;
     border-color: white;
     display:inline-table;
+    text-align: center;
 }
 
 h1 {
@@ -107,7 +108,6 @@ h4 {
 }
 
 .cluster {
-    width: 90%;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -161,4 +161,8 @@ h4 {
 
 .sourceToggle:focus {
     outline-width: 0
+}
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
 }

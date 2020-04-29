@@ -64,10 +64,11 @@ public final class NewsData extends Database {
     private int insertArticle(ArticleJSON article) throws SQLException {
         PreparedStatement prep = conn.prepareStatement(
                 "INSERT into articles (source, title, url, date_published, date_pulled,"
-                        + " text) VALUES (?, ?, ?, ?, DATETIME('now'), ?);"
+                        + " text) SELECT ?, ?, ?, ?, DATETIME('now'), ?"
+                    + "WHERE NOT EXISTS (SELECT 1 FROM articles WHERE title = ?);"
         );
         prep.setString(1, article.getSourceName());
-        prep.setString(2, article.getTitle());
+        prep.setString(2, article.getTitle().replace("\'", ""));
         prep.setString(3, article.getUrl());
 
         String datePublished = article.getTimePublished();
@@ -76,6 +77,7 @@ public final class NewsData extends Database {
             .substring(0, Math.min(19, datePublished.length()));
         prep.setString(4, datePublished);
         prep.setString(5, article.getContent());
+        prep.setString(6, article.getTitle().replace("\'", ""));
         prep.execute();
         prep.close();
         // get id of article
@@ -102,7 +104,9 @@ public final class NewsData extends Database {
      */
     private void insertEntities(int articleId, HashMap<Entity, Integer> entityFrequencyMap) throws SQLException {
         for (Entity entity : entityFrequencyMap.keySet()) {
-            insertEntity(articleId, entity, entityFrequencyMap.get(entity));
+            if (!(entity.getClassType().length() == 1)) {
+                insertEntity(articleId, entity, entityFrequencyMap.get(entity));
+            }
         }
     }
 
@@ -201,7 +205,8 @@ public final class NewsData extends Database {
         PreparedStatement prep = conn.prepareStatement("SELECT id, title, date_published, author, "
                         + "url, text "
                         + "FROM articles "
-                //+ "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < DATETIME('now');"
+                + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
+            + "DATETIME('now');"
         );
         //prep.setInt(1, hours);
         ResultSet rs = prep.executeQuery();
