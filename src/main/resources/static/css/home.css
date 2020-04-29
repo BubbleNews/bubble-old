@@ -68,4 +68,15 @@ p {
 
 #graphWrapper {
     padding: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+#sources {
+    display: flex;
+    flex-direction: column;
+}
+
+.sourceToggle {
+    background-color: lightgreen;
 }

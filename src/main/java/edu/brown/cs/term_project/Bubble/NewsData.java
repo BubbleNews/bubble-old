@@ -48,13 +48,18 @@ public final class NewsData extends Database {
      */
     private int insertArticle(ArticleJSON article) throws SQLException {
         PreparedStatement prep = conn.prepareStatement(
-                "INSERT into articles (title, url, author, date_published, date_pulled,"
+                "INSERT into articles (source, title, url, date_published, date_pulled,"
                         + " text) VALUES (?, ?, ?, ?, DATETIME('now'), ?);"
         );
-        prep.setString(1, article.getTitle());
-        prep.setString(2, article.getUrl());
-        prep.setString(3, article.getAuthors()[0]);
-        prep.setDate(4, new java.sql.Date(Instant.parse(article.getTimePublished()).toEpochMilli()));
+        prep.setString(1, article.getSourceName());
+        prep.setString(2, article.getTitle());
+        prep.setString(3, article.getUrl());
+
+        String datePublished = article.getTimePublished();
+        datePublished = datePublished
+            .replace('T', ' ')
+            .substring(0, Math.min(19, datePublished.length()));
+        prep.setString(4, datePublished);
         prep.setString(5, article.getContent());
         prep.execute();
         prep.close();
@@ -131,6 +136,8 @@ public final class NewsData extends Database {
             statement += "final_cluster_id";
         }
         statement += " = (?)";
+        System.out.println(clusterId);
+        System.out.println(statement);
         PreparedStatement prep = conn.prepareStatement(statement);
         prep.setInt(1, clusterId);
         ResultSet rs = prep.executeQuery();
@@ -307,23 +314,21 @@ public final class NewsData extends Database {
      * @throws SQLException only thrown if the database is malformed
      */
     public List<ChartCluster> getClusters(String date) throws SQLException {
-        String query = "SELECT id, title, size FROM clusters WHERE day = ?";
-        try (PreparedStatement prep = conn.prepareStatement(query)) {
-            prep.setString(1, date);
-            try (ResultSet rs = prep.executeQuery()) {
-                List<ChartCluster> clusters = new ArrayList<>();
-                while (rs.next()) {
-                    System.out.println("hello");
-                    clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
-                }
-                System.out.println(clusters);
-                return clusters;
-            }
+//        String query = "SELECT id, title, size FROM clusters WHERE day = ?";
+        String query = "SELECT id, title, size FROM clusters";
+        PreparedStatement prep = conn.prepareStatement(query);
+//        prep.setString(1, date);
+        ResultSet rs = prep.executeQuery();
+        List<ChartCluster> clusters = new ArrayList<>();
+        while (rs.next()) {
+            clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
         }
+        System.out.println(clusters);
+        return clusters;
     }
 
     public static void main(String[] args) throws Exception {
-        ArticleJSON testArticle = new ArticleJSON(new String[]{"Kayla Suazo"},
+        ArticleJSON testArticle = new ArticleJSON("BuzzFeed", new String[]{"Kayla Suazo"},
                 "23 Top-Rated Cleaning Products That Are Popular For A Reason",
                 "So good, they have *a ton* of 4- and 5-star reviews.",
                 "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
@@ -340,8 +345,8 @@ public final class NewsData extends Database {
                         + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
                         + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
         );
-        NewsData db = new NewsData("data/bubble.db");
-//        db.insertArticle(testArticle);
+        NewsData db = new NewsData("data/backloaded.db");
+        db.insertArticle(testArticle);
     }
 
 }

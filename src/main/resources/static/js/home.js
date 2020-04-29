@@ -1,5 +1,7 @@
 let currentlyOpenClusterId = null;
 
+const sourceMap = new Map()
+
 $(document).ready(() => {
 
     /* startup particlejs */
@@ -14,7 +16,30 @@ $(document).ready(() => {
     });
     // get current chart
     getChart(new Date());
+
+    $('.sourceToggle').click(function() {
+        const button = $(this);
+        // check if source currently being shown or not
+        if (sourceMap.get(button.text)) {
+            // filter out source
+            $('.' + button.text).hide();
+            sourceMap.set(button.text, false);
+            button.css("background-color", "palevioletred");
+        } else {
+            // show results from source
+            $('.' + button.text).show();
+            sourceMap.set(button.text, true);
+            button.css("background-color", "lightgreen");
+        }
+    });
+
+    $('.sourceToggle').each(function(index, element) {
+        const source = $(this).text;
+        sourceMap.set(source, true);
+    });
 });
+
+
 
 function addDate() {
     const today = new Date().toISOString().split('T')[0];
@@ -66,7 +91,7 @@ function getChart(date) {
     })
 }
 
-function appendCluster(cluster, color) {
+function appendCluster(cluster, num, color) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div id=" + cluster.clusterId
