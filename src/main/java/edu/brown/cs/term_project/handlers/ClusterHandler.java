@@ -8,6 +8,7 @@ import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**

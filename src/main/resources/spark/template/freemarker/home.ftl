@@ -20,7 +20,7 @@
     <div id="sourcesWrapper">
         <p>Click to Toggle Source</p>
         <div id="sources">
-            <#list sourceList as source> 
+            <#list sourceList as source>
                 <button type="button" class="sourceToggle">${source}</button>
             </#list>
         </div>

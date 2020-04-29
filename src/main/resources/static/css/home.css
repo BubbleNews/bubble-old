@@ -80,3 +80,7 @@ p {
 .sourceToggle {
     background-color: lightgreen;
 }
+
+.sourceToggle:focus {
+    outline-width: 0
+}
