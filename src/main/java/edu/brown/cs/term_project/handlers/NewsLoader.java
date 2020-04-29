@@ -19,9 +19,6 @@ import java.time.*;
 import java.util.HashMap;
 import java.util.List;
 
-import static edu.brown.cs.term_project.handlers.HTTPRequests.sendGet;
-
-
 public class NewsLoader {
   private NewsData db;
   String pythonEndpoint;
@@ -33,12 +30,10 @@ public class NewsLoader {
 
   public void executeBatches(int numBatches, int articlesPerBatch, int step) throws Exception {
     Instant endTime = Instant.now();
-    Duration hour = Duration.ofHours(1);
     Instant startTime = endTime.minus(step, ChronoUnit.HOURS);
     for (int i = 0; i < numBatches; i++) {
-      System.out.println("Start: " + startTime);
-      System.out.println("End: " + endTime);
-      System.out.println("Getting batch...");
+      System.out.println("Batch " + (i + 1) + "/" + numBatches+ ": Getting " + articlesPerBatch + " articles from "
+              + startTime + " to " + endTime);
       loadArticlesBatch(startTime, endTime, articlesPerBatch);
       endTime = startTime;
       startTime = endTime.minus(step, ChronoUnit.HOURS);
@@ -90,7 +85,6 @@ public class NewsLoader {
    * @throws Exception
    */
   private String sendGet(String url) throws Exception {
-
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create(url))
@@ -106,28 +100,25 @@ public class NewsLoader {
    * @throws SQLException if error occurred adding to database
    */
   private void processJSONArticles(List<ArticleJSON> jsonArticles) throws SQLException {
-    System.out.println("Processing " + jsonArticles.size() + " JSON articles...");
+    System.out.println("-----Scraped " + jsonArticles.size() + " articles-----");
     // keep track of total number of articles each word has occurred in
     HashMap<String, Integer> occurenceMap = new HashMap<>();
     for (ArticleJSON article: jsonArticles) {
-      System.out.println("Processing article: " + article.getUrl());
-      System.out.println("Getting entities...");
+      System.out.println("Getting entities and lemmizing: " + article.getUrl());
       // get entities for the given article body
       HashMap<Entity, Integer> entityFrequencies =
           TextProcessing.getEntityFrequencies(article.getContent());
       // lemmize text
-      System.out.println("Lemmizing...");
       String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
       // change the content field of the article object to be the lemmized text
       article.setContent(String.join(" ", lemmizedText));
+      System.out.println("Updating database");
       // insert article and its entities into the database
-      System.out.println("Inserting article and entities...");
       db.insertArticleAndEntities(article, entityFrequencies);
       // add to the total batch word occurrence map
       TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedText);
     }
     // update vocab counts in database
-    System.out.println("Updating vocab occurrences in database...");
     db.updateVocabCounts(occurenceMap);
   }
 
