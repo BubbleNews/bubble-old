@@ -22,19 +22,21 @@ DOMAINS = 'apnews.com,time.com,wsj.com,politico.com,washingtonpost.com,' \
 #     return ','.join(source_ids)
 
 
-def get_news(start_date, end_date, num_articles=100):
+def get_news(start_date, end_date, num_articles):
     print("Connecting to Google News API...")
     top_headlines = NEWS_API.get_everything(from_param=start_date,
                                             to=end_date,
                                             language='en',
                                             domains=DOMAINS,
-                                            page_size=num_articles,)
+                                            page_size=num_articles,
+                                            sort_by='relevancy')
 
     articles_json = []
     articles = top_headlines['articles']
     # loop through articles and scrape article text with scraper
     for i, article in enumerate(articles):
         url = article['url']
+        print(url)
         scraped_title, scraped_authors, scraped_text = scrape_text(url)
         # threshold
         if len(scraped_text) < MINIMUM_ARTICLE_CHAR_LENGTH:

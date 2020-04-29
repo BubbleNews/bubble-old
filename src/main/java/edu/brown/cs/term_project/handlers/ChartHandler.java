@@ -43,7 +43,7 @@ public final class ChartHandler {
       clusters.sort(compareBySize);
 
       // pass to front handler
-      chartResponse.setClusters(mockClusters());
+      chartResponse.setClusters(clusters);
     } catch (Exception e) {
       chartResponse.setErrorMessage(e.getMessage());
     }

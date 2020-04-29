@@ -49,13 +49,13 @@ function getChart(date) {
         const clusters = parsed.clusters;
         let i;
         for (i = 0; i < clusters.length; i++) {
-            appendCluster(clusters[i]);
+            appendCluster(clusters[i], i);
         }
     })
 }
 
-function appendCluster(cluster) {
-    const classNum = Math.floor(Math.random() * 4);
+function appendCluster(cluster, num) {
+    const classNum = num % 4;
     const clusterHtml =
         "<div id=" + cluster.clusterId
         + " class='cluster cluster" + classNum + "'>"

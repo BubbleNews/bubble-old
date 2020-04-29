@@ -27,14 +27,14 @@ public class ClusterHandler {
     try {
       QueryParamsMap qm = request.queryMap();
       String clusterIdStr = qm.value("id");
-//      if (clusterIdStr == null || clusterIdStr.equals("")) {
-//        clusterResponse.setErrorMessage("No cluster id given.");
-//      } else {
-//        int clusterId = Integer.parseInt(clusterIdStr);
+      if (clusterIdStr == null || clusterIdStr.equals("")) {
+        clusterResponse.setErrorMessage("No cluster id given.");
+      } else {
+        int clusterId = Integer.parseInt(clusterIdStr);
         // TODO: CHANGE FROM HARDCODED
-        List<ArticleJSON> articlesFromCluster = db.getArticlesFromCluster(3, false);
+        List<ArticleJSON> articlesFromCluster = db.getArticlesFromCluster(clusterId, true);
         clusterResponse.setArticles(articlesFromCluster);
-//      }
+      }
     } catch (Exception e) {
       clusterResponse.setErrorMessage(e.getMessage());
     }
