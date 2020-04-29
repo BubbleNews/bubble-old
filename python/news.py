@@ -1,4 +1,7 @@
+from __future__ import print_function
+
 import json
+import dateutil.parser
 
 from newspaper import Article
 from newspaper.article import ArticleException
@@ -10,7 +13,7 @@ NEWS_API = NewsApiClient(api_key=API_KEY)
 MINIMUM_ARTICLE_CHAR_LENGTH = 700
 BAD_CHARS = ['\r', '\n']
 DOMAINS = 'apnews.com,time.com,wsj.com,politico.com,washingtonpost.com,' \
-          'nytimes.com,vox.com,usatoday.com,npr.org,theatlantic.com'
+          'nytimes.com,vox.com,usatoday.com/news,npr.org,theatlantic.com'
 
 
 # return comma separated list of sources
@@ -24,19 +27,20 @@ DOMAINS = 'apnews.com,time.com,wsj.com,politico.com,washingtonpost.com,' \
 
 def get_news(start_date, end_date, num_articles):
     print("Connecting to Google News API...")
+
     top_headlines = NEWS_API.get_everything(from_param=start_date,
                                             to=end_date,
                                             language='en',
                                             domains=DOMAINS,
-                                            page_size=num_articles,
-                                            sort_by='relevancy')
+                                            page_size=num_articles)
 
     articles_json = []
     articles = top_headlines['articles']
+    print('Retrieved ' + str(len(articles)) + ' articles between ' + str(start_date)
+          + ' and ' + str(end_date))
     # loop through articles and scrape article text with scraper
     for i, article in enumerate(articles):
         url = article['url']
-        print(url)
         scraped_title, scraped_authors, scraped_text = scrape_text(url)
         # threshold
         if len(scraped_text) < MINIMUM_ARTICLE_CHAR_LENGTH:
@@ -46,12 +50,14 @@ def get_news(start_date, end_date, num_articles):
                 f.write(url)
         else:
             articles_json.append(
-                make_article_json(article, scraped_title, scraped_authors, clean_text(scraped_text, BAD_CHARS)))
+                make_article_json(article, scraped_title, scraped_authors,
+                                  clean_text(scraped_text, BAD_CHARS)))
     return json.dumps(articles_json)
 
 
 def make_article_json(article, scraped_title, scraped_authors, scraped_text):
     return {
+        'sourceName': article['source']['name'],
         'authors': scraped_authors,
         'title': scraped_title,
         'description': article['description'],

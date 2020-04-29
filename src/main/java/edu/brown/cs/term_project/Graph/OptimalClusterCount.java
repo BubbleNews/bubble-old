@@ -30,7 +30,8 @@ public class OptimalClusterCount<T extends INode<S>, S extends IEdge<T>> {
       double diff = (prevRadius2 - prevRadius1) / Math.max(prevRadius1 - newRadius, minDenominator);
       //experiment - diff formula
       System.out.println("Diff: " + (i - 1) + " - " + diff);
-      if (diff > maxDiff) { // if diff is larger than maxDiff, update
+      if (i >= Math.min(maxClusters, nodes.size() / 10) && diff > maxDiff) { // if diff is larger
+        // than maxDiff, update
         maxDiff = diff;
         numClusters = i - 1;
       }

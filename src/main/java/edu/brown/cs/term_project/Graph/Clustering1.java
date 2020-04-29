@@ -15,8 +15,8 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
   private Set<Cluster<T, S>> clusters;
   private int count = 0;
   private final double minMaxMult = 1.3;
-  private final double maxMaxMult = 2;
-  private final double iterMaxMult = 0.05;
+  private final double maxMaxMult = 2.6;
+  private final double iterMaxMult = 0.1;
   private final double tightCluster = 0.5;
 
   public Clustering1(Set<T> nodes, List<S> edges, double threshold) {
@@ -61,6 +61,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
         tempClusters.put(src.getId(), newCluster);
         tempClusters.put(dst.getId(), newCluster);
         count++;
+        System.out.println("Make: " + src.getId() + " : " + dst.getId());
       }
     } // add cluster in tempClusters to clusters
     tempClusters.forEach((k, v) -> {
@@ -121,6 +122,10 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
     if (newMean < radiusThreshold && (newMean < maxMult * oldMean || diff2 < 1)) { //add to cluster
       c1.addNode(node);
       expandClusters.put(node.getId(), c1);
+      System.out.println("added: " + node.getId() + " : " + c1.getHeadNode().getId() + " -> " + c1.getSize());
+    } else {
+      System.out.println("Not added: " + node.getId() + " : " + c1.getHeadNode().getId() + " -> " + c1.getSize());
+
     }
   }
 
@@ -144,7 +149,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
     double maxMult1 =
         Math.min(maxMaxMult - (iterMaxMult * c1.getSize() / c2.getSize()), minMaxMult); //experiment
     double maxMult2 =
-        Math.min(maxMaxMult - (iterMaxMult * c2.getSize() / c2.getSize()), minMaxMult); //experiment
+        Math.min(maxMaxMult - (iterMaxMult * c2.getSize() / c1.getSize()), minMaxMult); //experiment
     double diff2 = newMean / (tightCluster * radiusThreshold); //experiment
     // ensures mean radius of new cluster is less than threshold, and the either new mean isn't too
     // much more than both old means or if the new mean is small enough to compensate for
@@ -166,7 +171,14 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
           articleToClusters.replace(a.getId(), c2);
         }
       }
-    } // Could have an else that decides a better split of the clusters
+      System.out.println("combined: " + c1.getHeadNode().getId() + " : " + c2.getHeadNode().getId() + " " +
+          "-> " + c1.getSize() + "/" + c2.getSize());
+    } else {
+      System.out.println("Not combined: " + c1.getHeadNode().getId() + " : " + c2.getHeadNode().getId() + " " +
+          "-> " + c1.getSize() + "/" + c2.getSize());
+
+    }
+
   }
 
 }

@@ -6,3 +6,4 @@ target/
 *.sqlite3
 bubble.iml
 venv/
+data/*
