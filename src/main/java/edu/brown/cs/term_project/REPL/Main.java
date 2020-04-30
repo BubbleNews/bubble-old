@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.REPL;
 
+import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.handlers.ClusterHandler;
 import edu.brown.cs.term_project.handlers.ChartHandler;
 import edu.brown.cs.term_project.handlers.HomeHandler;
@@ -7,11 +8,14 @@ import edu.brown.cs.term_project.handlers.UpdateHandler;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import spark.Request;
+import spark.Response;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static spark.Spark.*;
 
@@ -21,12 +25,15 @@ import static spark.Spark.*;
 public final class Main {
   private static final int DEFAULT_PORT = 4567;
 
+  private static NewsData DATABASE;
+
   /**
    * The initial method called when execution begins.
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    DATABASE = new NewsData("data/2 days data.db");
     new Main(args).run();
   }
 
@@ -66,8 +73,8 @@ public final class Main {
 //        "In late March, Vincent Racaniello, host of the podcast “This Week in Virology” and a professor at Columbia University, conducted an interview with the pediatric infectious-disease expert Mark Denison. Denison, who teaches at Vanderbilt University Medical Center, led a team that developed one of the most promising current treatments for Covid-19: the drug remdesivir, currently being tested by the pharmaceutical company Gilead Sciences.\n" +
 //        "On the show, Denison noted that because it is almost impossible to predict which virus might cause the next pandemic, researchers had long argued that it was essential to design panviral drugs and vaccines that would be effective against a wide range of strains: all types of influenza, for instance, or a substantial group of coronaviruses rather than just one. When his lab was first applying for a grant to study remdesivir, Denison recalled, that was already the goal. “We don’t want to work with a compound unless it inhibits every coronavirus we test,” Denison said. “Because we’re worried about MERS, we’re worried about SARS-1, but they’re not really our problem. The future is the problem.”\n" +
 //        "Panviral drugs — ones that work broadly within or across virus families — are harder to make than broad-spectrum antibiotics, largely because viruses work by hijacking the machinery of our cells, harnessing their key functions in order to replicate. A drug that blocks one of those functions (e.g., the production of a particular protein) is often also disrupting something that our own cells need to survive. Researchers have begun to find ways around that problem, in part by refining which process a drug targets. But they’ve also begun to test existing drugs against a wider array of viruses. It was in just such a follow-up screen that Gilead discovered that remdesivir, originally developed to treat hepatitis C and later tried against Ebola, might be effective against coronaviruses. (Favipiravir, an influenza drug developed in Japan, is another broad-spectrum candidate.) The reason drugs sometimes work in extremely different diseases — in, say, Ebola and coronaviruses and flu — is that they block some common mechanism. Remdesivir and favipiravir, for instance, each mimics a key building block in a virus’s RNA, which, when inserted, keeps the virus from replicating. “It’s definitely possible to make a drug that would work across a good range of coronaviruses,” Racaniello says. “We honestly should have had one long ago, since SARS in 2003. It would have taken care of this outbreak in China before it got out. And the only reason we didn’t is because there wasn’t enough financial backing.";
-//
-//    ExtractEntities.getEntities(article);
+////
+//    TextProcessing.getEntityFrequencies(article);
   }
 
   private static FreeMarkerEngine createEngine() {
@@ -96,13 +103,19 @@ public final class Main {
 
     path("/bubble", () -> {
       // home page endpoint
-      get("/home", new HomeHandler(), freeMarker);
+      get("/home", new HomeHandler(DATABASE), freeMarker);
       // api endpoints
       path("/api", () -> {
         // TODO: add authentication for api calls with before()
-        get("/update", UpdateHandler::handle);
-        get("/chart", ChartHandler::handle);
-        get("/cluster", ClusterHandler::handle);
+        get("/update", (Request request, Response response) -> {
+          return UpdateHandler.handle(request, response, DATABASE);
+        });
+        get("/chart", (Request request, Response response) -> {
+          return ChartHandler.handle(request, response, DATABASE);
+        });
+        get("/cluster", (Request request, Response response) -> {
+          return ClusterHandler.handle(request, response, DATABASE);
+        });
       });
     });
   }

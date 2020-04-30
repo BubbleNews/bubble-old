@@ -1,6 +1,10 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
+import edu.brown.cs.term_project.Bubble.*;
+import edu.brown.cs.term_project.Graph.Graph;
+import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.nlp.TextProcessing;
 import spark.Request;
 import spark.Response;
 
@@ -8,10 +12,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.*;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 
@@ -27,72 +30,47 @@ public class UpdateHandler {
    *
    * @param request  the request
    * @param response the response
+   * @param db the database
    * @return a JSON response with status and message.
    */
-  public static String handle(Request request, Response response) {
-    String pythonEndpoint = "http://127.0.0.1:5000/scrape";
+  public static String handle(Request request, Response response, NewsData db) throws Exception {
     StandardResponse updateResponse = new StandardResponse(0, "");
-    try {
-      String pythonResponse = sendGet(pythonEndpoint);
+//    try {
 
-      Gson gson = new Gson();
-      JsonParser parser = new JsonParser();
-      JsonArray jsonArray = parser.parse(pythonResponse).getAsJsonArray();
-      List<ArticleJSON> articles = new ArrayList<>();
-      for (int i = 0; i < jsonArray.size(); i++) {
-        articles.add(gson.fromJson(jsonArray.get(i), ArticleJSON.class));
-      }
-
-      // stem words
-      // add to database
-
-      // WE NEED TO PARSE THE JSON STRING INTO A LIST OF SOMETHING THEN ADD TO DB
-
-
-    } catch (Exception e) {
-      // there has been an error so update response to reflect that
-      updateResponse.setStatus(1);
-      updateResponse.setMessage(e.getMessage());
-    }
-    // convert to json and return
+//    } catch (Exception e) {
+//      // there has been an error so update response to reflect that
+//      updateResponse.setStatus(1);
+//      updateResponse.setMessage(e.getMessage());
+//    }
+//    // convert to particles.json and return
     return new Gson().toJson(updateResponse);
   }
 
-  /**
-   * Sends an HTTP GET request to a url.
-   *
-   * @param uri the url to send the get request to
-   * @return a json string response
-   * @throws Exception
-   */
-  private static String sendGet(String uri) throws Exception {
-    HttpClient client = HttpClient.newHttpClient();
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(uri))
-        .build();
-    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    return response.body();
+  public static void main(String[] args) throws Exception {
+    ArticleJSON testArticle = new ArticleJSON("BuzzFeed", new String[]{"Kayla Suazo"},
+        "23 Top-Rated Cleaning Products That Are Popular For A Reason",
+        "So good, they have *a ton* of 4- and 5-star reviews.",
+        "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
+            + "that-are-popular-for-a-reason",
+        "2020-04-27T17:22:24.963019Z",
+        "all you have to do be let it sit for 15 minute and wipe -- minimal work on you "
+            + "part . check out BuzzFeed 's full write-up on this Feed-N-Wax Wood Polish to learn "
+            + "more!and ! it have 4,700 + positive review on amazon.promising review : `` OMG ! "
+            + "this be the most amazing product ! we inherit some antique furniture from the '30s"
+            + " that have be in storage forever ... it be dry and dirty and not much to look at ."
+            + " I use this product on it and the oak wood literally come alive show the beautiful"
+            + " grain and texture of the wood . I have since use it on my oak kitchen cabinet and"
+            + " they look AMAZING ! I will never use anything else other than this product on my "
+            + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
+            + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
+    );
+
+    NewsData db = new NewsData("data/new_bubble.db");
+    db.insertArticleAndEntities(testArticle, new HashMap<>());
+
+//    ArrayList<ArticleJSON> testList = new ArrayList<>();
+//    testList.add(testArticle);
+//    //processJSONArticles(testList, db);
+//    clusterArticles(db);
   }
-
-
-  private static class ArticleJSON {
-
-    private String[] authors;
-    private String title;
-    private String description;
-    public String url;
-    private String timePublished;
-    private String content;
-
-    private ArticleJSON(String[] authors, String title, String description, String url,
-                        String timePublished, String content) {
-      this.authors = authors;
-      this.title = title;
-      this.description = description;
-      this.url = url;
-      this.timePublished = timePublished;
-      this.content = content;
-    }
-  }
-
 }

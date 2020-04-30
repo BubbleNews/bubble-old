@@ -6,4 +6,5 @@ target/
 *.sqlite3
 bubble.iml
 *.pyc
-venv/*
+venv/
+data/*

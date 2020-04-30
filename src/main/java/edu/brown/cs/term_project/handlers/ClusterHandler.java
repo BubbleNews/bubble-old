@@ -1,9 +1,15 @@
 package edu.brown.cs.term_project.handlers;
 
+import com.google.gson.Gson;
+import edu.brown.cs.term_project.Bubble.ArticleJSON;
+import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Graph.Cluster;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
+
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Class for handling requests to the /cluster API.
@@ -14,28 +20,33 @@ public class ClusterHandler {
    * Handles a request to the /cluster API.
    * @param request the request
    * @param response the response
+   * @param db the news database
    * @return a JSON response with the list of articles in a cluster
    */
-  public static String handle(Request request, Response response) {
+  public static String handle(Request request, Response response, NewsData db) {
     ClusterResponse clusterResponse = new ClusterResponse(0, "");
     try {
       QueryParamsMap qm = request.queryMap();
-      String clusterId = qm.value("id");
-      // TODO: need to use Database class to get the cluster of id 'clusterId'
-      Cluster cluster = null;
-      clusterResponse.setCluster(cluster);
+      String clusterIdStr = qm.value("id");
+      if (clusterIdStr == null || clusterIdStr.equals("")) {
+        clusterResponse.setErrorMessage("No cluster id given.");
+      } else {
+        int clusterId = Integer.parseInt(clusterIdStr);
+        // TODO: CHANGE FROM HARDCODED
+        List<ArticleJSON> articlesFromCluster = db.getArticlesFromCluster(clusterId, true);
+        clusterResponse.setArticles(articlesFromCluster);
+      }
     } catch (Exception e) {
-      clusterResponse.setStatus(1);
-      clusterResponse.setMessage(e.getMessage());
+      clusterResponse.setErrorMessage(e.getMessage());
     }
-    return null;
+    return new Gson().toJson(clusterResponse);
   }
 
   /**
    * Class for a response from the ClusterHandler endpoint.
    */
    private static class ClusterResponse extends StandardResponse {
-    private Cluster cluster;
+    private List<ArticleJSON> articles;
     /**
      * Constructor for the response.
      *
@@ -46,12 +57,8 @@ public class ClusterHandler {
       super(status, message);
     }
 
-    /**
-     * Sets the cluster of the response.
-     * @param cluster the cluster to return in the response
-     */
-    public void setCluster(Cluster cluster) {
-      this.cluster = cluster;
+    public void setArticles(List<ArticleJSON> articles) {
+      this.articles = articles;
     }
   }
 }

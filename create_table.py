@@ -1,14 +1,10 @@
 import sqlite3
 
-PATH_TO_DATABASE = "data/bubble.db"
+PATH_TO_DATABASE = "data/backloaded.db"
 
 conn = sqlite3.connect(PATH_TO_DATABASE)
 c = conn.cursor()
 c.execute("PRAGMA foreign_keys = ON")
-
-
-
-
 
 CREATE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS entity (
     class VARCHAR(20),
@@ -18,16 +14,16 @@ CREATE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS entity (
 );'''
 
 CREATE_VOCAB_QUERY = '''CREATE TABLE IF NOT EXISTS vocab (
-    word VARCHAR(50) PRIMARY KEY NOT NULL,
+    word VARCHAR(50) PRIMARY KEY,
     count INT
 );'''
 
 CREATE_CLUSTERS_QUERY = '''CREATE TABLE IF NOT EXISTS clusters (
-    id INT PRIMARY KEY NOT NULL,
+    id INTEGER PRIMARY KEY,
     head INT,
     title VARCHAR(50),
     size INT,
-    day INT,
+    day DATE,
     hour INT,
     avg_connections DOUBLE,
     avg_radius DOUBLE,
@@ -37,9 +33,11 @@ CREATE_CLUSTERS_QUERY = '''CREATE TABLE IF NOT EXISTS clusters (
 );'''
 
 CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
-    id INT PRIMARY KEY NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    source VARCHAR(50),
     title VARCHAR(50),
     url VARCHAR(200),
+    author VARCHAR(50),
     date_published DATETIME,
     date_pulled DATETIME,
     text TEXT,
@@ -81,7 +79,6 @@ def create_tables():
 def main():
     # Create tables
     create_tables()
-
 
 
 
