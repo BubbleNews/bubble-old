@@ -54,7 +54,7 @@ public final class Main {
       parser.accepts("port").withRequiredArg().ofType(Integer.class)
           .defaultsTo(DEFAULT_PORT);
       OptionSet options = parser.parse(args);
-j
+
       runSparkServer((int) options.valueOf("port"));
 
 
