@@ -35,14 +35,15 @@ public class UpdateHandler {
    */
   public static String handle(Request request, Response response, NewsData db) throws Exception {
     StandardResponse updateResponse = new StandardResponse(0, "");
-//    try {
+    try {
 
-//    } catch (Exception e) {
-//      // there has been an error so update response to reflect that
-//      updateResponse.setStatus(1);
-//      updateResponse.setMessage(e.getMessage());
-//    }
-//    // convert to particles.json and return
+
+    } catch (Exception e) {
+      // there has been an error so update response to reflect that
+      updateResponse.setStatus(1);
+      updateResponse.setMessage(e.getMessage());
+    }
+    // convert to particles.json and return
     return new Gson().toJson(updateResponse);
   }
 
