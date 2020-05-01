@@ -205,9 +205,8 @@ public final class NewsData extends Database {
         PreparedStatement prep = conn.prepareStatement("SELECT id, title, date_published, author, "
                         + "url, text "
                         + "FROM articles "
-                + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
-            + "DATETIME('now');"
-        );
+                + "WHERE date_pulled >= DATETIME('now', '-72 hours') AND date_pulled < "
+            + "DATETIME('now');");
         //prep.setInt(1, hours);
         ResultSet rs = prep.executeQuery();
         Set<Article> articles = new HashSet<>();

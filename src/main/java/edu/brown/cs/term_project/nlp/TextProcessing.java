@@ -44,7 +44,7 @@ public final class TextProcessing {
 
   public static String[] lemmizeText(String text) {
     List<String> lemmas = new ArrayList<>();
-    Document doc = new Document(text);
+    Document doc = new Document(text.toLowerCase());
     for (Sentence sent : doc.sentences()) {
       lemmas.addAll(sent.lemmas());
     }

@@ -16,7 +16,10 @@ import java.util.Set;
 
 public class NewsClusterer {
   public static void clusterArticles(NewsData db) throws SQLException {
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(24);
+    final double textWeight = 1;
+    final double entityWeight = 0;
+    final double titleWeight = 0;
+    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
     int maxCount = db.getMaxVocabCount();
@@ -30,7 +33,8 @@ public class NewsClusterer {
       for (ArticleVertex a2: pulledArticles) {
         if (a1.getId() < a2.getId()) {
 
-          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus);
+          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, textWeight,
+              entityWeight, titleWeight);
           a1.addEdge(tempEdge);
           a2.addEdge(tempEdge);
           edges.add(tempEdge);
@@ -48,12 +52,12 @@ public class NewsClusterer {
       }
     }
 
-    Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
-    graph.runClusters(2);
-    db.insertClusters(graph.getClusters());
+//    Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
+//    graph.runClusters(2);
+//    db.insertClusters(graph.getClusters());
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    clusterArticles(new NewsData("data/backloaded.db"));
+    clusterArticles(new NewsData("data/ben_test.db"));
   }
 }

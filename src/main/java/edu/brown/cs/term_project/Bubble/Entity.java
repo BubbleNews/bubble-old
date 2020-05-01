@@ -23,11 +23,14 @@ public class Entity implements IWord {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Entity entity1 = (Entity) o;
-    return Objects.equals(entity, entity1.entity) &&
-        Objects.equals(classType, entity1.classType);
+    return Objects.equals(entity, entity1.entity) &&  Objects.equals(classType, entity1.classType);
   }
 
   @Override
