@@ -49,7 +49,7 @@ public class NewsClusterer {
     }
 
     Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
-    graph.runClusters(2);
+    graph.runClusters(1);
     db.insertClusters(graph.getClusters());
   }
 

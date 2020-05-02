@@ -1,6 +1,5 @@
 package edu.brown.cs.term_project.nlp;
 
-import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.stanford.nlp.simple.*;
 

@@ -3,7 +3,7 @@ package edu.brown.cs.term_project.handlers;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import edu.brown.cs.term_project.Bubble.ArticleJSON;
+import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.nlp.TextProcessing;
@@ -54,9 +54,9 @@ public class NewsLoader {
     Gson gson = new Gson();
     JsonParser parser = new JsonParser();
     JsonArray jsonArray = parser.parse(pythonResponse).getAsJsonArray();
-    List<ArticleJSON> articles = new ArrayList<>();
+    List<Article> articles = new ArrayList<>();
     for (int i = 0; i < jsonArray.size(); i++) {
-      articles.add(gson.fromJson(jsonArray.get(i), ArticleJSON.class));
+      articles.add(gson.fromJson(jsonArray.get(i), Article.class));
     }
     // process the articles
     processJSONArticles(articles);
@@ -100,11 +100,11 @@ public class NewsLoader {
    * @param jsonArticles a list of articles in the form ArticleJSON∂
    * @throws SQLException if error occurred adding to database
    */
-  private void processJSONArticles(List<ArticleJSON> jsonArticles) throws SQLException {
+  private void processJSONArticles(List<Article> jsonArticles) throws SQLException {
     System.out.println("-----Scraped " + jsonArticles.size() + " articles-----");
     // keep track of total number of articles each word has occurred in
     HashMap<String, Integer> occurenceMap = new HashMap<>();
-    for (ArticleJSON article: jsonArticles) {
+    for (Article article: jsonArticles) {
       System.out.println("Getting entities and lemmizing: " + article.getUrl());
       // get entities for the given article body
       HashMap<Entity, Integer> entityFrequencies =
@@ -129,6 +129,6 @@ public class NewsLoader {
 //    Date now = new Date();
 //    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(24, 100, 1, 39);
+    loader.executeBatches(1, 10, 1, 0);
   }
 }

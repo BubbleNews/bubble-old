@@ -1,53 +1,60 @@
 package edu.brown.cs.term_project.Bubble;
 
-/**
- * This class represents an article and its content.
- */
 public class Article {
+
   private int id;
+  private String sourceName;
+  private String[] authors;
   private String title;
-  private String date;
-  private String author;
+  private String description;
   private String url;
+  private String timePublished;
+  private String content;
 
-  /**
-   * Creates an article.
-   * @param id unique id in database
-   * @param title Title of the article
-   * @param date Date the article was published
-   * @param author Author of the article
-   * @param url URL to the article
-   */
-  public Article(int id, String title, String date, String author, String url) {
-    this.id = id;
+  public Article(String sourceName, String[] authors, String title, String description, String url,
+                 String timePublished, String content) {
+    this.sourceName = sourceName;
+    this.authors = authors;
     this.title = title;
-    this.date = date;
-    this.author = author;
+    this.description = description;
     this.url = url;
+    this.timePublished = timePublished;
+    this.content = content;
   }
 
-  /**
-   * Creates an article with just an id (for testing the gui)
-   * @param id unique id
-   */
-  public Article(int id) {
+  public Article(int id, String sourceName, String title, String url, String timePublished) {
     this.id = id;
+    this.sourceName = sourceName;
+    this.title = title;
+    this.url = url;
+    this.timePublished = timePublished;
   }
 
-  /**
-   * Gets the id of the article.
-   * @return the id of the article
-   */
-  public int getId() {
-    return id;
+  public String getSourceName() {
+    return sourceName;
   }
 
-  /**
-   * Gets the title of the article.
-   * @return the title of the article
-   */
   public String getTitle() {
     return title;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public String getTimePublished() {
+    return timePublished;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
 }

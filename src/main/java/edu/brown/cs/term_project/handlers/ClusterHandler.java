@@ -1,14 +1,12 @@
 package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.ArticleJSON;
+import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.Graph.Cluster;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -33,7 +31,7 @@ public class ClusterHandler {
       } else {
         int clusterId = Integer.parseInt(clusterIdStr);
         // TODO: CHANGE FROM HARDCODED
-        List<ArticleJSON> articlesFromCluster = db.getArticlesFromCluster(clusterId, true);
+        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId, true);
         clusterResponse.setArticles(articlesFromCluster);
       }
     } catch (Exception e) {
@@ -46,7 +44,7 @@ public class ClusterHandler {
    * Class for a response from the ClusterHandler endpoint.
    */
    private static class ClusterResponse extends StandardResponse {
-    private List<ArticleJSON> articles;
+    private List<Article> articles;
     /**
      * Constructor for the response.
      *
@@ -57,7 +55,7 @@ public class ClusterHandler {
       super(status, message);
     }
 
-    public void setArticles(List<ArticleJSON> articles) {
+    public void setArticles(List<Article> articles) {
       this.articles = articles;
     }
   }

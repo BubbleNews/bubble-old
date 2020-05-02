@@ -2,21 +2,10 @@ package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.*;
-import edu.brown.cs.term_project.Graph.Graph;
-import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
-import edu.brown.cs.term_project.nlp.TextProcessing;
 import spark.Request;
 import spark.Response;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.sql.SQLException;
 import java.util.*;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 
 /**
  * Class that handles calling the Python API to get updated news headlines
@@ -47,7 +36,7 @@ public class UpdateHandler {
   }
 
   public static void main(String[] args) throws Exception {
-    ArticleJSON testArticle = new ArticleJSON("BuzzFeed", new String[]{"Kayla Suazo"},
+    Article testArticle = new Article("BuzzFeed", new String[]{"Kayla Suazo"},
         "23 Top-Rated Cleaning Products That Are Popular For A Reason",
         "So good, they have *a ton* of 4- and 5-star reviews.",
         "https://www.buzzfeed.com/kaylasuazo/top-rated-cleaning-products-"
