@@ -77,6 +77,18 @@ public final class Main {
 //    TextProcessing.getEntityFrequencies(article);
   }
 
+  /**
+   * Method to get a port assigned by Heroku.
+   * @return the port
+   */
+  static int getHerokuAssignedPort() {
+    ProcessBuilder processBuilder = new ProcessBuilder();
+    if (processBuilder.environment().get("PORT") != null) {
+      return Integer.parseInt(processBuilder.environment().get("PORT"));
+    }
+    return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
+  }
+
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
@@ -95,7 +107,7 @@ public final class Main {
    * @param port - port to go to
    */
   private void runSparkServer(int port) {
-    port(port);
+    port(getHerokuAssignedPort());
     externalStaticFileLocation("src/main/resources/static");
     // Spark.exception(Exception.class, new ExceptionPrinter());
 
