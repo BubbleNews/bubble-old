@@ -3,11 +3,16 @@ package edu.brown.cs.term_project.Bubble;
 import edu.brown.cs.term_project.Graph.IEdge;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
+import java.util.Map;
+
 
 public class Similarity implements IEdge<ArticleVertex> {
   private ArticleVertex src;
   private ArticleVertex dst;
   private double distance;
+  private Map<ArticleWord, Double> wordSim;
+  private Map<Entity, Double> entitySim;
+  private Map<TitleWord, Double> titleSim;
 
   public Similarity(ArticleVertex src, ArticleVertex dst, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus) {
@@ -41,4 +46,27 @@ public class Similarity implements IEdge<ArticleVertex> {
         + ((1 - entityWeight) * wordCorpus.getSimilarity(this.src, this.dst, 1)) + divideZeroShift);
   }
 
+  public void setEntitySim(Map<Entity, Double> entitySim) {
+    this.entitySim = entitySim;
+  }
+
+  public void setTitleSim(Map<TitleWord, Double> titleSim) {
+    this.titleSim = titleSim;
+  }
+
+  public void setWordSim(Map<ArticleWord, Double> wordSim) {
+    this.wordSim = wordSim;
+  }
+
+  public Map<ArticleWord, Double> getWordSim() {
+    return wordSim;
+  }
+
+  public Map<Entity, Double> getEntitySim() {
+    return entitySim;
+  }
+
+  public Map<TitleWord, Double> getTitleSim() {
+    return titleSim;
+  }
 }

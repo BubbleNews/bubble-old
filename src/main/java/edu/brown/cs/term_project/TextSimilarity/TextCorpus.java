@@ -70,4 +70,26 @@ public class TextCorpus<W extends IWord, T extends IText> {
     return sum;
   }
 
+
+  /**
+   * Returns the cosine similarity of two documents. It determines this based on the based in
+   * value for the type of word we are comparing.
+   * @param src Article 1
+   * @param dst Article 2
+   * @param textType Integer representing the type of word we are comparing from the articles
+   * @return the cosine similarity of the two articles based on the textType
+   */
+  public Map<IWord, Double> getSimilarityHast(T src, T dst, Integer textType) {
+    Map<IWord, Double> srcMap = src.getFreq(textType);
+    Map<IWord, Double> dstMap = dst.getFreq(textType);
+    Set<IWord> sharedWords = srcMap.keySet();
+    sharedWords.retainAll(dstMap.keySet());
+    double
+    for (IWord w: sharedWords) {
+      dotProduct += this.getImportance(srcMap, w) * this.getImportance(dstMap, w);
+    }
+    return dotProduct / (Math.sqrt(this.getMagImportance(srcMap)
+        + Math.sqrt(this.getMagImportance(dstMap))));
+  }
+
 }
