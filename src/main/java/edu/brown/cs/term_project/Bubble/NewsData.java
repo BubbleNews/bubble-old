@@ -170,30 +170,30 @@ public final class NewsData extends Database {
     return articles;
   }
 
-//    public List<ArticleVertex> getArticleVerticiesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
-//        // build sql statement
-//        String statement = "SELECT id, title, date_published, author, url, text, source FROM " +
-//            "articles WHERE ";
-//        if (isTemporary) {
-//            statement += "temp_cluster_id";
-//        } else {
-//            statement += "final_cluster_id";
-//        }
-//        statement += " = (?)";
-//        PreparedStatement prep = conn.prepareStatement(statement);
-//        prep.setInt(1, clusterId);
-//        ResultSet rs = prep.executeQuery();
-//        List<ArticleJSON> articles = new ArrayList<>();
-//        while (rs.next()) {
-//            String title = rs.getString(1);
-//            String url = rs.getString(2);
-//            String datePublished = rs.getString(3);
-//            String source = rs.getString(4);
-//            ArticleJSON a = new ArticleJSON(source, title, url, datePublished);
-//            articles.add(a);
-//        }
-//        return articles;
-//    }
+    public Set<ArticleVertex> getArticleVerticiesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
+        // build sql statement
+        String statement = "SELECT id, source, title, url, date_published, text FROM " +
+            "articles WHERE ";
+        if (isTemporary) {
+            statement += "temp_cluster_id";
+        } else {
+            statement += "final_cluster_id";
+        }
+        statement += " = (?)";
+        PreparedStatement prep = conn.prepareStatement(statement);
+        prep.setInt(1, clusterId);
+        ResultSet rs = prep.executeQuery();
+        Set<Article> articles = new HashSet<>();
+        Map<Integer, String> articleText = new HashMap<>();
+        while (rs.next()) {
+            articles.add(new Article(rs.getInt(1), rs.getString(2),
+                rs.getString(3), rs.getString(4), rs.getString(5)));
+            articleText.put(rs.getInt(1), rs.getString(6));
+        }
+        rs.close();
+        prep.close();
+        return createArticleVerticies(articles, articleText);
+    }
 
 
   /**

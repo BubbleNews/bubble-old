@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.handlers;
 
+import com.google.common.collect.ObjectArrays;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -109,15 +110,18 @@ public class NewsLoader {
       // get entities for the given article body
       HashMap<Entity, Integer> entityFrequencies =
           TextProcessing.getEntityFrequencies(article.getContent());
-      // lemmize text
+      // lemmize text and title
       String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
+      String[] lemmizedTitle = TextProcessing.lemmizeText(article.getTitle());
+
+      String[] lemmizedTextAndTitle = ObjectArrays.concat(lemmizedTitle, lemmizedText, String.class);
       // change the content field of the article object to be the lemmized text
       article.setContent(String.join(" ", lemmizedText));
       System.out.println("Updating database");
       // insert article and its entities into the database
       db.insertArticleAndEntities(article, entityFrequencies);
       // add to the total batch word occurrence map
-      TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedText);
+      TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedTextAndTitle);
     }
     // update vocab counts in database
     db.updateVocabCounts(occurenceMap);
@@ -129,6 +133,6 @@ public class NewsLoader {
 //    Date now = new Date();
 //    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(1, 10, 1, 0);
+    loader.executeBatches(1, 10, 1, 39);
   }
 }
