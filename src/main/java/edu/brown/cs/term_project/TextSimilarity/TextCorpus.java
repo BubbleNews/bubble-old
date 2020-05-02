@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.TextSimilarity;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,15 +13,18 @@ import java.util.Set;
 public class TextCorpus<W extends IWord, T extends IText> {
   private Map<W, Double> wordFreq;
   private int docNum;
+  private int corpusType;
 
   /**
    * This instantiates the TextCorpus.
    * @param wordFreq hashmap representing number of documents each word in our vocab is in
    * @param docNum number of documents used to create our vocab
+   * @param corpusType int representing corpus type
    */
-  public TextCorpus(Map<W, Double> wordFreq, Integer docNum) {
+  public TextCorpus(Map<W, Double> wordFreq, Integer docNum, int corpusType) {
     this.wordFreq = wordFreq;
     this.docNum = docNum;
+    this.corpusType = corpusType;
   }
 
   /**
@@ -28,12 +32,11 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * value for the type of word we are comparing.
    * @param src Article 1
    * @param dst Article 2
-   * @param textType Integer representing the type of word we are comparing from the articles
    * @return the cosine similarity of the two articles based on the textType
    */
-  public Double getSimilarity(T src, T dst, Integer textType) {
-    Map<IWord, Double> srcMap = src.getFreq(textType);
-    Map<IWord, Double> dstMap = dst.getFreq(textType);
+  public Double getSimilarity(T src, T dst) {
+    Map<IWord, Double> srcMap = src.getFreq(corpusType);
+    Map<IWord, Double> dstMap = dst.getFreq(corpusType);
     Set<IWord> sharedWords = srcMap.keySet();
     sharedWords.retainAll(dstMap.keySet());
     double dotProduct = 0;
@@ -53,7 +56,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
    */
   private Double getImportance(Map<? extends IWord, Double> wordMap, IWord word) {
     Double normalizedTermFrequency =  wordMap.get(word) / (double) wordMap.size();
-    Double inverseDocumentFrequency = docNum / wordFreq.get(word);
+    Double inverseDocumentFrequency = docNum / wordFreq.getOrDefault(word, 1.0);
     return normalizedTermFrequency * inverseDocumentFrequency;
   }
 
@@ -70,27 +73,36 @@ public class TextCorpus<W extends IWord, T extends IText> {
     return sum;
   }
 
+  public Map<IWord, Double> getImportanceMap(Map<IWord, Double> map) {
+    Map<IWord, Double> importanceMap = new HashMap<>();
+    for (IWord w: map.keySet()) {
+      importanceMap.put(w, getImportance(map, w));
+    }
+    return importanceMap;
+  }
+
 
   /**
    * Returns the cosine similarity of two documents. It determines this based on the based in
    * value for the type of word we are comparing.
    * @param src Article 1
    * @param dst Article 2
-   * @param textType Integer representing the type of word we are comparing from the articles
    * @return the cosine similarity of the two articles based on the textType
    */
-//  public Map<IWord, Double> getSimilarityHast(T src, T dst, Integer textType) {
-//    Map<IWord, Double> srcMap = src.getFreq(textType);
-//    Map<IWord, Double> dstMap = dst.getFreq(textType);
-//    Set<IWord> sharedWords = srcMap.keySet();
-//    sharedWords.retainAll(dstMap.keySet());
-//    double totImportance = (Math.sqrt(this.getMagImportance(srcMap)
-//        + Math.sqrt(this.getMagImportance(dstMap))));
-//    for (IWord w: sharedWords) {
-//      dotProduct += this.getImportance(srcMap, w) * this.getImportance(dstMap, w);
-//    }
-//    return dotProduct / (Math.sqrt(this.getMagImportance(srcMap)
-//        + Math.sqrt(this.getMagImportance(dstMap))));
-//  }
+  public Map<IWord, Double> getSimilarityHash(T src, T dst) {
+    Map<IWord, Double> srcMap = src.getFreq(corpusType);
+    Map<IWord, Double> dstMap = dst.getFreq(corpusType);
+    Map<IWord, Double> srcImportance = src.getImportance(corpusType);
+    Map<IWord, Double> dstImportance = dst.getImportance(corpusType);
+    Set<IWord> sharedWords = srcImportance.keySet();
+    sharedWords.retainAll(dstImportance.keySet());
+    double totImportance = (Math.sqrt(this.getMagImportance(srcMap)
+        + Math.sqrt(this.getMagImportance(dstMap))));
+    Map<IWord, Double> edgeImportance = new HashMap<>();
+    for (IWord w: sharedWords) {
+      double toAdd = (srcImportance.get(w) * dstImportance.get(w)) / totImportance;
+    }
+    return edgeImportance;
+  }
 
 }

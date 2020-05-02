@@ -10,4 +10,6 @@ public interface IText {
    * @return as hashmap that maps from word to frequency in text.
    */
   Map<IWord, Double> getFreq(Integer textType);
+
+  Map<IWord, Double> getImportance(Integer textType);
 }

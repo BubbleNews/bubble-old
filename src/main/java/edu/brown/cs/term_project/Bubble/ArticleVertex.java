@@ -3,6 +3,8 @@ package edu.brown.cs.term_project.Bubble;
 import edu.brown.cs.term_project.Graph.INode;
 import edu.brown.cs.term_project.TextSimilarity.IText;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
+import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.nlp.TextProcessing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,20 +12,21 @@ import java.util.List;
 import java.util.Map;
 
 public class ArticleVertex implements INode<Similarity>, IText {
-  private List<Similarity> similarities;
-  private Article article;
-  private Map<Entity, Double> entities;
-  private Map<ArticleWord, Double> words;
-  private Map<TitleWord, Double> title;
-  private Map<Entity, Double> entitiesImportance;
-  private Map<ArticleWord, Double> wordsImportance;
-  private Map<TitleWord, Double> titleImportance;
+  private final List<Similarity> similarities;
+  private final Article article;
+  private final Map<Entity, Double> entities;
+  private final Map<ArticleWord, Double> words;
+  private final Map<ArticleWord, Double> title;
+  private Map<IWord, Double> entitiesImportance;
+  private Map<IWord, Double> wordsImportance;
+  private Map<IWord, Double> titleImportance;
 
   public ArticleVertex(Article article, String text, Map<Entity, Double> entities) {
     this.similarities = new ArrayList<>();
     this.article = article;
     this.entities = entities;
-    setWords(text);
+    this.words = setWords(text);
+    this.title = setWords(article.getTitle());
   }
 
   @Override
@@ -89,17 +92,18 @@ public class ArticleVertex implements INode<Similarity>, IText {
     return null;
   }
 
-  private void setWords(String text) {
-    this.words = new HashMap<>();
-    String[] splitWords = text.split(" ");
+  private Map<ArticleWord, Double> setWords(String text) {
+    HashMap<ArticleWord, Double> wordMap = new HashMap<>();
+    String[] splitWords = TextProcessing.lemmizeText(text);
     for (String word: splitWords) {
       ArticleWord articleWord = new ArticleWord(word);
-      if (words.containsKey(articleWord)) {
-        words.replace(articleWord, words.get(articleWord) + 1);
+      if (wordMap.containsKey(articleWord)) {
+        wordMap.replace(articleWord, wordMap.get(articleWord) + 1);
       } else {
-        words.put(articleWord, 1.0);
+        wordMap.put(articleWord, 1.0);
       }
     }
+    return wordMap;
   }
 
   @Override
@@ -115,39 +119,39 @@ public class ArticleVertex implements INode<Similarity>, IText {
     }
   }
 
-//  public void setImportance(Integer textType) {
-//    if (textType == 0) {
-//      return new HashMap<>(entities);
-//    } else if (textType == 1) {
-//      return new HashMap<>(words);
-//    } else if (textType == 2) {
-//      return new HashMap<>(title);
-//    } else {
-//      return null;
-//    }
-//  }
 
-  public Map<Entity, Double> getEntitiesImportance() {
+
+  public void setImportance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
+      ArticleVertex> wordCorpus, TextCorpus<ArticleWord, ArticleVertex> titleCorpus) {
+    this.entitiesImportance = entityCorpus.getImportanceMap(getFreq(0));
+    this.wordsImportance = wordCorpus.getImportanceMap(getFreq(1));
+    this.titleImportance = titleCorpus.getImportanceMap((getFreq(2)));
+  }
+
+  public Map<IWord, Double> getImportance(Integer textType) {
+    if (textType == 0) {
+      return new HashMap<>(entitiesImportance);
+    } else if (textType == 1) {
+      return new HashMap<>(wordsImportance);
+    } else if (textType == 2) {
+      return new HashMap<>(titleImportance);
+    } else {
+      return null;
+    }
+  }
+
+  public Map<IWord, Double> getEntitiesImportance() {
     return entitiesImportance;
   }
 
-  public void setEntitiesImportance(Map<Entity, Double> entitiesImportance) {
-    this.entitiesImportance = entitiesImportance;
-  }
 
-  public Map<ArticleWord, Double> getWordsImportance() {
+  public Map<IWord, Double> getWordsImportance() {
     return wordsImportance;
   }
 
-  public void setWordsImportance(Map<ArticleWord, Double> wordsImportance) {
-    this.wordsImportance = wordsImportance;
-  }
 
-  public Map<TitleWord, Double> getTitleImportance() {
+  public Map<IWord, Double> getTitleImportance() {
     return titleImportance;
   }
 
-  public void setTitleImportance(Map<TitleWord, Double> titleImportance) {
-    this.titleImportance = titleImportance;
-  }
 }
