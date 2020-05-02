@@ -14,14 +14,14 @@ import java.util.Map;
 public class ArticleVertex implements INode<Similarity>, IText {
   private final List<Similarity> similarities;
   private final Article article;
-  private final Map<Entity, Double> entities;
-  private final Map<ArticleWord, Double> words;
-  private final Map<ArticleWord, Double> title;
+  private final Map<IWord, Double> entities;
+  private final Map<IWord, Double> words;
+  private final Map<IWord, Double> title;
   private Map<IWord, Double> entitiesImportance;
   private Map<IWord, Double> wordsImportance;
   private Map<IWord, Double> titleImportance;
 
-  public ArticleVertex(Article article, String text, Map<Entity, Double> entities) {
+  public ArticleVertex(Article article, String text, Map<IWord, Double> entities) {
     this.similarities = new ArrayList<>();
     this.article = article;
     this.entities = entities;
@@ -92,8 +92,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
     return null;
   }
 
-  private Map<ArticleWord, Double> setWords(String text) {
-    HashMap<ArticleWord, Double> wordMap = new HashMap<>();
+  private Map<IWord, Double> setWords(String text) {
+    HashMap<IWord, Double> wordMap = new HashMap<>();
     String[] splitWords = TextProcessing.lemmizeText(text);
     for (String word: splitWords) {
       ArticleWord articleWord = new ArticleWord(word);
@@ -108,18 +108,20 @@ public class ArticleVertex implements INode<Similarity>, IText {
 
   @Override
   public Map<IWord, Double> getFreq(Integer textType) {
-    if (textType == 0) {
-      return new HashMap<>(entities);
-    } else if (textType == 1) {
-      return new HashMap<>(words);
-    } else if (textType == 2) {
-      return new HashMap<>(title);
-    } else {
-      return null;
+    switch (textType) {
+      case 0:
+        return entities;
+
+      case 1:
+        return words;
+
+      case 2:
+        return title;
+
+      default:
+        return null;
     }
   }
-
-
 
   public void setImportance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<ArticleWord, ArticleVertex> titleCorpus) {
@@ -129,14 +131,18 @@ public class ArticleVertex implements INode<Similarity>, IText {
   }
 
   public Map<IWord, Double> getImportance(Integer textType) {
-    if (textType == 0) {
-      return new HashMap<>(entitiesImportance);
-    } else if (textType == 1) {
-      return new HashMap<>(wordsImportance);
-    } else if (textType == 2) {
-      return new HashMap<>(titleImportance);
-    } else {
-      return null;
+    switch (textType) {
+      case 0:
+        return entitiesImportance;
+
+      case 1:
+        return wordsImportance;
+
+      case 2:
+        return titleImportance;
+
+      default:
+        return null;
     }
   }
 
