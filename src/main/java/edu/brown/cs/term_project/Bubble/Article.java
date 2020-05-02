@@ -57,4 +57,12 @@ public class Article {
   public void setContent(String content) {
     this.content = content;
   }
+
+  @Override
+  public String toString() {
+    return "Article{" +
+        "id=" + id +
+        ", title='" + title + '\'' +
+        '}';
+  }
 }

@@ -37,4 +37,9 @@ public class Entity implements IWord {
   public int hashCode() {
     return Objects.hash(entity, classType);
   }
+
+  @Override
+  public String toString() {
+    return entity;
+  }
 }

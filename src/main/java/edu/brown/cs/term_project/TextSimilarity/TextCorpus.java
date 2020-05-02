@@ -101,6 +101,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
     Map<IWord, Double> edgeImportance = new HashMap<>();
     for (IWord w: sharedWords) {
       double toAdd = (srcImportance.get(w) * dstImportance.get(w)) / totImportance;
+      edgeImportance.put(w, toAdd);
     }
     return edgeImportance;
   }

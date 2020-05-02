@@ -1,5 +1,6 @@
 package edu.brown.cs.term_project.Bubble;
 
+import com.google.gson.Gson;
 import edu.brown.cs.term_project.Graph.IEdge;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
@@ -14,6 +15,9 @@ public class Similarity implements IEdge<ArticleVertex> {
   private Map<IWord, Double> wordSim;
   private Map<IWord, Double> entitySim;
   private Map<IWord, Double> titleSim;
+  private double wordDistance;
+  private double entityDistance;
+  private double titleDistance;
 
 
   public Similarity(ArticleVertex src, ArticleVertex dst, TextCorpus<ArticleWord,
@@ -47,11 +51,12 @@ public class Similarity implements IEdge<ArticleVertex> {
     // Should be between 0 and 1, the higher it is, the more highly weighted entities are
     double totalWeight = textWeight + entityWeight + titleWeight;
     final double divideZeroShift = .00000001;
-    this.distance = 1 / ((entityWeight / totalWeight
-        * entityCorpus.getSimilarity(this.src, this.dst))
-        + (textWeight / totalWeight  * wordCorpus.getSimilarity(this.src, this.dst))
-        + (titleWeight / totalWeight * titleCorpus.getSimilarity(this.src, this.dst))
-        + divideZeroShift);
+
+    this.wordDistance = textWeight / totalWeight  * wordCorpus.getSimilarity(this.src, this.dst);
+    this.titleDistance = titleWeight / totalWeight * titleCorpus.getSimilarity(this.src, this.dst);
+    this.entityDistance = entityWeight / totalWeight * entityCorpus.getSimilarity(this.src, this.dst);
+
+    this.distance = 1 / (wordDistance + titleDistance + entityDistance + divideZeroShift);
   }
 
   public void setImportance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
@@ -72,4 +77,13 @@ public class Similarity implements IEdge<ArticleVertex> {
   public Map<IWord, Double> getTitleSim() {
     return titleSim;
   }
+
+
+  public SimilarityJSON toSimilarityJSON() {
+    SimilarityJSON sim = new SimilarityJSON(src.getId(), dst.getId(), this.distance,
+        this.titleDistance, this.wordDistance, this.entityDistance);
+    return sim;
+  }
 }
+
+
