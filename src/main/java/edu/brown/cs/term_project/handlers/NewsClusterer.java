@@ -17,8 +17,8 @@ import java.util.Set;
 public class NewsClusterer {
   public static void clusterArticles(NewsData db) throws SQLException {
     final double textWeight = 1;
-    final double entityWeight = 0;
-    final double titleWeight = 0;
+    final double entityWeight = 1;
+    final double titleWeight = 1;
     Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
