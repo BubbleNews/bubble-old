@@ -79,17 +79,18 @@ public class TextCorpus<W extends IWord, T extends IText> {
    * @param textType Integer representing the type of word we are comparing from the articles
    * @return the cosine similarity of the two articles based on the textType
    */
-  public Map<IWord, Double> getSimilarityHast(T src, T dst, Integer textType) {
-    Map<IWord, Double> srcMap = src.getFreq(textType);
-    Map<IWord, Double> dstMap = dst.getFreq(textType);
-    Set<IWord> sharedWords = srcMap.keySet();
-    sharedWords.retainAll(dstMap.keySet());
-    double
-    for (IWord w: sharedWords) {
-      dotProduct += this.getImportance(srcMap, w) * this.getImportance(dstMap, w);
-    }
-    return dotProduct / (Math.sqrt(this.getMagImportance(srcMap)
-        + Math.sqrt(this.getMagImportance(dstMap))));
-  }
+//  public Map<IWord, Double> getSimilarityHast(T src, T dst, Integer textType) {
+//    Map<IWord, Double> srcMap = src.getFreq(textType);
+//    Map<IWord, Double> dstMap = dst.getFreq(textType);
+//    Set<IWord> sharedWords = srcMap.keySet();
+//    sharedWords.retainAll(dstMap.keySet());
+//    double totImportance = (Math.sqrt(this.getMagImportance(srcMap)
+//        + Math.sqrt(this.getMagImportance(dstMap))));
+//    for (IWord w: sharedWords) {
+//      dotProduct += this.getImportance(srcMap, w) * this.getImportance(dstMap, w);
+//    }
+//    return dotProduct / (Math.sqrt(this.getMagImportance(srcMap)
+//        + Math.sqrt(this.getMagImportance(dstMap))));
+//  }
 
 }

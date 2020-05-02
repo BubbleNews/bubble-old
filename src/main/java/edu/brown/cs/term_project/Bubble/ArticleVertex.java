@@ -115,17 +115,17 @@ public class ArticleVertex implements INode<Similarity>, IText {
     }
   }
 
-  public void setImportance(Integer textType) {
-    if (textType == 0) {
-      return new HashMap<>(entities);
-    } else if (textType == 1) {
-      return new HashMap<>(words);
-    } else if (textType == 2) {
-      return new HashMap<>(title);
-    } else {
-      return null;
-    }
-  }
+//  public void setImportance(Integer textType) {
+//    if (textType == 0) {
+//      return new HashMap<>(entities);
+//    } else if (textType == 1) {
+//      return new HashMap<>(words);
+//    } else if (textType == 2) {
+//      return new HashMap<>(title);
+//    } else {
+//      return null;
+//    }
+//  }
 
   public Map<Entity, Double> getEntitiesImportance() {
     return entitiesImportance;
