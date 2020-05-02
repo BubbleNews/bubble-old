@@ -111,12 +111,13 @@ public class NewsLoader {
       HashMap<Entity, Integer> entityFrequencies =
           TextProcessing.getEntityFrequencies(article.getContent());
       // lemmize text and title
-      String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
+      String[] lemmizedText = TextProcessing.lemmizeText(article.getContent() + " "
+          + article.getTitle());
       String[] lemmizedTitle = TextProcessing.lemmizeText(article.getTitle());
 
       String[] lemmizedTextAndTitle = ObjectArrays.concat(lemmizedTitle, lemmizedText, String.class);
       // change the content field of the article object to be the lemmized text
-      article.setContent(String.join(" ", lemmizedText));
+//      article.setContent(String.join(" ", lemmizedText));
       System.out.println("Updating database");
       // insert article and its entities into the database
       db.insertArticleAndEntities(article, entityFrequencies);
@@ -133,6 +134,6 @@ public class NewsLoader {
 //    Date now = new Date();
 //    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(1, 10, 1, 39);
+    loader.executeBatches(10, 10, 1, 39);
   }
 }

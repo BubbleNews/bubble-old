@@ -17,10 +17,14 @@ public class ArticleWord implements IWord {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof ArticleWord)) {
+      return false;
+    }
     ArticleWord that = (ArticleWord) o;
-    return Objects.equals(word, that.word);
+    return word.equals(that.word);
   }
 
   @Override
