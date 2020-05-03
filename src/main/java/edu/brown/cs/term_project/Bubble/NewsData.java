@@ -351,7 +351,6 @@ public final class NewsData extends Database {
    * @throws SQLException only thrown if the database is malformed
    */
   public List<ChartCluster> getClusters(String date) throws SQLException {
-    System.out.println(date);
     String query = "SELECT id, title, size FROM clusters WHERE day = ?";
     //        String query = "SELECT id, title, size FROM clusters";
     PreparedStatement prep = conn.prepareStatement(query);
@@ -362,7 +361,8 @@ public final class NewsData extends Database {
       int clusterId = rs.getInt(1);
       String headline = rs.getString(2);
       int size = rs.getInt(3);
-      List<Article> articles = getArticlesFromCluster(clusterId);
+      List<Article> articles = new ArrayList<>();
+//      articles = getArticlesFromCluster(clusterId);
       ChartCluster cluster = new ChartCluster(clusterId, headline, size, articles);
       clusters.add(cluster);
     }
