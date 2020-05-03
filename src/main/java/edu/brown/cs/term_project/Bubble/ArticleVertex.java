@@ -14,19 +14,19 @@ import java.util.Map;
 public class ArticleVertex implements INode<Similarity>, IText {
   private final List<Similarity> similarities;
   private final Article article;
-  private final Map<Entity, Double> entities;
-  private final Map<ArticleWord, Double> words;
-  private final Map<ArticleWord, Double> title;
+  private final Map<IWord, Double> entities;
+  private final Map<IWord, Double> words;
+  private final Map<IWord, Double> title;
   private Map<IWord, Double> entitiesImportance;
   private Map<IWord, Double> wordsImportance;
   private Map<IWord, Double> titleImportance;
 
-  public ArticleVertex(Article article, String text, Map<Entity, Double> entities) {
+  public ArticleVertex(Article article, String text, Map<IWord, Double> entities) {
     this.similarities = new ArrayList<>();
     this.article = article;
     this.entities = entities;
-    this.words = setWords(text);
-    this.title = setWords(article.getTitle());
+    this.words = setWords(text, false);
+    this.title = setWords(article.getTitle(), true);
   }
 
   @Override
@@ -93,9 +93,15 @@ public class ArticleVertex implements INode<Similarity>, IText {
     return null;
   }
 
-  private Map<ArticleWord, Double> setWords(String text) {
-    HashMap<ArticleWord, Double> wordMap = new HashMap<>();
-    String[] splitWords = TextProcessing.lemmizeText(text);
+  private Map<IWord, Double> setWords(String text, boolean isTitle) {
+    HashMap<IWord, Double> wordMap = new HashMap<>();
+    String[] splitWords;
+    if (isTitle) {
+      splitWords = TextProcessing.lemmizeText(text);
+    } else {
+      splitWords = text.split("~\\^");
+    }
+
     for (String word: splitWords) {
       ArticleWord articleWord = new ArticleWord(word);
       if (wordMap.containsKey(articleWord)) {

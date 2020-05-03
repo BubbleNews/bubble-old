@@ -3,6 +3,7 @@ package edu.brown.cs.term_project.Bubble;
 import edu.brown.cs.term_project.Database.Database;
 import edu.brown.cs.term_project.Graph.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
+import edu.brown.cs.term_project.TextSimilarity.IWord;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -279,13 +280,13 @@ public final class NewsData extends Database {
     return words;
   }
 
-  public Map<Entity, Double> getArticleEntityFreq(Integer articleId) throws SQLException {
+  public Map<IWord, Double> getArticleEntityFreq(Integer articleId) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT entity_class, entity_entity, count\n"
         + "FROM article_entity\n"
         + "WHERE article_id = ?;");
     prep.setInt(1, articleId);
     ResultSet rs = prep.executeQuery();
-    Map<Entity, Double> articleEntityFreq = new HashMap<>();
+    Map<IWord, Double> articleEntityFreq = new HashMap<>();
     while (rs.next()) {
       articleEntityFreq.put(new Entity(rs.getString(2), rs.getString(1)),
           rs.getDouble(3));

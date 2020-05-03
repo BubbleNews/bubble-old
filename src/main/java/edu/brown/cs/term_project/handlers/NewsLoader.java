@@ -8,6 +8,7 @@ import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.nlp.TextProcessing;
+import org.w3c.dom.Text;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -15,10 +16,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.*;
 import java.time.*;
-import java.util.HashMap;
-import java.util.List;
 
 public class NewsLoader {
   private NewsData db;
@@ -111,18 +110,25 @@ public class NewsLoader {
       HashMap<Entity, Integer> entityFrequencies =
           TextProcessing.getEntityFrequencies(article.getContent());
       // lemmize text and title
-      String[] lemmizedText = TextProcessing.lemmizeText(article.getContent() + " "
-          + article.getTitle());
+      String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
       String[] lemmizedTitle = TextProcessing.lemmizeText(article.getTitle());
 
       String[] lemmizedTextAndTitle = ObjectArrays.concat(lemmizedTitle, lemmizedText, String.class);
       // change the content field of the article object to be the lemmized text
-//      article.setContent(String.join(" ", lemmizedText));
+      article.setContent(String.join("~^", lemmizedText));
       System.out.println("Updating database");
       // insert article and its entities into the database
       db.insertArticleAndEntities(article, entityFrequencies);
       // add to the total batch word occurrence map
-      TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedTextAndTitle);
+      Set<String> uniqueWords = new HashSet<>(Arrays.asList(lemmizedTextAndTitle));
+      for (String uniqueWord: uniqueWords) {
+        if (occurenceMap.containsKey(uniqueWord)) {
+          occurenceMap.replace(uniqueWord, occurenceMap.get(uniqueWord) + 1);
+        } else {
+          occurenceMap.put(uniqueWord, 1);
+        }
+      }
+//      TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedTextAndTitle);
     }
     // update vocab counts in database
     db.updateVocabCounts(occurenceMap);
@@ -134,5 +140,10 @@ public class NewsLoader {
 //    Date now = new Date();
 //    loader.loadArticlesBatch(dayAgo, now, 10);
     loader.executeBatches(10, 10, 1, 39);
+//    String[] test = TextProcessing.lemmizeText("Afrobeat Legend Tony Allen, " +
+//        "Fela Kutis Drummer, Has Died At Age 79");
+//    String[] another = new String[]{"hello", "this", "is", "another", "string"};
+//    String[] lemmizedTextAndTitle = ObjectArrays.concat(test, another, String.class);
+//    System.out.println(Arrays.toString(lemmizedTextAndTitle));
   }
 }
