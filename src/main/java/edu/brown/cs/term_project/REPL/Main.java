@@ -113,6 +113,7 @@ public final class Main {
     path("/bubble", () -> {
       // home page endpoint
       get("/home", new HomeHandler(DATABASE), freeMarker);
+      get("/diagram", new DiagramHandler(DATABASE), freeMarker);
       // api endpoints
       path("/api", () -> {
         // TODO: add authentication for api calls with before()
