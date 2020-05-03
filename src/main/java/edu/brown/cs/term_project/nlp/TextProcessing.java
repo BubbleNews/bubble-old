@@ -1,6 +1,9 @@
 package edu.brown.cs.term_project.nlp;
 
 import edu.brown.cs.term_project.Bubble.Entity;
+import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.Bubble.RemoveStopWords;
+import edu.brown.cs.term_project.handlers.NewsLoader;
 import edu.stanford.nlp.simple.*;
 
 import java.util.*;
@@ -60,11 +63,20 @@ public final class TextProcessing {
     for (String word: words) {
       // we are keeping track of number of articles a word has appeared in, so
       // if we already saw word in this article we can ignore
-      if (!alreadySeen.contains(word)) {
+      if (word.length() == 1) {
+        int w = word.length();
+      }
+      if (word.equals("and")) {
+        int w = word.length();
+      }
+      if (!alreadySeen.contains(word) && !RemoveStopWords.testWord(word)) {
+        int w = word.length();
         frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
         alreadySeen.add(word);
       }
     }
   }
+
+
 
 }

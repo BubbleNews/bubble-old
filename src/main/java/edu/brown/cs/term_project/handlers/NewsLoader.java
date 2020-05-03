@@ -133,6 +133,6 @@ public class NewsLoader {
         ".1:5000/scrape");
 //    Date now = new Date();
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(10, 10, 1, 0);
+    loader.executeBatches(1, 5, 1, 0);
   }
 }
