@@ -25,8 +25,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
     this.similarities = new ArrayList<>();
     this.article = article;
     this.entities = entities;
-    this.words = setWords(text);
-    this.title = setWords(article.getTitle());
+    this.words = setWords(text, false);
+    this.title = setWords(article.getTitle(), true);
   }
 
   @Override
@@ -92,9 +92,14 @@ public class ArticleVertex implements INode<Similarity>, IText {
     return null;
   }
 
-  private Map<IWord, Double> setWords(String text) {
+  private Map<IWord, Double> setWords(String text, boolean isTitle) {
     HashMap<IWord, Double> wordMap = new HashMap<>();
-    String[] splitWords = TextProcessing.lemmizeText(text);
+    String[] splitWords;
+    if (isTitle) {
+      splitWords = TextProcessing.lemmizeText(text);
+    } else {
+      splitWords = text.split("~\\^");
+    }
     for (String word: splitWords) {
       ArticleWord articleWord = new ArticleWord(word);
       if (wordMap.containsKey(articleWord)) {
