@@ -61,6 +61,6 @@ public class NewsClusterer {
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    clusterArticles(new NewsData("data/ben_test.db"));
+    clusterArticles(new NewsData("data/backloaded.db"));
   }
 }

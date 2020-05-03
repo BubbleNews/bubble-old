@@ -1,119 +1,119 @@
-const MAX_WIDTH = Math.max(1080, window.innerWidth);
-const MAX_HEIGHT = 720;
-const margin = {top: 40, right: 100, bottom: 40, left: 175, top2: 25, left2: 75, left3: 75, right3: 40, bottom3: 120};
+function renderChord(parsed) {
+    const margin = {top: 40, right: 100, bottom: 40, left: 175};
+    const width = 500, height = Math.min(640, width);
+    const inner_width = width - margin.left - margin.right;
+    const inner_height = height - margin.top - margin.bottom;
+    const outerRadius = Math.min(width, height) * 0.5 - 30;
+    const innerRadius = outerRadius - 20;
 
-// Assumes the same graph width, height dimensions as the example dashboard. Feel free to change these if you'd like
-let graph_1_width = (MAX_WIDTH / 2) - 10, graph_1_height = 250;
-let graph_2_width = (MAX_WIDTH / 2) - 10, graph_2_height = 325;
-let graph_3_width = MAX_WIDTH / 2, graph_3_height = 655;
+    // get data
+    const arr = getChordDataMatrix(parsed);
+    const titles = arr[0];
+    const matrix = arr[1];
 
+    console.log(titles);
 
-let svg1 = d3.select("#chord")
-    .append("svg")
-    .attr("width", graph_1_width)
-    .attr("height", graph_1_height)
-    .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    const svg = d3.select(".chord-chart")
+        .append("svg")
+        .attr('viewBox', [-width / 2, -height / 2, width, height]);
 
-function makeChord(parsed) {
+    const chords = d3.chord()
+        .padAngle(.15)
+        .sortSubgroups(d3.descending)(matrix);
 
-    console.log("hello");
+    const group = svg.append('g').attr('class', 'node')
+        .selectAll('g')
+        .data(chords.groups)
+        .join('g');
 
-    console.log(parsed.edges[0]);
+    const arc = d3.arc()
+        .innerRadius(innerRadius)
+        .outerRadius(outerRadius);
 
-    filterData(data.edges)
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
 
+    const ribbon = d3.ribbon().radius(innerRadius);
 
+    console.log(chords);
 
-            // data = filterDate(data);
-            //
-            // data = d3.nest()
-            //     .key(function(d) {
-            //         return new Date(Date.parse(d.date)).getFullYear(); })
-            //     .rollup( function(a) {
-            //         return a.length})
-            //     .entries(data)
-            //     .map(function(d) {
-            //         return {year: d.key, count: d.value}});
-            //
-            //
-            // let x = d3.scaleLinear()
-            //     .domain([d3.min(data, d => d.year), d3.max(data, d => d.year )])
-            //     .range([0, graph_1_width - margin.left - margin.right]);
-            //
-            // let y = d3.scaleLinear()
-            //     .domain([d3.max(data, function(d) { return d.count; }), 0])
-            //     .range([0, graph_1_height - margin.top - margin.bottom]);
-            //
-            // svg1.append('g')
-            //     .attr("transform", `translate(0, ${graph_1_height - margin.bottom-margin.top})`)
-            //     .call(d3.axisBottom(x).tickSize(0).tickPadding(10).tickFormat(d3.format("d")))
-            //     .attr("class", "axis");
-            //
-            //
-            // svg1.append('g')
-            //     .call(d3.axisLeft(y).tickSize(0).tickPadding(10))
-            //     .attr("class", "axis");
-            //
-            // let points = svg1.selectAll("circle").data(data);
-            //
-            //
-            // points.enter()
-            //     .append("circle")
-            //     .merge(points)
-            //     .attr("fill", "red")
-            //     .attr("cx", d => x(d.year))
-            //     .attr("cy", d => y(d.count))
-            //     .attr("r", 2);
-            //
-            // svg1.append("text")
-            //     .attr("transform", `translate(${(graph_1_width - margin.left - margin.right) / 2},
-            //                                     ${(graph_1_height - margin.top - margin.bottom) + 40})`)
-            //     .style("text-anchor", "middle")
-            //     .text("Year")
-            //     .attr("class", "label");
-            //
-            // svg1.append('g')
-            //     .append("text")
-            //     // HINT: Place this at the center left edge of the graph
-            //     .style("text-anchor", "middle")
-            //     .text("Count")
-            //     .attr("transform", "rotate(-90)")
-            //     .attr("y", -50)
-            //     .attr("x", -((graph_1_height-margin.top-margin.bottom)/2))
-            //     .attr("class", "label");
-            //
-            // // Add chart title
-            // svg1.append("text")
-            //     .attr("transform", `translate(${(graph_1_width - margin.left - margin.right) / 2}, ${-10})`)       // HINT: Place this at the top middle edge of the graph
-            //     .style("text-anchor", "middle")
-            //     .attr("class", "title")
-            //     .text("Football Games Per Year since 1900")
-        //});
+    const labels = group.append('g').selectAll('g')
+        .data(titles)
+        .join('g')
+        .attr('class', (d, i) => i);
+
+    group.append('path')
+        .attr('fill', d => color(d.index))
+        .attr('stroke', d => d3.rgb(color(d.index)).darker())
+        .attr('d', arc);
+
+    svg.append('g')
+        .attr('fill-opacity', .67)
+    .selectAll('path')
+        .data(chords)
+        .join('path')
+        .attr('d', ribbon)
+        .attr('fill', d => interpolateColor(d, color, matrix))
+        .attr('stroke', d => d3.rgb(color(d.target.index)).darker());
+}
+
+function color() {
 
 }
 
-
-
-
-function filterData(data) {
-    let data1 = data.map(function(d) {
-        return {
-            src: d.src.article.id,
-            dest: d.dst.article.id,
-            distance: 1/d.distance,
-        }});
-
-
-    let data2 = data.map(function(d) {
-        let country = d.away_team;
-        return {country: country, score: d.away_score,
-            opponent: d.home_team, opponent_score: d.home_score,
-            year: new Date(Date.parse(d.date)).getFullYear()
-        }});
+function interpolateColor(d, color, matrix) {
+    const srcIndex = d.source.index;
+    const targetIndex = d.target.index;
+    const srcColor = color(srcIndex);
+    const targetColor = color(targetIndex);
+    return d3.interpolateRgb(srcColor, targetColor)(0.5);
 }
 
+function getChordDataMatrix(parsed) {
+    const edges = parsed['edges'];
+    const numVertices = parsed['numVertices'];
+    const titles = [];
 
+    // this will be data matrix for the chord diagram
+    const matrix = [];
+    // initialize matrix with empty values
+    for(let i = 0; i < numVertices; i++) {
+        matrix[i] = new Array(numVertices);
+
+        // set weight from article to itself to 0 because articles can't be similar to themselves
+        matrix[i][i] = 0;
+    }
+
+    // map from article ID -> index in matrix array
+    const indices = {};
+
+    // fill in matrix with distances
+    edges.forEach(edge => {
+        // get index of source and destination articles in matrix
+        const srcIndex = getIndex(edge.src.article.id, indices);
+        const destIndex = getIndex(edge.dst.article.id, indices);
+
+        // get distance values of each edge
+        // need to take reciprocal because clustering algorithm treats a lower weight as better
+        const distance = 1 / edge.distance;
+        matrix[srcIndex][destIndex] = distance;
+        matrix[destIndex][srcIndex] = distance;
+
+        // store title of each article
+        const srcTitle = `${edge.src.article.sourceName}: ${edge.src.article.title}`;
+        const destTitle = `${edge.dst.article.sourceName}: ${edge.dst.article.title}`;
+        titles[srcIndex] = srcTitle;
+        titles[destIndex] = destTitle;
+    })
+
+    return [titles, matrix];
+}
+
+function getIndex(id, indices) {
+    if (!indices.hasOwnProperty(id)) {
+        indices[id] = Object.keys(indices).length;
+    }
+    return indices[id];
+}
 
 function getClusterDetails(clusterId) {
     let clusterUrl = 'api/details';
@@ -122,9 +122,8 @@ function getClusterDetails(clusterId) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        console.log(parsed);
-        makeChord(parsed)
+        renderChord(parsed)
     });
 }
 
-getClusterDetails(3);
+getClusterDetails(9);

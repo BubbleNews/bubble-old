@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-https://www.npr.org/2020/04/29/847870532/what-the-u-s-might-learn-from-chinas-approach-to-covid-19
-=======
-https://apnews.com/c20799bbc63b49e8b18faa4ce98326f1
->>>>>>> e63dec8871eef1e9a592ad31da25ad67d51719c3
-=======
-http://wpcomics.washingtonpost.com/client/wpc/db/2020/04/29/
->>>>>>> edge
+https://www.wsj.com/articles/irs-denies-deductions-tied-to-small-business-loans-amid-coronavirus-11588286040

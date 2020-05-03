@@ -47,6 +47,7 @@ public class ClusterDetailHandler {
         }
         // put edges in response
         detailResponse.setEdges(clusterEdges);
+        detailResponse.setNumVertices(articlesFromCluster.size());
       }
     } catch (Exception e) {
       detailResponse.setErrorMessage(e.getMessage());
@@ -101,6 +102,7 @@ public class ClusterDetailHandler {
    */
   private static class ClusterDetailResponse extends StandardResponse {
     private Set<Similarity> edges;
+    private int numVertices;
 
     /**
      * Constructor for the response.
@@ -114,6 +116,9 @@ public class ClusterDetailHandler {
 
     public void setEdges(Set<Similarity> edges) {
       this.edges = edges;
+    }
+    public void setNumVertices(int numVertices) {
+      this.numVertices = numVertices;
     }
   }
 }
