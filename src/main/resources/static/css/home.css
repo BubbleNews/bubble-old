@@ -65,7 +65,7 @@
 /*}*/
 
 .sidePanel {
-    background-color:lightsalmon;
+    /*background-color:lightsalmon;*/
     border-radius: 10px;
     border-style: solid;
     border-color: white;
@@ -89,7 +89,7 @@ p {
 h4 {
     font-family: 'Helvetica', sans-serif;
     text-align: center;
-    color: lightcyan;
+    color: black;
     font-size: 1.1rem;
 }
 

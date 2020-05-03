@@ -57,8 +57,11 @@
                                    max="1"
                                    value=".5" step="0.01">
                             <button class="btn btn-primary btn-sm" type="button" style="margin:
-                            auto;
+                            auto; margin-bottom:10px;
                             ">Recluster</button>
+                            <button class="btn btn-blue-grey btn-sm" type="button" style="margin:
+                            auto;
+                            ">Reset</button>
                         </div>
                     </form>
                 </div>
