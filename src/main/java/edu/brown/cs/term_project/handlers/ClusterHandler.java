@@ -42,7 +42,7 @@ public class ClusterHandler {
         // get list of articles for cluster
         int clusterId = Integer.parseInt(clusterIdStr);
         // TODO: CHANGE FROM HARDCODED
-        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId, true);
+        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId);
         clusterResponse.setArticles(articlesFromCluster);
       }
     } catch (Exception e) {
