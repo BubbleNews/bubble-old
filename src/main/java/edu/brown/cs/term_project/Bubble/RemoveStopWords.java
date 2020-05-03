@@ -25,15 +25,15 @@ public final class RemoveStopWords {
     // BufferedReader to read file
     try {
       FileReader file = new FileReader("data/stopwords.csv");
-//      BufferedReader csvReader = new BufferedReader(file);
-//
-//      String row = csvReader.readLine();
-//      // Splits rows on commas
-//      while (row != null) {
-//        words.add(row);
-//        row = csvReader.readLine();
-//      }
-//      csvReader.close();
+      BufferedReader csvReader = new BufferedReader(file);
+
+      String row = csvReader.readLine();
+      // Splits rows on commas
+      while (row != null) {
+        words.add(row);
+        row = csvReader.readLine();
+      }
+      csvReader.close();
     } catch (IOException e) {
       System.out.println("IOException");
     }

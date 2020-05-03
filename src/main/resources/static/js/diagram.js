@@ -127,7 +127,7 @@ function getClusterDetails(clusterId) {
     });
 }
 
-getClusterDetails(3);
+getClusterDetails(1);
 
 function getEdgeDetails(id1, id2) {
     let clusterUrl = 'api/edge';
@@ -140,4 +140,4 @@ function getEdgeDetails(id1, id2) {
     });
 }
 
-getEdgeDetails(1, 2);
+getEdgeDetails(1, 343);
