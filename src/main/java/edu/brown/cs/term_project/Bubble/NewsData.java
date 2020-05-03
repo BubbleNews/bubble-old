@@ -170,7 +170,7 @@ public final class NewsData extends Database {
     return articles;
   }
 
-    public Set<ArticleVertex> getArticleVerticiesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
+    public Set<ArticleVertex> getArticleVerticesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
         // build sql statement
         String statement = "SELECT id, source, title, url, date_published, text FROM " +
             "articles WHERE ";

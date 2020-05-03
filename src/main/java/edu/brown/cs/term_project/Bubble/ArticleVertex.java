@@ -14,14 +14,14 @@ import java.util.Map;
 public class ArticleVertex implements INode<Similarity>, IText {
   private final List<Similarity> similarities;
   private final Article article;
-  private final Map<IWord, Double> entities;
-  private final Map<IWord, Double> words;
-  private final Map<IWord, Double> title;
+  private final Map<Entity, Double> entities;
+  private final Map<ArticleWord, Double> words;
+  private final Map<ArticleWord, Double> title;
   private Map<IWord, Double> entitiesImportance;
   private Map<IWord, Double> wordsImportance;
   private Map<IWord, Double> titleImportance;
 
-  public ArticleVertex(Article article, String text, Map<IWord, Double> entities) {
+  public ArticleVertex(Article article, String text, Map<Entity, Double> entities) {
     this.similarities = new ArrayList<>();
     this.article = article;
     this.entities = entities;
@@ -93,8 +93,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
     return null;
   }
 
-  private Map<IWord, Double> setWords(String text) {
-    HashMap<IWord, Double> wordMap = new HashMap<>();
+  private Map<ArticleWord, Double> setWords(String text) {
+    HashMap<ArticleWord, Double> wordMap = new HashMap<>();
     String[] splitWords = TextProcessing.lemmizeText(text);
     for (String word: splitWords) {
       ArticleWord articleWord = new ArticleWord(word);
@@ -111,13 +111,13 @@ public class ArticleVertex implements INode<Similarity>, IText {
   public Map<IWord, Double> getFreq(Integer textType) {
     switch (textType) {
       case 0:
-        return entities;
+        return new HashMap<>(entities);
 
       case 1:
-        return words;
+        return new HashMap<>(words);
 
       case 2:
-        return title;
+        return new HashMap<>(title);
 
       default:
         return null;
@@ -161,4 +161,13 @@ public class ArticleVertex implements INode<Similarity>, IText {
     return titleImportance;
   }
 
+  @Override
+  public String toString() {
+    return "ArticleVertex{" +
+        "article=" + article +
+        ", entitiesImportance=" + entitiesImportance +
+        ", wordsImportance=" + wordsImportance +
+        ", titleImportance=" + titleImportance +
+        '}';
+  }
 }

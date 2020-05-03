@@ -114,11 +114,16 @@ function appendCluster(cluster, color) {
         + "style='background-color:" + color + ";'>"
         + "<h2>" + cluster.headline
         + "<div class='clusterSize'>" + cluster.size + "</div></h2>"
+        + "<button id=" + cluster.clusterId + "button class='detailsButton'>?</button>"
         + "</div>";
     $('#clusters').append(clusterHtml);
     // add a click function to get clusters
     $('#' + cluster.clusterId).click(function() {
         getCluster(cluster.clusterId);
+    });
+    // add detail clicks
+    $('#' + cluster.clusterId + 'button').click(function() {
+        getClusterDetails(cluster.clusterId);
     })
 }
 
@@ -134,6 +139,7 @@ function getCluster(clusterId) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
+        console.log(parsed);
         // TODO: do something with parsed cluster response
         const divId = clusterId + 'articles';
         const articlesHtml = '<div id="' + divId + '" class="articlesWrapper"></div>';
@@ -159,6 +165,17 @@ function getCluster(clusterId) {
 
 function cleanSourceName(sourceName) {
     return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+}
+
+function getClusterDetails(clusterId) {
+    let clusterUrl = 'api/details';
+    // add id to cluster base url
+    clusterUrl += '?id=' + clusterId;
+    // send get request
+    $.get(clusterUrl, response => {
+        const parsed = JSON.parse(response);
+        console.log(parsed);
+    });
 }
 
 

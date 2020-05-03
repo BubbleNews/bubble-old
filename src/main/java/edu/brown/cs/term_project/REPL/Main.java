@@ -125,6 +125,9 @@ public final class Main {
         get("/cluster", (Request request, Response response) -> {
           return ClusterHandler.handle(request, response, DATABASE);
         });
+        get("/details", (Request request, Response response) -> {
+          return ClusterDetailHandler.handle(request, response, DATABASE);
+        });
       });
     });
   }
