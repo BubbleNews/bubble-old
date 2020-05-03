@@ -11,8 +11,6 @@ function renderChord(parsed) {
     const titles = arr[0];
     const matrix = arr[1];
 
-    console.log(titles);
-
     const svg = d3.select(".chord-chart")
         .append("svg")
         .attr('viewBox', [-width / 2, -height / 2, width, height]);
@@ -21,31 +19,38 @@ function renderChord(parsed) {
         .padAngle(.15)
         .sortSubgroups(d3.descending)(matrix);
 
-    const group = svg.append('g').attr('class', 'node')
-        .selectAll('g')
-        .data(chords.groups)
-        .join('g');
-
     const arc = d3.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius);
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
-
     const ribbon = d3.ribbon().radius(innerRadius);
 
-    console.log(chords);
-
-    const labels = group.append('g').selectAll('g')
-        .data(titles)
+    const group = svg.append('g').attr('class', 'node')
+        .selectAll('g')
+        .data(chords.groups)
         .join('g')
-        .attr('class', (d, i) => i);
 
     group.append('path')
         .attr('fill', d => color(d.index))
         .attr('stroke', d => d3.rgb(color(d.index)).darker())
         .attr('d', arc);
+    //
+    const groupLabels = group.selectAll('g')
+        .data(d => labels(d, titles))
+        .join('g')
+        .attr('transform', d => transformText(d, outerRadius))
+        .attr('text-anchor', d => getTextAnchor(d));
 
+
+    groupLabels.append('text')
+        .text(d => d.title);
+
+    //
+    // group.append('text')
+    //     .attr('text', (d,i) => titles[i])
+    //     .attr('x', 0)
+    //     .attr('y', 0);
     svg.append('g')
         .attr('fill-opacity', .67)
     .selectAll('path')
@@ -56,8 +61,30 @@ function renderChord(parsed) {
         .attr('stroke', d => d3.rgb(color(d.target.index)).darker());
 }
 
-function color() {
+function transformText(d, outerRadius) {
+    const labelGap = 20;
+    const flipAngle = d.angle > Math.PI ? 'rotate(180)' : '';
+    return `rotate(${d.angle * 180 / Math.PI - 90}) translate(${outerRadius + labelGap},0) rotate(${-1 * (d.angle * 180 / Math.PI - 90)})`;
+}
 
+function getTextAnchor(d) {
+    console.log(d);
+    if (d.angle > Math.PI) {
+        return 'end'
+    }
+    return null;
+}
+
+function labels(d, titles) {
+    const midAngle = (d.startAngle + d.endAngle) / 2;
+    console.log({
+        angle: midAngle,
+        title: titles[d.index]
+    });
+    return [{
+        angle: midAngle,
+        title: titles[d.index]
+    }];
 }
 
 function interpolateColor(d, color, matrix) {
@@ -89,18 +116,18 @@ function getChordDataMatrix(parsed) {
     // fill in matrix with distances
     edges.forEach(edge => {
         // get index of source and destination articles in matrix
-        const srcIndex = getIndex(edge.src.article.id, indices);
-        const destIndex = getIndex(edge.dst.article.id, indices);
+        const srcIndex = getIndex(edge.articleId1, indices);
+        const destIndex = getIndex(edge.articleId2, indices);
 
         // get distance values of each edge
         // need to take reciprocal because clustering algorithm treats a lower weight as better
-        const distance = 1 / edge.distance;
+        const distance = 1 / edge.totalDistance;
         matrix[srcIndex][destIndex] = distance;
         matrix[destIndex][srcIndex] = distance;
 
         // store title of each article
-        const srcTitle = `${edge.src.article.sourceName}: ${edge.src.article.title}`;
-        const destTitle = `${edge.dst.article.sourceName}: ${edge.dst.article.title}`;
+        const srcTitle = edge.articleTitle1;
+        const destTitle = edge.articleTitle2;
         titles[srcIndex] = srcTitle;
         titles[destIndex] = destTitle;
     })
@@ -126,8 +153,6 @@ function getClusterDetails(clusterId) {
     });
 }
 
-getClusterDetails(9);
-
 function getEdgeDetails(id1, id2) {
     let clusterUrl = 'api/edge';
     // add id to cluster base url
@@ -135,8 +160,9 @@ function getEdgeDetails(id1, id2) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        console.log(parsed);
     });
 }
 
-getEdgeDetails(1, 2);
+
+getClusterDetails(9);
+// getEdgeDetails(1, 2);

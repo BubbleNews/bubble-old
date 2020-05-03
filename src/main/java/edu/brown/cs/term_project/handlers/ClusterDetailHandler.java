@@ -124,12 +124,12 @@ public class ClusterDetailHandler {
     private String articleTitle2;
     private double totalDistance;
 
-    SimilarityJSON(int articleId1, int articleId2, String title1,
-                          String title2, double totalDistance) {
+    SimilarityJSON(int articleId1, int articleId2, String title1, String title2,
+                   String source1, String source2, double totalDistance) {
       this.articleId1 = articleId1;
       this.articleId2 = articleId2;
-      this.articleTitle1 = title1;
-      this.articleTitle2 = title2;
+      this.articleTitle1 = source1 + ": " + title1;
+      this.articleTitle2 = source2 + ": " + title2;
       this.totalDistance = totalDistance;
     }
   }
@@ -159,8 +159,8 @@ public class ClusterDetailHandler {
       for (Similarity s: edges) {
         Article a1 = s.getSource().getArticle();
         Article a2 = s.getDest().getArticle();
-        finalEdges.add(new SimilarityJSON(a1.getId(), a2.getId(), a1.getTitle(), a2.getTitle(),
-            s.getDistance()));
+        finalEdges.add(new SimilarityJSON(a1.getId(), a2.getId(), a1.getTitle(),
+            a2.getTitle(), a1.getSourceName(), a2.getSourceName(), s.getDistance()));
       }
       this.edges = finalEdges;
     }
