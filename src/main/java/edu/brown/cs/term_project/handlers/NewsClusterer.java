@@ -9,17 +9,33 @@ import edu.brown.cs.term_project.Graph.Graph;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NewsClusterer {
+
   public static void clusterArticles(NewsData db) throws SQLException {
+    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
+    List<Similarity> edges = edges(db, pulledArticles);
+
+    edges.sort(Comparator.comparingDouble(Similarity::getDistance));
+    int size = edges.size();
+    for (int i = 0; i < size; i++) {
+      if (i < pulledArticles.size() || i > (size - 25)) {
+        Similarity tempEdge = edges.get(i);
+        System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
+            + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());
+      }
+    }
+
+    Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
+    graph.runClusters(1);
+    db.insertClusters(graph.getClusters());
+  }
+
+  public static List<Similarity> edges(NewsData db, Set<ArticleVertex> pulledArticles) throws SQLException {
     final double textWeight = 1;
     final double entityWeight = 1;
     final double titleWeight = 1;
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
     int maxCount = db.getMaxVocabCount();
@@ -44,20 +60,7 @@ public class NewsClusterer {
         }
       }
     }
-
-    edges.sort(Comparator.comparingDouble(Similarity::getDistance));
-    int size = edges.size();
-    for (int i = 0; i < size; i++) {
-      if (i < pulledArticles.size() || i > (size - 25)) {
-        Similarity tempEdge = edges.get(i);
-        System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
-            + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());
-      }
-    }
-
-    Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
-    graph.runClusters(1);
-    db.insertClusters(graph.getClusters());
+    return edges;
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {

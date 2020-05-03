@@ -129,6 +129,9 @@ public final class Main {
         get("/details", (Request request, Response response) -> {
           return ClusterDetailHandler.handle(request, response, DATABASE);
         });
+        get("/edge", (Request request, Response response) -> {
+          return EdgeHandler.handle(request, response, DATABASE);
+        });
       });
     });
   }

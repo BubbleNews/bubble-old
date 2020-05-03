@@ -1,6 +1,7 @@
 package edu.brown.cs.term_project.TextSimilarity;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
   public Double getSimilarity(T src, T dst) {
     Map<IWord, Double> srcMap = src.getFreq(corpusType);
     Map<IWord, Double> dstMap = dst.getFreq(corpusType);
-    Set<IWord> sharedWords = srcMap.keySet();
+    Set<IWord> sharedWords = new HashSet<>(srcMap.keySet());
     sharedWords.retainAll(dstMap.keySet());
     double dotProduct = 0;
     for (IWord w: sharedWords) {
@@ -94,7 +95,7 @@ public class TextCorpus<W extends IWord, T extends IText> {
     Map<IWord, Double> dstMap = dst.getFreq(corpusType);
     Map<IWord, Double> srcImportance = src.getImportance(corpusType);
     Map<IWord, Double> dstImportance = dst.getImportance(corpusType);
-    Set<IWord> sharedWords = srcImportance.keySet();
+    Set<IWord> sharedWords = new HashSet<>(srcImportance.keySet());
     sharedWords.retainAll(dstImportance.keySet());
     double totImportance = (Math.sqrt(this.getMagImportance(srcMap)
         + Math.sqrt(this.getMagImportance(dstMap))));

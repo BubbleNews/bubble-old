@@ -127,3 +127,16 @@ function getClusterDetails(clusterId) {
 }
 
 getClusterDetails(9);
+
+function getEdgeDetails(id1, id2) {
+    let clusterUrl = 'api/edge';
+    // add id to cluster base url
+    clusterUrl += '?id1=' + id1 + '&id2=' + id2;
+    // send get request
+    $.get(clusterUrl, response => {
+        const parsed = JSON.parse(response);
+        console.log(parsed);
+    });
+}
+
+getEdgeDetails(1, 2);
