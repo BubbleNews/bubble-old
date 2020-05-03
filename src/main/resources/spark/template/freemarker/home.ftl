@@ -37,11 +37,11 @@
     <div id="reclusterWrapper" class="sidePanel">
         <h4>Clustering Parameters</h4>
         <div id="clusterParameters">
-            <p>Edge Percentage Threshold</p>
-            <input type="number" id="edgeThreshold" min="0" max="100" value="75">
             <p>Entity vs Vocab Weight</p>
             <input type="range" min="0" max="1" step="0.1">
             <button type="button" style="margin: auto;">Recluster</button>
+            <p>Edge Percentage Threshold</p>
+            <input type="number" id="edgeThreshold" min="0" max="100" value="75">
         </div>
     </div>
 </div>
