@@ -58,12 +58,12 @@ public class NewsClusterer {
       }
     }
 
-    Graph<ArticleVertex, Similarity> graph = new Graph(pulledArticles, edges);
+    Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
     graph.runClusters(1);
     db.insertClusters(graph.getClusters());
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//    clusterArticles(new NewsData("data/ben_test.db"), , , );
+
   }
 }
