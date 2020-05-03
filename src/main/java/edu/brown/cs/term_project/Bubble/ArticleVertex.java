@@ -35,7 +35,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
   }
 
   /**
-   * Gets the distance to another node by finding the relevant edge, and getting the distance
+   * Gets the distance to another node by finding the relevant edge, and getting the distance.
    * @param dst - destination node
    * @return - distance to dst
    */
@@ -63,7 +63,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
   }
 
   /**
-   * Sets edges of Article, by parsing through list of Similarities and finding the ones that include itself
+   * Sets edges of Article, by parsing through list of Similarities and finding the ones that
+   * include itself.
    * @param newSimilarities - similarities to pull edges from
    */
   public void setEdges(List<Similarity> newSimilarities) {

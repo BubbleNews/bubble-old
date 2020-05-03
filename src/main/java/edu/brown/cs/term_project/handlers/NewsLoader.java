@@ -132,7 +132,6 @@ public class NewsLoader {
     NewsLoader loader = new NewsLoader(new NewsData("data/backloaded.db"), "http://127.0.0" +
         ".1:5000/scrape");
 //    Date now = new Date();
-//    Date dayAgo = DateUtils.addDays(now, -1);
 //    loader.loadArticlesBatch(dayAgo, now, 10);
     loader.executeBatches(10, 10, 1, 39);
   }
