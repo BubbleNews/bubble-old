@@ -97,11 +97,13 @@ public class ArticleVertex implements INode<Similarity>, IText {
     HashMap<ArticleWord, Double> wordMap = new HashMap<>();
     String[] splitWords = TextProcessing.lemmizeText(text);
     for (String word: splitWords) {
-      ArticleWord articleWord = new ArticleWord(word);
-      if (wordMap.containsKey(articleWord)) {
-        wordMap.replace(articleWord, wordMap.get(articleWord) + 1);
-      } else {
-        wordMap.put(articleWord, 1.0);
+      if (!RemoveStopWords.testWord(word)) {
+        ArticleWord articleWord = new ArticleWord(word);
+        if (wordMap.containsKey(articleWord)) {
+          wordMap.replace(articleWord, wordMap.get(articleWord) + 1);
+        } else {
+          wordMap.put(articleWord, 1.0);
+        }
       }
     }
     return wordMap;

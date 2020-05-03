@@ -163,6 +163,5 @@ function getEdgeDetails(id1, id2) {
     });
 }
 
-
 getClusterDetails(9);
-// getEdgeDetails(1, 2);
+getEdgeDetails(1, 343);
