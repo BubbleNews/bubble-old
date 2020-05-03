@@ -5,6 +5,7 @@ import edu.brown.cs.term_project.Bubble.ArticleWord;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Bubble.Similarity;
+import edu.brown.cs.term_project.Graph.ClusterParameters;
 import edu.brown.cs.term_project.Graph.Graph;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
@@ -15,11 +16,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class NewsClusterer {
-  public static void clusterArticles(NewsData db) throws SQLException {
-    final double textWeight = 1;
-    final double entityWeight = 1;
-    final double titleWeight = 1;
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
+  private NewsData db;
+
+  public NewsClusterer(NewsData db) {
+    this.db = db;
+  }
+
+  public void clusterArticles(Set<ArticleVertex> pulledArticles, ClusterParameters params) throws SQLException {
+//    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
     int maxCount = db.getMaxVocabCount();
@@ -34,10 +38,9 @@ public class NewsClusterer {
     for (ArticleVertex a1: pulledArticles) {
       for (ArticleVertex a2: pulledArticles) {
         if (a1.getId() < a2.getId()) {
-
           Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, titleCorpus,
-              textWeight,
-              entityWeight, titleWeight);
+              params.getTextWeight(),
+              params.getEntityWeight(), params.getTitleWeight());
           a1.addEdge(tempEdge);
           a2.addEdge(tempEdge);
           edges.add(tempEdge);
@@ -61,6 +64,6 @@ public class NewsClusterer {
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    clusterArticles(new NewsData("data/ben_test.db"));
+//    clusterArticles(new NewsData("data/ben_test.db"), , , );
   }
 }

@@ -20,7 +20,7 @@
 
 <div id="graphWrapper">
     <div id="sourcesWrapper" class="sidePanel">
-        <h4>Visible Sources</h4>
+        <h4>Toggle Sources</h4>
         <div id="sources">
             <#list sourceList as source>
                 <button type="button" class="sourceToggle">${source}</button>
