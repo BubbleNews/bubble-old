@@ -30,7 +30,7 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/2 days data.db");
+    DATABASE = new NewsData("data/backloaded.db");
     new Main(args).run();
   }
 
@@ -128,6 +128,9 @@ public final class Main {
         });
         get("/details", (Request request, Response response) -> {
           return ClusterDetailHandler.handle(request, response, DATABASE);
+        });
+        get("/edge", (Request request, Response response) -> {
+          return EdgeHandler.handle(request, response, DATABASE);
         });
       });
     });

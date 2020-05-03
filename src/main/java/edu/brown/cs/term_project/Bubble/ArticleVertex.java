@@ -114,7 +114,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
         return new HashMap<>(entities);
 
       case 1:
-        return new HashMap<>(words);
+        Map map = new HashMap<>(words);
+        return map;
 
       case 2:
         return new HashMap<>(title);
