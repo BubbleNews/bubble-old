@@ -1,10 +1,15 @@
+import { getClusterDetails } from './d3.js';
 export { renderChord };
+
+
+// map from article ID -> index in matrix array
+const indices = {};
 
 function renderChord(parsed) {
     console.log(parsed);
     const width = 1500
     const height = 700;
-    const margin = {top:40, left: 500, right: 500, bottom: 10};
+    const margin = {top:70, left: 500, right: 500, bottom: 10};
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
     const aspect = width / height;
@@ -56,7 +61,7 @@ function renderChord(parsed) {
     let mouseover = function(d) {
         let color_span = `<span style="color: white;">`;
         let html = `Edge:<br/>
-               Distance: ${color_span}${getDistance(d, total, padAngle, parsed.numVertices)}</span>`;
+               Similarity: ${color_span}${getDistance(d, total, padAngle, parsed.numVertices)}</span>`;
 
         tooltip.html(html)
             .style("left", `${(d3.event.pageX)}px`)
@@ -78,6 +83,17 @@ function renderChord(parsed) {
             .duration(200)
             .style("opacity", 0);
     };
+
+    let getEdge = function (d) {
+        let a1, a2;
+        for (let key in indices) {
+            if (indices[key] === d.source.index) {
+                a1 = key
+            } else if (indices[key] === d.target.index) {
+                a2 = key
+            }
+        }
+    }
 
     const group = svg.selectAll('g')
         .data(chords.groups)
@@ -123,15 +139,16 @@ function renderChord(parsed) {
                 .attr("fill", d => interpolateColor(d, color))
                 .attr("stroke", d => d3.rgb(color(d.target.index)).darker());
         })
+        .on("click", getEdge)
 
     // TODO: Get resizing working
-    window.onresize = () => {
-        console.log('test')
-        const targetWidth = (window.innerWidth < width) ? window.innerWidth : width;
-        d3.select(".chord-chart")
-            .attr("width", targetWidth)
-            .attr("height", targetWidth / aspect);
-    }
+    // window.onresize = () => {
+    //     console.log('test')
+    //     const targetWidth = (window.innerWidth < width) ? window.innerWidth : width;
+    //     d3.select(".chord-chart")
+    //         .attr("width", targetWidth)
+    //         //.attr("height", targetWidth / aspect);
+    // }
 }
 
 
@@ -218,8 +235,6 @@ function getChordDataMatrix(parsed) {
     const edges = parsed['edges'];
     const numVertices = parsed['numVertices'];
     const titles = [];
-    // map from article ID -> index in matrix array
-    const indices = {};
 
     // this will be data matrix for the chord diagram
     const matrix = [];
