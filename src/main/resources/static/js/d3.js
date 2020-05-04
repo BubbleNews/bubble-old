@@ -36,5 +36,5 @@ function render(data) {
     renderChord(data);
 }
 
-getClusterDetails(7);
+getClusterDetails(2);
 getEdgeDetails(20, 8);
