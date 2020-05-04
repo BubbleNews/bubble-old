@@ -62,9 +62,9 @@ function renderBarPlot() {
 
     console.log(relevantWords);
     // add labels for each bar
-    svg.selectAll('.test123')
+    svg.selectAll('rect')
         .data(relevantWords)
-        .join('.test123'
+        .join('rect'
             // enter => {
             //     enter.append('g').attr('class', 'test123').call(
             //         gbar => gbar.append('rect')
@@ -76,6 +76,11 @@ function renderBarPlot() {
             //     );
             // }
         )
+        .attr('x', 0)
+        .attr('y', (d, i) => y(i))
+        .attr('width', d => x(d.value))
+        .attr('height', y.bandwidth())
+        .attr('fill', d => color(d.type));
             // .attr('y', (d, i) => y(i))
             // .attr('text-anchor', 'end')
             // .attr('dy', y.bandwidth()/2)
