@@ -84,7 +84,10 @@ function addDate() {
 $('#date').datepicker();
 
 function dateClickHandler() {
-    const dateVal = $('#date').val();
+    let dateVal = $('#date').val();
+    const dateString = new Date(dateVal).toISOString().split('T')[0].split('-');
+    $('#date').val(dateString[1] + '/' + dateString[2] + '/' + dateString[0]);
+    dateVal = $('#date').val();
     const dateArr = dateVal.split('/').map(x => parseInt(x));
     const date = new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
     console.log(date);
