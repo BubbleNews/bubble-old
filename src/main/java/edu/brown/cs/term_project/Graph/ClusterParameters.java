@@ -1,21 +1,33 @@
 package edu.brown.cs.term_project.Graph;
 
 public class ClusterParameters {
+  // date of clusters
+  private String date;
+  // whether or not to insert into database
+  private boolean doInsert;
   // calculating edge weight
   private double textWeight;
   private double entityWeight;
   private double titleWeight;
-  // clustering
-  private double percentageEdgesToConsider;
   // which clustering method to use
   private int clusterMethod;
+  // clustering
+  private double percentageEdgesToConsider;
 
-  public ClusterParameters(double textWeight, double entityWeight, double titleWeight, double percentageEdgesToConsider, int clusterMethod) {
+
+  public ClusterParameters(String date, boolean doInsert, double textWeight, double entityWeight, double titleWeight,
+                           int clusterMethod, double percentageEdgesToConsider) {
+    this.date = date;
+    this.doInsert = doInsert;
     this.textWeight = textWeight;
     this.entityWeight = entityWeight;
     this.titleWeight = titleWeight;
-    this.percentageEdgesToConsider = percentageEdgesToConsider;
     this.clusterMethod = clusterMethod;
+    this.percentageEdgesToConsider = percentageEdgesToConsider;
+  }
+
+  public boolean getDoInsert() {
+    return doInsert;
   }
 
   public double getTextWeight() {

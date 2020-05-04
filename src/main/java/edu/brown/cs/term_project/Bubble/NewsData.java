@@ -215,9 +215,9 @@ public final class NewsData extends Database {
   public Set<ArticleVertex> getArticleVertices(Integer hours) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
         + "text "
-        + "FROM articles "
-        + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
-        + "DATETIME('now');"
+        + "FROM articles LIMIT 100; "
+//        + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
+//        + "DATETIME('now');"
     );
     //prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();

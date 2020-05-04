@@ -41,7 +41,6 @@ public class ClusterHandler {
       } else {
         // get list of articles for cluster
         int clusterId = Integer.parseInt(clusterIdStr);
-        // TODO: CHANGE FROM HARDCODED
         List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId);
         clusterResponse.setArticles(articlesFromCluster);
       }
