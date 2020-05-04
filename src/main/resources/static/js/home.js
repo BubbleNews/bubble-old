@@ -206,15 +206,12 @@ function makeCluster(clusterId, articles) {
         const timePub = article.timePublished;
         let articleDate = new Date(Date.UTC(timePub.slice(0, 4), timePub.slice(5, 7) - 1, timePub.slice(8, 10), timePub.slice(11, 13), timePub.slice(14, 16)))
         let cleanSource = cleanSourceName(article.sourceName);
-        let articleHTML = '<li class="list-group-item"><div id="' + divId + i  + '" class="article ' + cleanSource + '"';
-        if (!sourceMap.get(cleanSource)) {
-            articleHTML += "style='display: none;'";
-        }
-        articleHTML += '> <h3><a href="' + article.url + '" target="_blank">'
+        let articleHTML = '<li class="list-group-item ' + cleanSource + '"><div id="' + divId + i  + '" class="article ' + '"'
+            + '> <h3><a href="' + article.url + '" target="_blank">'
             + article.title + '</a></h3>'
             + '<span class="badge badge-info"><span>' + article.sourceName + ' <span class="badge'
             + ' badge-light ml-2">'
-            + articleDate.getHours() + ":" + articleDate.getMinutes() + '</span></h3></span></div></li>';
+            + articleDate.getHours() + ":" + articleDate.getMinutes() + " " + articleDate.toLocaleTimeString('en-us', {timeZoneName:'short'}).split(' ')[2]+ '</span></h3></span></div></li>';
         $('#' + divId).append(articleHTML);
     }
     currentlyOpenClusterId = clusterId;
