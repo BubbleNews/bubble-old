@@ -148,8 +148,10 @@ public final class NewsData extends Database {
 
   public List<Article> getArticlesFromCluster(int clusterId) throws SQLException {
     // build sql statement
-    String statement = "SELECT title, url, date_published, source, id FROM articles";
+    String statement = "SELECT title, url, date_published, source, id FROM articles WHERE " +
+        "temp_cluster_id = ?";
     PreparedStatement prep = conn.prepareStatement(statement);
+    prep.setInt(1, clusterId);
     ResultSet rs = prep.executeQuery();
     List<Article> articles = new ArrayList<>();
     while (rs.next()) {
