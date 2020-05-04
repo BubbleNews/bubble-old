@@ -353,7 +353,7 @@ public final class NewsData extends Database {
 
   public void updateArticle(int clusterId, int articleId, boolean finalCluster) throws SQLException {
     PreparedStatement prep;
-    prep = conn.prepareStatement("INSERT INTO article_cluster (article_id, cluster_id)\n"
+    prep = conn.prepareStatement("INSERT INTO article_cluster (cluster_id, article_id)\n"
         + "VALUES (?, ?);");
     prep.setInt(1, clusterId);
     prep.setInt(2, articleId);

@@ -7,9 +7,9 @@
 </head>
 <body>
 <h>Diagram!</h>
-<button type="button" class="btn btn-info">Win Percentage</button>
-<button type="button" class="btn btn-info">Number of Wins</button>
-<button type="button" class="btn btn-info">Number of Games</button>
+<button type="button" class="btn btn-info">Entity</button>
+<button type="button" class="btn btn-info">Text</button>
+<button type="button" class="btn btn-info">Title</button>
 <div class="chord-chart"></div>
 <div class="bar-chart"></div>
 
