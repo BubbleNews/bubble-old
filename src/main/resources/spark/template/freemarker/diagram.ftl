@@ -10,6 +10,7 @@
 <button type="button" class="btn btn-info">Entity</button>
 <button type="button" class="btn btn-info">Text</button>
 <button type="button" class="btn btn-info">Title</button>
+<button type="button" class="btn btn-info">All</button>
 <div class="chord-chart"></div>
 <div class="bar-chart"></div>
 

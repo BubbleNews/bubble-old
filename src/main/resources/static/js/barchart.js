@@ -1,5 +1,15 @@
 export { renderBarPlot };
 
+const numBarsToDisplayThresholdPercent = 0.95;
+const maxBars = 20;
+const margin = {left: 60, right: 10, top: 10, bottom: 0};
+const labelPadding = 10;
+const types = ['entity', 'title', 'text'];
+const colors = ['steelblue', 'red', 'orange'];
+const dotRadius = 10;
+const distanceBetweenDots = 25;
+const distanceBetweenLabelAndDot = 20;
+
 /**
  *
  * @param data Object of the form:
@@ -11,21 +21,13 @@ export { renderBarPlot };
  * @param type
  */
 function renderBarPlot(data, type) {
-    const numBarsToDisplayThresholdPercent = 0.99;
-    const maxBars = 20;
     const words = formatBarPlotData(data, type);
     const relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
+
     const width = 500;
     const height = 30 * relevantWords.length;
-    const margin = {left: 60, right: 10, top: 10, bottom: 0};
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-    const labelPadding = 10;
-    const types = ['entity', 'title', 'text'];
-    const colors = ['steelblue', 'red', 'orange'];
-    const dotRadius = 10;
-    const distanceBetweenDots = 25;
-    const distanceBetweenLabelAndDot = 20;
 
     const svg = d3.select(".bar-chart")
         .append("svg")
@@ -36,10 +38,7 @@ function renderBarPlot(data, type) {
 
     const x = d3.scaleLinear()
         .domain(d3.extent(words.map(d => d.value)))
-        .range([0, innerWidth])
-        .nice();
-
-    console.log('extent', d3.extent(words.map(d => d.value)));
+        .range([0, innerWidth]);
 
     const y = d3.scaleBand()
         .domain(d3.range(relevantWords.length))
@@ -52,37 +51,26 @@ function renderBarPlot(data, type) {
 
     // add labels for each bar
     svg.append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`)
+            .attr('class', 'bar-labels')
+            .attr('transform', `translate(${margin.left},0)`)
         .selectAll('text')
         .data(relevantWords)
-        .join('text')
-        .attr('y', (d, i) => y(i))
-        .attr('text-anchor', 'end')
-        .attr('dy', y.bandwidth()/2)
-        .attr('dx', -labelPadding)
-        .text(d => d.word);
+        .join(
+            enter => enter.append('text')
+                .attr('fill', 'red'),
+            update => update.attr('fill', 'gray'),
+            exit => {
+                console.log(exit);
+                exit.remove();
+            }
+        )
+            .attr('y', (d, i) => y(i))
+            .attr('text-anchor', 'end')
+            .attr('dy', y.bandwidth()/2)
+            .attr('dx', -labelPadding)
+            .text(d => d.word);
 
-    // add one dot in the legend for each type
-    const legend = svg.append('g')
-        .attr('class', 'legend')
-        .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
-        .selectAll('myLabels')
-        .data(types)
-        .enter()
-        .append('g');
-
-    legend.append('circle')
-        .attr('cy', (d,i) => i * distanceBetweenDots)
-        .attr('r', dotRadius)
-        .attr('fill', d => color(d));
-
-    legend.append('text')
-        .attr('x', distanceBetweenLabelAndDot)
-        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-        .attr('fill', d => color(d))
-        .text(d => d)
-
+    // make bars
     const rect = svg.append('g')
         .attr('transform', `translate(${margin.left},0)`)
         .selectAll('rect')
@@ -93,11 +81,33 @@ function renderBarPlot(data, type) {
         .attr('width', d => x(d.value))
         .attr('height', y.bandwidth())
         .attr('fill', d => color(d.type));
-    rect.append()
 
-    relevantWords.forEach(d => {
-        console.log(d.word, d.value, x(d.value), x(d.value)/d.value);
-    })
+    // make a legend group
+    const legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
+        .selectAll('myLabels')
+        .data(types)
+        .enter()
+        .append('g')
+        .on('click', d => {
+            console.log(d);
+            rect.exit();
+            renderBarPlot(data, d)
+        });
+
+    // add dots to legend
+    legend.append('circle')
+        .attr('cy', (d,i) => i * distanceBetweenDots)
+        .attr('r', dotRadius)
+        .attr('fill', d => color(d));
+
+    // add labels to legend
+    legend.append('text')
+        .attr('x', distanceBetweenLabelAndDot)
+        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+        .attr('fill', d => color(d))
+        .text(d => d)
 }
 
 function sliceWords(words, thresholdPercent, maxBars) {

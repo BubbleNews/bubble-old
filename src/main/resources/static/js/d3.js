@@ -3,20 +3,22 @@ import { renderBarPlot } from './barchart.js';
 
 // assigns on click functionality to buttons
 document.getElementsByClassName("btn btn-info")[0].addEventListener("click", () => {
-    setData('winPercentage')});
+    getClusterDetails(2,'entity')});
 document.getElementsByClassName("btn btn-info")[1].addEventListener("click", () => {
-    setData('numWins')});
+    getClusterDetails(2,'text')});
 document.getElementsByClassName("btn btn-info")[2].addEventListener("click", () => {
-    setData('numGames')});
+    getClusterDetails(2,'title')});
+document.getElementsByClassName("btn btn-info")[3].addEventListener("click", () => {
+    getClusterDetails(2,'all')});
 
-function getClusterDetails(clusterId) {
+function getClusterDetails(clusterId, type) {
     let clusterUrl = 'api/details';
     // add id to cluster base url
     clusterUrl += '?id=' + clusterId;
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        render(parsed);
+        render(parsed, type);
     });
 }
 
@@ -31,10 +33,10 @@ function getEdgeDetails(id1, id2) {
     });
 }
 
-function render(data) {
-    renderBarPlot(data, 'all');
-    renderChord(data);
+function render(data, type) {
+    renderBarPlot(data, type);
+    // renderChord(data);
 }
 
 getClusterDetails(2);
-getEdgeDetails(20, 61);
+// getEdgeDetails(20, 61);
