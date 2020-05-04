@@ -72,9 +72,10 @@
 
                             <label for="numArticles">Maximum Number of Articles</label>
                             <input name="numArticles" type="number" class="form-control" id="numArticles" min="0"
-                                   max="100"
+                                   max="200"
                                    value="75">
-                            <button class="btn btn-primary btn-sm" type="submit" style="margin: auto; margin-bottom: 10px;">Recluster</button>
+                            <button class="btn btn-primary btn-sm" type="submit" style="margin:
+                            auto; margin-bottom: 10px; margin-top: 10px;">Recluster</button>
                             <button id="resetButton" class="btn btn-blue-grey btn-sm" type="button" style="margin:auto; margin-bottom:10px;">Reset</button>
                         </div>
                     </form>

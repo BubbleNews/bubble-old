@@ -1,20 +1,34 @@
-package edu.brown.cs.term_project.handlers;
-
+package edu.brown.cs.term_project.api.handlers;
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.*;
+import edu.brown.cs.term_project.Bubble.Article;
+import edu.brown.cs.term_project.Bubble.ArticleVertex;
+import edu.brown.cs.term_project.Bubble.ArticleWord;
+import edu.brown.cs.term_project.Bubble.Entity;
+import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.Bubble.Similarity;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.api.response.StandardResponse;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Class for handling requests to the /details API
+ * Class for handling requests to the /details API.
  */
-public class ClusterDetailHandler {
+public final class ClusterDetailHandler {
+
+  /**
+   * Constructor - not called.
+   */
+  private ClusterDetailHandler() {
+    // not called
+  }
 
   /**
    * Handles a request to the /details API.
@@ -73,7 +87,8 @@ public class ClusterDetailHandler {
    * @return list of edges between articles
    * @throws SQLException should never be thrown
    */
-  public static Set<Similarity> calculateImportance(NewsData db, Set<ArticleVertex> articles) throws SQLException {
+  public static Set<Similarity> calculateImportance(
+      NewsData db, Set<ArticleVertex> articles) throws SQLException {
     final double textWeight = 1;
     final double entityWeight = 1;
     final double titleWeight = 1;
@@ -117,7 +132,7 @@ public class ClusterDetailHandler {
   }
 
   /**
-   * Class for serializing a similarity edge;
+   * Class for serializing a similarity edge.
    */
   static class SimilarityJSON {
     private int articleId1;

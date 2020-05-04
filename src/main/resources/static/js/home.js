@@ -94,7 +94,9 @@ function dateClickHandler() {
 function stringifyDate(date) {
     const originalMonth = date.getMonth() + 1;
     const month = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-    return date.getFullYear() + '-' + month + '-' + date.getDate();
+    const originalDay = date.getDate();
+    const day = (originalDay < 10) ? '0' + originalDay: originalDay;
+    return date.getFullYear() + '-' + month + '-' + day;
 }
 
 function getChart(date) {
@@ -201,15 +203,15 @@ function makeCluster(clusterId, articles) {
     console.log(articles);
     for (i = 0; i < articles.length; i++) {
         const article = articles[i];
+        const timePub = article.timePublished;
+        let articleDate = new Date(Date.UTC(timePub.slice(0, 4), timePub.slice(5, 7) - 1, timePub.slice(8, 10), timePub.slice(11, 13), timePub.slice(14, 16)))
         let cleanSource = cleanSourceName(article.sourceName);
-        let articleHTML = '<li class="list-group-item"><div id="' + divId + i  + '" class="article ' + cleanSource + '"';
-        if (!sourceMap.get(cleanSource)) {
-            articleHTML += "style='display: none;'";
-        }
-        articleHTML += '> <h3><a href="' + article.url + '" target="_blank">'
+        let articleHTML = '<li class="list-group-item ' + cleanSource + '"><div id="' + divId + i  + '" class="article ' + '"'
+            + '> <h3><a href="' + article.url + '" target="_blank">'
             + article.title + '</a></h3>'
-            + '<span class="badge badge-secondary"><h3>' + article.sourceName + ' | '
-            + article.timePublished.slice(0, 16) + ' UTC</h3></span></div></li>';
+            + '<span class="badge badge-info"><span>' + article.sourceName + ' <span class="badge'
+            + ' badge-light ml-2">'
+            + articleDate.toLocaleTimeString('en-us', {hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName:'short'})+ '</span></h3></span></div></li>';
         $('#' + divId).append(articleHTML);
     }
     currentlyOpenClusterId = clusterId;

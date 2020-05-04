@@ -1,4 +1,4 @@
-package edu.brown.cs.term_project.handlers;
+package edu.brown.cs.term_project.api.pipeline;
 
 import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.ArticleVertex;
@@ -6,7 +6,7 @@ import edu.brown.cs.term_project.Bubble.ArticleWord;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Bubble.Similarity;
-import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.Graph.ClusterParameters;
 import edu.brown.cs.term_project.Graph.Graph;
@@ -27,19 +27,11 @@ public class NewsClusterer {
   }
 
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
-    List<Similarity> edges = edges(db, pulledArticles, params);
-
+    Set<ArticleVertex> pulledArticles = db.getArticleVertices(params.getNumArticles());
+    List<Similarity> edges = getEdges(pulledArticles, params);
+    // sort edges
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
-    int size = edges.size();
-    for (int i = 0; i < size; i++) {
-      if (i < pulledArticles.size() || i > (size - 25)) {
-        Similarity tempEdge = edges.get(i);
-        System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
-            + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());
-      }
-    }
-
+    // make graph from vertices and cluster
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
     graph.runClusters(params.getClusterMethod());
     if (params.getDoInsert()) {
@@ -53,8 +45,8 @@ public class NewsClusterer {
     return chartClusters;
   }
 
-  public static List<Similarity> edges(NewsData db, Set<ArticleVertex> pulledArticles,
-                                       ClusterParameters params) throws SQLException {
+  public List<Similarity> getEdges(Set<ArticleVertex> pulledArticles,
+                                   ClusterParameters params) throws SQLException {
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
     int maxCount = db.getMaxVocabCount();
@@ -92,8 +84,8 @@ public class NewsClusterer {
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    ClusterParameters params = new ClusterParameters("", true, 1, 1, 1,  1, 75);
-    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/bubble.db"));
-    clusterer.clusterArticles(params);
+//    ClusterParameters params = new ClusterParameters("", true, 1, 1, 1,  1, 75);
+//    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/bubble.db"));
+//    clusterer.clusterArticles(params);
   }
 }

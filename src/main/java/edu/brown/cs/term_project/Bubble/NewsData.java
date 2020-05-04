@@ -1,7 +1,7 @@
 package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
-import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 
@@ -150,7 +150,7 @@ public final class NewsData extends Database {
     // build sql statement
     String statement = "SELECT title, url, date_published, source, id FROM articles a\n"
         + "JOIN article_cluster c ON c.article_id = a.id\n"
-        + "WHERE c.cluster_id = ?";
+        + "WHERE c.cluster_id = ? ORDER BY date_published desc";
     PreparedStatement prep = conn.prepareStatement(statement);
     prep.setInt(1, clusterId);
     ResultSet rs = prep.executeQuery();
@@ -218,13 +218,14 @@ public final class NewsData extends Database {
 
   // Ben/John
 
-  public Set<ArticleVertex> getArticleVertices(Integer hours) throws SQLException {
+  public Set<ArticleVertex> getArticleVertices(int maxNumArticles) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
         + "text "
         + "FROM articles WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
-        + "DATETIME('now');"
+        + "DATETIME('now') ORDER BY date_published "
+        + "LIMIT (?);"
     );
-    //prep.setInt(1, hours);
+    prep.setInt(1, maxNumArticles);
     ResultSet rs = prep.executeQuery();
     Set<Article> articles = new HashSet<>();
     Map<Integer, String> articleText = new HashMap<>();
@@ -369,7 +370,7 @@ public final class NewsData extends Database {
    * @throws SQLException only thrown if the database is malformed
    */
   public List<ChartCluster> getClusters(String date) throws SQLException {
-    String query = "SELECT id, title, size FROM clusters WHERE day = '2020-05-04'";
+    String query = "SELECT id, title, size FROM clusters WHERE day = ? ORDER BY size desc";
     //        String query = "SELECT id, title, size FROM clusters";
     PreparedStatement prep = conn.prepareStatement(query);
     //prep.setString(1, date);
