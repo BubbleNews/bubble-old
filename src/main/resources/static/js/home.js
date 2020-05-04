@@ -13,8 +13,10 @@ $(document).ready(() => {
     addDate();
     // // add on click to date button
     $('#dateButton').click(function() {
-        dateClickHandler(new Date());
+        dateClickHandler();
     });
+
+
     // get current chart
     getChart(new Date());
 
@@ -50,6 +52,13 @@ $(document).ready(() => {
                 const parsed = JSON.parse(data);
                 $('#mainLoader').hide();
                 console.log(parsed);
+                $('#chartMessage').hide();
+                if (parsed.clusters.length == 0) {
+                    $('#chartMessage').empty();
+                    $('#chartMessage').append('<div class="alert alert-danger"><h2>No' +
+                        ' clusters found with these parameters</h2></div>');
+                    $('#chartMessage').show();
+                }
                 for (i = 0; i < parsed.clusters.length; i++) {
                     appendCluster(parsed.clusters[i], true);
                 }
@@ -68,14 +77,16 @@ $(document).ready(() => {
 
 
 function addDate() {
-    const today = new Date().toISOString().split('T')[0];
-    $('#date').val(today);
+    const today = new Date().toISOString().split('T')[0].split('-');
+    $('#date').val(today[1] + '/' + today[2] + '/' + today[0]);
 }
+
+$('#date').datepicker();
 
 function dateClickHandler() {
     const dateVal = $('#date').val();
-    const dateArr = dateVal.split('-').map(x => parseInt(x));
-    const date = new Date(dateArr[0], dateArr[1] - 1, dateArr[2]);
+    const dateArr = dateVal.split('/').map(x => parseInt(x));
+    const date = new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
     console.log(date);
     // check if date is later than today
     $("#chartMessage").hide();

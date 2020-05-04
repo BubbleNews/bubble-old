@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/mdb.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
@@ -17,7 +18,7 @@
     <div id="dateWrapper">
         <div id="dateAndButton">
             <div class="row">
-            <input type="date" id="date">
+            <input type="date" id="date" readonly>
             </div>
             <div class="row">
                 <div class="col my-auto">
@@ -105,6 +106,7 @@
 <script src="https://d3js.org/d3.v5.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/mdb.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="../js/home.js"></script>
 </body>
 </html>
