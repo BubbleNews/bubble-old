@@ -13,10 +13,12 @@ public class ClusterParameters {
   private int clusterMethod;
   // clustering
   private double percentageEdgesToConsider;
+  // max number of articles to get from the database
+  private int numArticles;
 
 
   public ClusterParameters(String date, boolean doInsert, double textWeight, double entityWeight, double titleWeight,
-                           int clusterMethod, double percentageEdgesToConsider) {
+                           int clusterMethod, double percentageEdgesToConsider, int numArticles) {
     this.date = date;
     this.doInsert = doInsert;
     this.textWeight = textWeight;
@@ -24,6 +26,7 @@ public class ClusterParameters {
     this.titleWeight = titleWeight;
     this.clusterMethod = clusterMethod;
     this.percentageEdgesToConsider = percentageEdgesToConsider;
+    this.numArticles = numArticles;
   }
 
   public boolean getDoInsert() {
@@ -48,5 +51,9 @@ public class ClusterParameters {
 
   public int getClusterMethod() {
     return clusterMethod;
+  }
+
+  public int getNumArticles() {
+    return numArticles;
   }
 }

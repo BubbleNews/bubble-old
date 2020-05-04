@@ -27,8 +27,8 @@ public class NewsClusterer {
   }
 
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
-    List<Similarity> edges = edges(db, pulledArticles, params);
+    Set<ArticleVertex> pulledArticles = db.getArticleVertices(params.getNumArticles());
+    List<Similarity> edges = getEdges(pulledArticles, params);
 
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     int size = edges.size();
@@ -53,8 +53,8 @@ public class NewsClusterer {
     return chartClusters;
   }
 
-  public static List<Similarity> edges(NewsData db, Set<ArticleVertex> pulledArticles,
-                                       ClusterParameters params) throws SQLException {
+  public List<Similarity> getEdges(Set<ArticleVertex> pulledArticles,
+                                   ClusterParameters params) throws SQLException {
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
     int maxCount = db.getMaxVocabCount();
@@ -92,8 +92,8 @@ public class NewsClusterer {
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    ClusterParameters params = new ClusterParameters("", true, 1, 1, 1,  1, 75);
-    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/bubble.db"));
-    clusterer.clusterArticles(params);
+//    ClusterParameters params = new ClusterParameters("", true, 1, 1, 1,  1, 75);
+//    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/bubble.db"));
+//    clusterer.clusterArticles(params);
   }
 }

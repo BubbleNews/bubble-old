@@ -34,12 +34,6 @@ public final class ChartHandler {
 
       // query database for clusters from given date
       List<ChartCluster> clusters = db.getClusters(dateString);
-
-      // sort by size
-      Comparator<ChartCluster> compareBySize =
-              (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
-      clusters.sort(compareBySize);
-
       // pass to front handler
       chartResponse.setClusters(clusters);
     } catch (Exception e) {
