@@ -81,7 +81,6 @@ public class NewsClusterer {
     return edges;
   }
 
-
   private ChartCluster clusterToChartCluster(Cluster<ArticleVertex, Similarity> complexCluster) {
     List<Article> simpleArticles = new ArrayList<>();
     for (ArticleVertex complexArticle: complexCluster.getArticles()) {
@@ -91,7 +90,6 @@ public class NewsClusterer {
         complexCluster.getHeadNode().getArticle().getTitle(),
         complexCluster.getSize(), simpleArticles);
   }
-
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
     ClusterParameters params = new ClusterParameters("", true, 1, 1, 1,  1, 75);

@@ -139,7 +139,7 @@ public class NewsLoader {
         ".1:5000/scrape");
 //    Date now = new Date();
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(5, 50, 1, 8);
+    loader.executeBatches(5, 16, 1, 8);
 //    String[] test = TextProcessing.lemmizeText("Afrobeat Legend Tony Allen, " +
 //        "Fela Kutis Drummer, Has Died At Age 79");
 //    String[] another = new String[]{"hello", "this", "is", "another", "string"};
