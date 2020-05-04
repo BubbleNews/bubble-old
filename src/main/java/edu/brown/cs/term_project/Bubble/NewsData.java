@@ -148,8 +148,9 @@ public final class NewsData extends Database {
 
   public List<Article> getArticlesFromCluster(int clusterId) throws SQLException {
     // build sql statement
-    String statement = "SELECT title, url, date_published, source, id FROM articles WHERE " +
-        "temp_cluster_id = ?";
+    String statement = "SELECT title, url, date_published, source, id FROM articles a\n"
+        + "JOIN article_cluster c ON c.article_id = a.id\n"
+        + "WHERE c.cluster_id = ?";
     PreparedStatement prep = conn.prepareStatement(statement);
     prep.setInt(1, clusterId);
     ResultSet rs = prep.executeQuery();
@@ -168,7 +169,9 @@ public final class NewsData extends Database {
 
     public Set<ArticleVertex> getArticleVerticesFromCluster(int clusterId) throws SQLException {
         // build sql statement
-        String statement = "SELECT id, source, title, url, date_published, text FROM articles WHERE temp_cluster_id=?";
+        String statement = "SELECT id, source, title, url, date_published, text FROM articles a\n"
+            + "JOIN article_cluster c ON c.article_id = a.id\n"
+            + "WHERE c.cluster_id = ?";
         try (PreparedStatement prep = conn.prepareStatement(statement)) {
           prep.setInt(1, clusterId);
           try (ResultSet rs = prep.executeQuery()) {
@@ -218,9 +221,8 @@ public final class NewsData extends Database {
   public Set<ArticleVertex> getArticleVertices(Integer hours) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
         + "text "
-        + "FROM articles LIMIT 100; "
-//        + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
-//        + "DATETIME('now');"
+        + "FROM articles WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
+        + "DATETIME('now');"
     );
     //prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();
@@ -351,15 +353,8 @@ public final class NewsData extends Database {
 
   public void updateArticle(int clusterId, int articleId, boolean finalCluster) throws SQLException {
     PreparedStatement prep;
-    if (finalCluster) {
-      prep = conn.prepareStatement("UPDATE articles\n"
-          + "SET final_cluster_id = ?\n"
-          + "WHERE id = ?;");
-    } else {
-      prep = conn.prepareStatement("UPDATE articles\n"
-          + "SET temp_cluster_id = ?\n"
-          + "WHERE id = ?;");
-    }
+    prep = conn.prepareStatement("INSERT INTO article_cluster (article_id, cluster_id)\n"
+        + "VALUES (?, ?);");
     prep.setInt(1, clusterId);
     prep.setInt(2, articleId);
     prep.execute();

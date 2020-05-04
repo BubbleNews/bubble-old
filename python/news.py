@@ -10,8 +10,14 @@ API_KEY = '77d7cb4756d44e13aea4a50d033d27e3'
 NEWS_API = NewsApiClient(api_key=API_KEY)
 MINIMUM_ARTICLE_CHAR_LENGTH = 700
 BAD_CHARS = ['\r', '\n']
-DOMAINS = 'apnews.com,time.com,wsj.com,politico.com,washingtonpost.com,' \
-          'nytimes.com,vox.com,usatoday.com/news,npr.org,theatlantic.com'
+DOMAINS =  'fortune.com,thehill.com,time.com,cnn.com,cbsnews.com,cnbc.com,foxnews.com,' \
+                'huffingtonpost.com,msnbc.com,nbcnews.com,usatoday.com,wsj.com,abcnews.go.com,' \
+                'apnews.com,news.google.com,politico.com,washingtonpost.com,washingtontimes.com' \
+                'latimes.com,nytimes.com,theatlantic.com,npr.org,nypost.com,chicago-tribune.com' \
+                'wired.com,vox.com'
+
+#DOMAINS = 'apnews.com,time.com,wsj.com,politico.com,washingtonpost.com,' \
+#           'nytimes.com,vox.com,usatoday.com/news,npr.org,theatlantic.com'
 
 
 # return comma separated list of sources
