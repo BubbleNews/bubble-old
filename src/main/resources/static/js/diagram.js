@@ -1,4 +1,5 @@
 function renderChord(parsed) {
+    console.log(parsed);
     const width = 500
     const height = Math.min(640, width);
     const textGap = 20;
@@ -183,18 +184,22 @@ function renderBarPlot(data, type) {
         .range([0, innerHeight])
         .padding(0.1);
 
+    // add labels for each bar
     svg.append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`)
+            .attr('class', 'bar-labels')
+            .attr('transform', `translate(${margin.left},0)`)
         .selectAll('text')
         .data(relevantWords)
         .join('text')
-        .attr('y', (d, i) => y(i))
-        .attr('text-anchor', 'end')
-        .attr('dy', y.bandwidth()/2)
-        .attr('dx', -labelPadding)
-        .text(d => d.word);
+            .attr('y', (d, i) => y(i))
+            .attr('text-anchor', 'end')
+            .attr('dy', y.bandwidth()/2)
+            .attr('dx', -labelPadding)
+            .text(d => d.word);
 
+    svg.append('g')
+        .attr('class', 'legenc')
+        .attr('transform', `translate(${innerWidth - 100},${innerHeight}`)
 
     const rect = svg.append('g')
         .attr('transform', `translate(${margin.left},0)`)
@@ -271,12 +276,6 @@ function addToArray(map, type, arr) {
     }
 }
 
-
-
-
-
-
-
 function getClusterDetails(clusterId) {
     let clusterUrl = 'api/details';
     // add id to cluster base url
@@ -300,5 +299,5 @@ function getEdgeDetails(id1, id2) {
     });
 }
 
-getClusterDetails(6);
-getEdgeDetails(23, 40);
+getClusterDetails(7);
+getEdgeDetails(20, 8);
