@@ -62,39 +62,20 @@ function renderBarPlot() {
 
     console.log(relevantWords);
     // add labels for each bar
-    const u = svg.selectAll('.test123')
-        .data(relevantWords);
-
-    const gbars = u.enter().append('g').attr('class', 'test123');
-    gbars.append('rect').merge(gbars)
-        .attr('x', 0)
-        .attr('y', (d, i) => y(i))
-        .attr('width', d => x(d.value))
-        .attr('height', y.bandwidth())
-        .attr('fill', d => color(d.type));
-
-    gbars.exit().remove();
-
-
-        // .join(
-        //     enter => {
-        //         const gbars = enter.append('g').attr('class', 'test123');
-        //         gbars.append('rect').merge(enter)
-        //             .attr('x', 0)
-        //             .attr('y', (d, i) => y(i))
-        //             .attr('width', d => x(d.value))
-        //             .attr('height', y.bandwidth())
-        //             .attr('fill', d => color(d.type));
-        //         // enter.append('text')
-        //         //     .attr('fill', 'red'),
-        //         //     update => update.attr('fill', 'gray')
-        //     },
-        //     exit => {
-        //
-        //     }
-        // )
-
-
+    svg.selectAll('.test123')
+        .data(relevantWords)
+        .join('.test123'
+            // enter => {
+            //     enter.append('g').attr('class', 'test123').call(
+            //         gbar => gbar.append('rect')
+            //             .attr('x', 0)
+            //             .attr('y', (d, i) => y(i))
+            //             .attr('width', d => x(d.value))
+            //             .attr('height', y.bandwidth())
+            //             .attr('fill', d => color(d.type))
+            //     );
+            // }
+        )
             // .attr('y', (d, i) => y(i))
             // .attr('text-anchor', 'end')
             // .attr('dy', y.bandwidth()/2)
