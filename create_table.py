@@ -40,18 +40,14 @@ CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
     author VARCHAR(50),
     date_published DATETIME,
     date_pulled DATETIME,
-    text TEXT,
-    final_cluster_id INT,
-    temp_cluster_id INT,
-    FOREIGN KEY (final_cluster_id) REFERENCES clusters(id),
-    FOREIGN KEY (temp_cluster_id) REFERENCES clusters(id)
+    text TEXT
 );'''
 
-CREATE_ARTICLE_CLUSTER_QUERY = '''CREATE TABLE IF NOT EXISTS entity (
+CREATE_ARTICLE_CLUSTER_QUERY = '''CREATE TABLE IF NOT EXISTS article_cluster (
     article_id INT,
-    clust INT,
+    cluster_id INT,
     FOREIGN KEY (article_id) REFERENCES articles(id),
-    FOREIGN KEY (entity_class, entity_entity) REFERENCES entity(class, entity)
+    FOREIGN KEY (cluster_id) REFERENCES clusters(id)
 );'''
 
 CREATE_ARTICLE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS article_entity (
@@ -78,6 +74,7 @@ def create_tables():
     c.execute(CREATE_CLUSTERS_QUERY)
     c.execute(CREATE_ARTICLES_QUERY)
     c.execute(CREATE_ARTICLE_ENTITY_QUERY)
+    c.execute(CREATE_ARTICLE_CLUSTER_QUERY)
     conn.commit()
 
 
