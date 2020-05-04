@@ -11,21 +11,21 @@ export { renderBarPlot };
  * @param type
  */
 function renderBarPlot(data, type) {
+    const numBarsToDisplayThresholdPercent = 0.99;
+    const maxBars = 20;
+    const words = formatBarPlotData(data, type);
+    const relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
     const width = 500;
-    const height = 800;
+    const height = 30 * relevantWords.length;
     const margin = {left: 60, right: 10, top: 10, bottom: 0};
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
-    const numBarsToDisplayThresholdPercent = 0.9;
     const labelPadding = 10;
     const types = ['entity', 'title', 'text'];
     const colors = ['steelblue', 'red', 'orange'];
     const dotRadius = 10;
     const distanceBetweenDots = 25;
     const distanceBetweenLabelAndDot = 20;
-
-    const words = formatBarPlotData(data, type);
-    const relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent);
 
     const svg = d3.select(".bar-chart")
         .append("svg")
@@ -35,9 +35,11 @@ function renderBarPlot(data, type) {
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     const x = d3.scaleLinear()
-        .domain(d3.extent(relevantWords.map(d => d.value)))
+        .domain(d3.extent(words.map(d => d.value)))
         .range([0, innerWidth])
         .nice();
+
+    console.log('extent', d3.extent(words.map(d => d.value)));
 
     const y = d3.scaleBand()
         .domain(d3.range(relevantWords.length))
@@ -92,9 +94,13 @@ function renderBarPlot(data, type) {
         .attr('height', y.bandwidth())
         .attr('fill', d => color(d.type));
     rect.append()
+
+    relevantWords.forEach(d => {
+        console.log(d.word, d.value, x(d.value), x(d.value)/d.value);
+    })
 }
 
-function sliceWords(words, thresholdPercent) {
+function sliceWords(words, thresholdPercent, maxBars) {
     let sum = 0;
     words.forEach(w => sum += w.value);
     const threshold = sum * thresholdPercent;
@@ -106,7 +112,7 @@ function sliceWords(words, thresholdPercent) {
         numItems++;
     }
 
-    return words.slice(0, numItems);
+    return words.slice(0, Math.min(numItems, maxBars));
 }
 
 /**
@@ -116,9 +122,9 @@ function sliceWords(words, thresholdPercent) {
  * @returns []
  */
 function formatBarPlotData(hashmaps, type) {
-    const entities = hashmaps.totalEntities;
-    const text = hashmaps.totalWords;
-    const title = hashmaps.totalTitle;
+    const entities = hashmaps.entitySim;
+    const text = hashmaps.wordSim;
+    const title = hashmaps.titleSim;
     const data = [];
 
     switch (type) {
@@ -145,7 +151,6 @@ function formatBarPlotData(hashmaps, type) {
 }
 
 function addToArray(map, type, arr) {
-    // console.log('called', arr.length);
     for (let word in map) {
         arr.push({
             type: type,

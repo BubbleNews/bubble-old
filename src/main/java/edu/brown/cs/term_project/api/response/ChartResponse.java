@@ -1,5 +1,4 @@
 package edu.brown.cs.term_project.api.response;
-import edu.brown.cs.term_project.Graph.ChartCluster;
 
 import java.util.ArrayList;
 import java.util.Date;

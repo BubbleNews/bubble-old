@@ -1,7 +1,7 @@
 package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
-import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 
@@ -370,7 +370,9 @@ public final class NewsData extends Database {
    * @throws SQLException only thrown if the database is malformed
    */
   public List<ChartCluster> getClusters(String date) throws SQLException {
-    String query = "SELECT id, title, size FROM clusters WHERE day = ? ORDER BY size desc";
+    String query =
+        "SELECT id, title, size FROM clusters WHERE day = ? ORDER BY size " +
+            "desc";
     //        String query = "SELECT id, title, size FROM clusters";
     PreparedStatement prep = conn.prepareStatement(query);
     prep.setString(1, date);
@@ -386,6 +388,34 @@ public final class NewsData extends Database {
       clusters.add(cluster);
     }
     return clusters;
+  }
+
+  /**
+   * Gets the clusters for a given day. This will be passed to the front end.
+   *
+   * @param clusterId cluster to find
+   * @return double
+   * @throws SQLException only thrown if the database is malformed
+   */
+  public double getClusterMeanRadiusPercentile(Integer clusterId) throws SQLException {
+    final double zeroAdj = 0.001;
+    String query = "SELECT MAX(avg_radius), MIN(avg_radius) FROM clusters;";
+    PreparedStatement prep = conn.prepareStatement(query);
+    ResultSet rs = prep.executeQuery();
+    double max = 0, min = 0;
+    if (rs.next()) {
+      max = rs.getDouble(1);
+      min = rs.getDouble(2);
+    }
+    String query2 = "SELECT avg_radius FROM clusters WHERE id = ?;";
+    PreparedStatement prep2 = conn.prepareStatement(query2);
+    prep2.setInt(1, clusterId);
+    ResultSet rs2 = prep2.executeQuery();
+    double radius = 0;
+    if (rs2.next()) {
+      radius = rs2.getDouble(1);
+    }
+    return (radius - min) / (max - min + zeroAdj);
   }
 
   public static void main(String[] args) throws Exception {

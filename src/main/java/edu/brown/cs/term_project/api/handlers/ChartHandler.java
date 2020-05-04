@@ -2,7 +2,7 @@ package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.api.response.ChartResponse;
 import spark.QueryParamsMap;
 import spark.Request;

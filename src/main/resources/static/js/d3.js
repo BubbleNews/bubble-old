@@ -1,5 +1,6 @@
 import { renderChord } from './chord-diagram.js';
 import { renderBarPlot } from './barchart.js';
+export { getClusterDetails};
 
 // assigns on click functionality to buttons
 document.getElementsByClassName("btn btn-info")[0].addEventListener("click", () => {
@@ -27,14 +28,14 @@ function getEdgeDetails(id1, id2) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        // renderBarPlot(parsed);
+        renderBarPlot(parsed.edge, 'all');
     });
 }
 
 function render(data) {
-    renderBarPlot(data);
+    renderBarPlot(data, 'all');
     renderChord(data);
 }
 
-getClusterDetails(7);
-getEdgeDetails(20, 8);
+getClusterDetails(2);
+//getEdgeDetails(20, 61);
