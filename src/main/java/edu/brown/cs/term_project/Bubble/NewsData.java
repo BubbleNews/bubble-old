@@ -387,6 +387,34 @@ public final class NewsData extends Database {
     return clusters;
   }
 
+  /**
+   * Gets the clusters for a given day. This will be passed to the front end.
+   *
+   * @param clusterId cluster to find
+   * @return double
+   * @throws SQLException only thrown if the database is malformed
+   */
+  public double getClusterMeanRadiusPercentile(Integer clusterId) throws SQLException {
+    final double zeroAdj = 0.001;
+    String query = "SELECT MAX(avg_radius), MIN(avg_radius) FROM clusters;";
+    PreparedStatement prep = conn.prepareStatement(query);
+    ResultSet rs = prep.executeQuery();
+    double max = 0, min = 0;
+    if (rs.next()) {
+      max = rs.getDouble(1);
+      min = rs.getDouble(2);
+    }
+    String query2 = "SELECT avg_radius FROM clusters WHERE id = ?;";
+    PreparedStatement prep2 = conn.prepareStatement(query2);
+    prep2.setInt(1, clusterId);
+    ResultSet rs2 = prep2.executeQuery();
+    double radius = 0;
+    if (rs2.next()) {
+      radius = rs2.getDouble(1);
+    }
+    return (radius - min) / (max - min + zeroAdj);
+  }
+
   public static void main(String[] args) throws Exception {
     Article testArticle = new Article("BuzzFeed", new String[]{"Kayla Suazo"},
         "23 Top-Rated Cleaning Products That Are Popular For A Reason",

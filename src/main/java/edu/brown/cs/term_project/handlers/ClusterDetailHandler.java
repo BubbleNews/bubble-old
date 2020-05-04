@@ -35,6 +35,7 @@ public class ClusterDetailHandler {
         int clusterId = Integer.parseInt(clusterIdStr);
         // get set of articles of cluster with id clusterId
         Set<ArticleVertex> articlesFromCluster = db.getArticleVerticesFromCluster(clusterId);
+        double meanRadius = db.getClusterMeanRadiusPercentile(clusterId);
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {
@@ -56,6 +57,7 @@ public class ClusterDetailHandler {
         // put edges in response
         detailResponse.setEdges(clusterEdges);
         detailResponse.setNumVertices(articlesFromCluster.size());
+        detailResponse.setClusterRadius(meanRadius);
         detailResponse.setTotals(aggEntities, aggWords, aggTitle);
       }
     } catch (Exception e) {
@@ -140,6 +142,7 @@ public class ClusterDetailHandler {
   private static class ClusterDetailResponse extends StandardResponse {
     private Set<SimilarityJSON> edges;
     private int numVertices;
+    private double clusterRadius;
     private Map<IWord, Double> entitySim;
     private Map<IWord, Double> wordSim;
     private Map<IWord, Double> titleSim;
@@ -173,6 +176,10 @@ public class ClusterDetailHandler {
     }
     public void setNumVertices(int numVertices) {
       this.numVertices = numVertices;
+    }
+
+    public void setClusterRadius(double radius) {
+      this.clusterRadius = radius;
     }
   }
 }
