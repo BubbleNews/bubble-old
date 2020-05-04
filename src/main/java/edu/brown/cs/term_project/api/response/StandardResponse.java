@@ -1,4 +1,4 @@
-package edu.brown.cs.term_project.handlers;
+package edu.brown.cs.term_project.api.response;
 
 /**
  * A class for a standard JSON response for the handlers.
@@ -18,7 +18,7 @@ public class StandardResponse {
   }
 
   /**
-   * Sets status of response
+   * Sets status of response.
    * @param status new status
    */
   public void setStatus(int status) {
@@ -35,10 +35,10 @@ public class StandardResponse {
 
   /**
    * Sets an error message and status to error.
-   * @param message the error message.
+   * @param errorMessage the error message.
    */
-  public void setErrorMessage(String message) {
-    this.status = 1;
-    this.message = message;
+  public void setErrorMessage(String errorMessage) {
+    setStatus(1);
+    this.message = errorMessage;
   }
 }

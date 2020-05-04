@@ -1,4 +1,4 @@
-package edu.brown.cs.term_project.handlers;
+package edu.brown.cs.term_project.api.pipeline;
 
 import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.ArticleVertex;
