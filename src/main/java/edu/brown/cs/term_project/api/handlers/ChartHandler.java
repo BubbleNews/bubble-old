@@ -1,16 +1,12 @@
-package edu.brown.cs.term_project.handlers;
+package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Graph.ChartCluster;
-import freemarker.template.SimpleDate;
-import org.apache.commons.lang3.time.DateUtils;
+import edu.brown.cs.term_project.api.response.ChartResponse;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -19,7 +15,8 @@ import java.util.*;
 public final class ChartHandler {
 
   /**
-   * Handles a request to the /chart API.
+   * Handles a request to the /chart API by getting the clusters for the inputted
+   * day.
    * @param request the request
    * @param response the response
    * @param db the news database
@@ -31,7 +28,6 @@ public final class ChartHandler {
       // get date object
       QueryParamsMap qm = request.queryMap();
       String dateString = qm.value("date");
-
       // query database for clusters from given date
       List<ChartCluster> clusters = db.getClusters(dateString);
       // pass to front handler

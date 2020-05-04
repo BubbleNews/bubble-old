@@ -1,14 +1,12 @@
-package edu.brown.cs.term_project.handlers;
+package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.*;
-import edu.brown.cs.term_project.TextSimilarity.IWord;
-import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.api.response.StandardResponse;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
-import java.sql.SQLException;
 import java.util.*;
 
 /**

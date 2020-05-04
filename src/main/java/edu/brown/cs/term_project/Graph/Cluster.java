@@ -1,11 +1,5 @@
 package edu.brown.cs.term_project.Graph;
 
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.ArticleVertex;
-import edu.brown.cs.term_project.handlers.ChartHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

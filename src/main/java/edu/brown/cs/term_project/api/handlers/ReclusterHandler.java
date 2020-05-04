@@ -1,17 +1,25 @@
-package edu.brown.cs.term_project.handlers;
+package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Graph.ChartCluster;
-import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.Graph.ClusterParameters;
+import edu.brown.cs.term_project.api.response.ChartResponse;
+import edu.brown.cs.term_project.api.pipeline.NewsClusterer;
 import spark.Request;
 import spark.Response;
-
 import java.util.Comparator;
 import java.util.List;
 
-public class ReclusterHandler {
+public final class ReclusterHandler {
+
+  /**
+   * Constructor - not called.
+   */
+  private ReclusterHandler() {
+    // not called
+  }
+
   /**
    * Handles a request to the /recluster API.
    * @param request the request

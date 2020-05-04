@@ -1,7 +1,14 @@
 package edu.brown.cs.term_project.REPL;
 
 import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.handlers.*;
+import edu.brown.cs.term_project.api.handlers.ChartHandler;
+import edu.brown.cs.term_project.api.handlers.ClusterDetailHandler;
+import edu.brown.cs.term_project.api.handlers.ClusterHandler;
+import edu.brown.cs.term_project.api.handlers.DiagramHandler;
+import edu.brown.cs.term_project.api.handlers.EdgeHandler;
+import edu.brown.cs.term_project.api.handlers.HomeHandler;
+import edu.brown.cs.term_project.api.handlers.ReclusterHandler;
+import edu.brown.cs.term_project.api.handlers.UpdateHandler;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
