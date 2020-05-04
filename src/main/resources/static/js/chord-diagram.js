@@ -1,6 +1,7 @@
 export { renderChord };
 
 function renderChord(parsed) {
+    console.log(parsed);
     const width = 1500
     const height = 600;
     const margin = {top: 10, left: 500, right: 500, bottom: 10};
@@ -118,6 +119,7 @@ function getChordDataMatrix(parsed) {
         matrix[i][i] = 0;
     }
 
+    console.log(edges);
     // fill in matrix with distances
     edges.forEach(edge => {
         // get index of source and destination articles in matrix
