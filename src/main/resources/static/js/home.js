@@ -94,7 +94,9 @@ function dateClickHandler() {
 function stringifyDate(date) {
     const originalMonth = date.getMonth() + 1;
     const month = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-    return date.getFullYear() + '-' + month + '-' + date.getDate();
+    const originalDay = date.getDate();
+    const day = (originalDay < 10) ? '0' + originalDay: originalDay;
+    return date.getFullYear() + '-' + month + '-' + day;
 }
 
 function getChart(date) {
