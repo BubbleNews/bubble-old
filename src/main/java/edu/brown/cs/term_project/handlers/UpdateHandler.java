@@ -55,7 +55,7 @@ public class UpdateHandler {
             + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
     );
 
-    NewsData db = new NewsData("data/new_bubble.db");
+    NewsData db = new NewsData("data/backloaded.db");
     db.insertArticleAndEntities(testArticle, new HashMap<>());
 
 //    ArrayList<ArticleJSON> testList = new ArrayList<>();

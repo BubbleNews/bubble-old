@@ -166,19 +166,20 @@ public final class NewsData extends Database {
 
     public Set<ArticleVertex> getArticleVerticesFromCluster(int clusterId) throws SQLException {
         // build sql statement
-        String statement = "SELECT id, source, title, url, date_published, text FROM articles";
-        PreparedStatement prep = conn.prepareStatement(statement);
-        ResultSet rs = prep.executeQuery();
-        Set<Article> articles = new HashSet<>();
-        Map<Integer, String> articleText = new HashMap<>();
-        while (rs.next()) {
-            articles.add(new Article(rs.getInt(1), rs.getString(2),
-                rs.getString(3), rs.getString(4), rs.getString(5)));
-            articleText.put(rs.getInt(1), rs.getString(6));
+        String statement = "SELECT id, source, title, url, date_published, text FROM articles WHERE temp_cluster_id=?";
+        try (PreparedStatement prep = conn.prepareStatement(statement)) {
+          prep.setInt(1, clusterId);
+          try (ResultSet rs = prep.executeQuery()) {
+            Set<Article> articles = new HashSet<>();
+            Map<Integer, String> articleText = new HashMap<>();
+            while (rs.next()) {
+              articles.add(new Article(rs.getInt(1), rs.getString(2),
+                  rs.getString(3), rs.getString(4), rs.getString(5)));
+              articleText.put(rs.getInt(1), rs.getString(6));
+            }
+            return createArticleVertices(articles, articleText);
+          }
         }
-        rs.close();
-        prep.close();
-        return createArticleVerticies(articles, articleText);
     }
 
 
@@ -230,10 +231,30 @@ public final class NewsData extends Database {
     }
     rs.close();
     prep.close();
-    return createArticleVerticies(articles, articleText);
+    return createArticleVertices(articles, articleText);
   }
 
-  public Set<ArticleVertex> createArticleVerticies(
+  public Set<ArticleVertex> getArticlePair(int id1, int id2) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
+        + "text "
+        + "FROM articles WHERE id = ? OR id = ?"
+    );
+    prep.setInt(1, id1);
+    prep.setInt(2, id2);
+    ResultSet rs = prep.executeQuery();
+    Set<Article> articles = new HashSet<>();
+    Map<Integer, String> articleText = new HashMap<>();
+    while (rs.next()) {
+      articles.add(new Article(rs.getInt(1), rs.getString(2),
+          rs.getString(3), rs.getString(4), rs.getString(5)));
+      articleText.put(rs.getInt(1), rs.getString(6));
+    }
+    rs.close();
+    prep.close();
+    return createArticleVertices(articles, articleText);
+  }
+
+  public Set<ArticleVertex> createArticleVertices(
       Set<Article> articles, Map<Integer, String> articleText) throws SQLException {
     Set<ArticleVertex> articleVertices = new HashSet<>();
     for (Article article : articles) {

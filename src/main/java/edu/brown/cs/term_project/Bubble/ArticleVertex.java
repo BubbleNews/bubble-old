@@ -4,6 +4,7 @@ import edu.brown.cs.term_project.Graph.INode;
 import edu.brown.cs.term_project.TextSimilarity.IText;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.nlp.RemoveStopWords;
 import edu.brown.cs.term_project.nlp.TextProcessing;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
   }
 
   /**
-   * Gets the distance to another node by finding the relevant edge, and getting the distance
+   * Gets the distance to another node by finding the relevant edge, and getting the distance.
    * @param dst - destination node
    * @return - distance to dst
    */
@@ -63,7 +64,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
   }
 
   /**
-   * Sets edges of Article, by parsing through list of Similarities and finding the ones that include itself
+   * Sets edges of Article, by parsing through list of Similarities and finding the ones that
+   * include itself.
    * @param newSimilarities - similarities to pull edges from
    */
   public void setEdges(List<Similarity> newSimilarities) {
@@ -119,7 +121,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
         return new HashMap<>(entities);
 
       case 1:
-        return new HashMap<>(words);
+        Map map = new HashMap<>(words);
+        return map;
 
       case 2:
         return new HashMap<>(title);
