@@ -11,6 +11,7 @@ export { renderBarPlot };
  * @param type
  */
 function renderBarPlot(data, type) {
+    console.log(data);
     const width = 500;
     const height = 800;
     const margin = {left: 60, right: 10, top: 10, bottom: 0};
@@ -25,6 +26,7 @@ function renderBarPlot(data, type) {
     const distanceBetweenLabelAndDot = 20;
 
     const words = formatBarPlotData(data, type);
+    console.log(words);
     const relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent);
 
     const svg = d3.select(".bar-chart")
@@ -116,9 +118,9 @@ function sliceWords(words, thresholdPercent) {
  * @returns []
  */
 function formatBarPlotData(hashmaps, type) {
-    const entities = hashmaps.totalEntities;
-    const text = hashmaps.totalWords;
-    const title = hashmaps.totalTitle;
+    const entities = hashmaps.entitySim;
+    const text = hashmaps.wordSim;
+    const title = hashmaps.titleSim;
     const data = [];
 
     switch (type) {
@@ -135,9 +137,13 @@ function formatBarPlotData(hashmaps, type) {
             break;
 
         default:
+            console.log(entities);
             addToArray(entities, 'entity', data);
+            console.log(data);
             addToArray(text, 'text', data);
+            console.log(data);
             addToArray(title, 'title', data);
+            console.log(data);
     }
 
     data.sort((a,b) => b.value - a.value);

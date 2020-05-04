@@ -140,9 +140,9 @@ public class ClusterDetailHandler {
   private static class ClusterDetailResponse extends StandardResponse {
     private Set<SimilarityJSON> edges;
     private int numVertices;
-    private Map<IWord, Double> totalEntities;
-    private Map<IWord, Double> totalWords;
-    private Map<IWord, Double> totalTitle;
+    private Map<IWord, Double> entitySim;
+    private Map<IWord, Double> wordSim;
+    private Map<IWord, Double> titleSim;
 
     /**
      * Constructor for the response.
@@ -167,9 +167,9 @@ public class ClusterDetailHandler {
 
     public void setTotals(Map<IWord, Double> entities, Map<IWord, Double> words,
                           Map<IWord, Double> title) {
-      this.totalEntities = entities;
-      this.totalWords = words;
-      this.totalTitle = title;
+      this.entitySim = entities;
+      this.wordSim = words;
+      this.titleSim = title;
     }
     public void setNumVertices(int numVertices) {
       this.numVertices = numVertices;
