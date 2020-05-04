@@ -146,17 +146,10 @@ public final class NewsData extends Database {
     prep3.close();
   }
 
-  public List<Article> getArticlesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
+  public List<Article> getArticlesFromCluster(int clusterId) throws SQLException {
     // build sql statement
-    String statement = "SELECT title, url, date_published, source, id FROM articles WHERE ";
-    if (isTemporary) {
-      statement += "temp_cluster_id";
-    } else {
-      statement += "final_cluster_id";
-    }
-    statement += " = (?)";
+    String statement = "SELECT title, url, date_published, source, id FROM articles";
     PreparedStatement prep = conn.prepareStatement(statement);
-    prep.setInt(1, clusterId);
     ResultSet rs = prep.executeQuery();
     List<Article> articles = new ArrayList<>();
     while (rs.next()) {
@@ -171,18 +164,10 @@ public final class NewsData extends Database {
     return articles;
   }
 
-    public Set<ArticleVertex> getArticleVerticesFromCluster(int clusterId, boolean isTemporary) throws SQLException {
+    public Set<ArticleVertex> getArticleVerticesFromCluster(int clusterId) throws SQLException {
         // build sql statement
-        String statement = "SELECT id, source, title, url, date_published, text FROM " +
-            "articles WHERE ";
-        if (isTemporary) {
-            statement += "temp_cluster_id";
-        } else {
-            statement += "final_cluster_id";
-        }
-        statement += " = (?)";
+        String statement = "SELECT id, source, title, url, date_published, text FROM articles";
         PreparedStatement prep = conn.prepareStatement(statement);
-        prep.setInt(1, clusterId);
         ResultSet rs = prep.executeQuery();
         Set<Article> articles = new HashSet<>();
         Map<Integer, String> articleText = new HashMap<>();
@@ -230,9 +215,9 @@ public final class NewsData extends Database {
   public Set<ArticleVertex> getArticleVertices(Integer hours) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
         + "text "
-        + "FROM articles "
-        + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
-        + "DATETIME('now');"
+        + "FROM articles LIMIT 100; "
+//        + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < "
+//        + "DATETIME('now');"
     );
     //prep.setInt(1, hours);
     ResultSet rs = prep.executeQuery();
@@ -366,7 +351,6 @@ public final class NewsData extends Database {
    * @throws SQLException only thrown if the database is malformed
    */
   public List<ChartCluster> getClusters(String date) throws SQLException {
-    System.out.println(date);
     String query = "SELECT id, title, size FROM clusters WHERE day = ?";
     //        String query = "SELECT id, title, size FROM clusters";
     PreparedStatement prep = conn.prepareStatement(query);
@@ -374,7 +358,13 @@ public final class NewsData extends Database {
     ResultSet rs = prep.executeQuery();
     List<ChartCluster> clusters = new ArrayList<>();
     while (rs.next()) {
-      clusters.add(new ChartCluster(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+      int clusterId = rs.getInt(1);
+      String headline = rs.getString(2);
+      int size = rs.getInt(3);
+      List<Article> articles = new ArrayList<>();
+//      articles = getArticlesFromCluster(clusterId);
+      ChartCluster cluster = new ChartCluster(clusterId, headline, size, articles);
+      clusters.add(cluster);
     }
     return clusters;
   }
