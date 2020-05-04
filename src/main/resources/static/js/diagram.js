@@ -33,11 +33,13 @@ function renderChord(parsed) {
         .data(chords.groups)
         .join('g')
 
+    // make outer article nodes
     group.append('path')
         .attr('fill', d => color(d.index))
         .attr('stroke', d => d3.rgb(color(d.index)).darker())
         .attr('d', arc);
 
+    // display article titles
     group.selectAll('g')
         .data(d => labels(d, titles))
         .join('g')
@@ -47,7 +49,7 @@ function renderChord(parsed) {
         .append('text')
             .text(d => d.title);
 
-
+    // make paths between articles
     svg.append('g')
         .attr('fill-opacity', edgeOpacity)
     .selectAll('path')
@@ -148,19 +150,18 @@ function getIndex(id, indices) {
  * @param type
  */
 function renderBarPlot(data, type) {
-    console.log(data);
-    const width = 1000;
+    const width = 500;
     const height = 800;
-    const margin = {left: 40, right: 10, top: 10, bottom: 0};
+    const margin = {left: 60, right: 10, top: 10, bottom: 0};
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
     const numBarsToDisplayThresholdPercent = 0.9;
     const labelPadding = 10;
-    const fillColor = {
-        entity: 'steelblue',
-        title: 'red',
-        text: 'orange'
-    };
+    const types = ['entity', 'title', 'text'];
+    const colors = ['steelblue', 'red', 'orange'];
+    const dotRadius = 10;
+    const distanceBetweenDots = 25;
+    const distanceBetweenLabelAndDot = 20;
 
     const words = formatBarPlotData(data, type);
     const relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent);
@@ -184,6 +185,10 @@ function renderBarPlot(data, type) {
         .range([0, innerHeight])
         .padding(0.1);
 
+    const color = d3.scaleOrdinal()
+        .domain(types)
+        .range(colors);
+
     // add labels for each bar
     svg.append('g')
             .attr('class', 'bar-labels')
@@ -197,9 +202,25 @@ function renderBarPlot(data, type) {
             .attr('dx', -labelPadding)
             .text(d => d.word);
 
-    svg.append('g')
-        .attr('class', 'legenc')
-        .attr('transform', `translate(${innerWidth - 100},${innerHeight}`)
+    // add one dot in the legend for each type
+    const legend = svg.append('g')
+            .attr('class', 'legend')
+            .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
+        .selectAll('myLabels')
+        .data(types)
+        .enter()
+        .append('g');
+
+    legend.append('circle')
+        .attr('cy', (d,i) => i * distanceBetweenDots)
+        .attr('r', dotRadius)
+        .attr('fill', d => color(d));
+
+    legend.append('text')
+        .attr('x', distanceBetweenLabelAndDot)
+        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+        .attr('fill', d => color(d))
+        .text(d => d)
 
     const rect = svg.append('g')
         .attr('transform', `translate(${margin.left},0)`)
@@ -210,7 +231,7 @@ function renderBarPlot(data, type) {
             .attr('y', (d, i) => y(i))
             .attr('width', d => x(d.value))
             .attr('height', y.bandwidth())
-            .attr('fill', d => fillColor[d.type]);
+            .attr('fill', d => color(d.type));
 
     rect.append()
 }

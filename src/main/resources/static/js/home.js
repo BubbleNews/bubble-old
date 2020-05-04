@@ -18,6 +18,8 @@ $(document).ready(() => {
     // get current chart
     getChart(new Date());
 
+    $('#mainLoader').hide();
+
     $('.sourceToggle').click(function() {
         const button = $(this);
         const cleanSource = cleanSourceName(button.text());
@@ -36,13 +38,33 @@ $(document).ready(() => {
             button.addClass("btn-success");
         }
     });
+    // add form submit
+    $('#reclusterParams').submit(function(event) {
+            event.preventDefault();
+            $("#clusters").empty();
+            $('#mainLoader').show();
+            const reclusterEndpoint = 'api/recluster';
+            const serialized = $('#reclusterParams').serialize();
+            console.log(serialized);
+            $.post(reclusterEndpoint, serialized, function(data) {
+                const parsed = JSON.parse(data);
+                $('#mainLoader').hide();
+                console.log(parsed);
+                for (i = 0; i < parsed.clusters.length; i++) {
+                    appendCluster(parsed.clusters[i], true);
+                }
+            });
+    });
 
     $('.sourceToggle').each(function(index, element) {
         const source = cleanSourceName($(this).text());
         sourceMap.set(source, true);
     });
-});
 
+    $('#resetButton').click(function() {
+        dateClickHandler();
+    });
+});
 
 
 function addDate() {
@@ -65,7 +87,6 @@ function dateClickHandler() {
         $('#chartMessage').show();
         return;
     } else {
-        $("#clusters").empty();
         getChart(date);
     }
 }
@@ -77,6 +98,7 @@ function stringifyDate(date) {
 }
 
 function getChart(date) {
+    $("#clusters").empty();
     // clear messages
     $('.message').hide();
     const dateStr = stringifyDate(date);
@@ -89,6 +111,7 @@ function getChart(date) {
         const parsed = JSON.parse(data);
         // TODO: do something with parsed chart response
         const clusters = parsed.clusters;
+        console.log(parsed);
         $('#chartMessage').hide();
         if (clusters.length == 0) {
             $('#chartMessage').empty();
@@ -101,16 +124,16 @@ function getChart(date) {
         }
         let i;
         for (i = 0; i < clusters.length; i++) {
-            appendCluster(clusters[i]);
+            appendCluster(clusters[i], false);
         }
     })
 }
 
-function appendCluster(cluster) {
+function appendCluster(cluster, reclustered) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div class='card text-center'>"
-            + "<div id=" + cluster.clusterId + " class='card-header cluster cluster" + classNum + "'>"
+            + "<div id=" + cluster.clusterId + " class='card-header cluster" + classNum + "'>"
                 +"<button class='btn btn-primary-outline' type='button' data-toggle='collapse'" +
         " data-target='#collapse" + cluster.clusterId + "'>"
                 + "<h2>" + cluster.headline
@@ -119,18 +142,14 @@ function appendCluster(cluster) {
                 + "</div>"
         + "</div>";
     $('#clusters').append(clusterHtml);
-    getCluster(cluster.clusterId);
-    // add a click function to get clusters
-    // $('#' + cluster.clusterId).click(function() {
-    //     getCluster(cluster.clusterId);
-    // });
-    // add detail clicks
-    $('#' + cluster.clusterId + 'button').click(function() {
-        getClusterDetails(cluster.clusterId);
-    })
+    if (reclustered) {
+        makeCluster(cluster.clusterId, cluster.articles);
+    } else {
+        getClusterRequest(cluster.clusterId);
+    }
 }
 
-function getCluster(clusterId) {
+function getClusterRequest(clusterId) {
     $('.articlesWrapper').remove();
     if (clusterId == currentlyOpenClusterId) {
         currentlyOpenClusterId = null;
@@ -142,71 +161,61 @@ function getCluster(clusterId) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        console.log(parsed);
         // TODO: do something with parsed cluster response
-        const divId = clusterId + 'articles';
-        const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
-            ' data-parent="#clusters">'
-                + '<div class="card-body"><ul class="nav nav-tabs nav-fill" role="tablist">'
-                + '<li class="nav-item"><a class="nav-link active" id="articlesList-tab"' +
-            ' data-toggle="tab" href="#articlesList' + divId + '" role="tab">Articles</a></li>'
-                + '<li class="nav-item"><a class="nav-link" id="visualization-tab"' +
-            ' data-toggle="tab"' +
-            ' href="#visualization' + divId + '" role="tab">Data' +
-            ' Visualization</a></li></ul>'
-            + '<div class="tab-content">'
-
-                + '<div id="articlesList' + divId + '" class="tab-pane fade show active' +
-            ' articlesWrapper"' +
-            ' role="tabpanel">'
-                + '<ul class="list-group list-group-flush" id="' + divId + '">'
-                + '</ul></div>'
-                + '<div class="tab-pane fade viz" id="visualization' + divId + '" role="tabpanel">'
-                    + '<button type="button" id="generate' + clusterId +'" class="btn btn-primary">' +
-            ' Render' +
-            ' Visualization</button></div>'
-            + '</div></div></div>';
-        $('#' + clusterId).append(articlesHtml);
-        $('#generate' + clusterId).click(function() {
-            let element = $('#visualization' + divId);
-            $('#generate' + clusterId).hide();
-            element.append('<div class="spinner-border text-primary" role="status">'
-                + '<span class="sr-only">Loading...</span>'
-            + '</div>');
-        })
-        const articles = parsed.articles;
-        let i;
-        for (i = 0; i < articles.length; i++) {
-            const article = articles[i];
-            let cleanSource = cleanSourceName(article.sourceName);
-            let articleHTML = '<li class="list-group-item"><div id="' + divId + i  + '" class="article ' + cleanSource + '"';
-            if (!sourceMap.get(cleanSource)) {
-                articleHTML += "style='display: none;'";
-            }
-            articleHTML += '> <h3><a href="' + article.url + '" target="_blank">'
-                + article.title + '</a></h3>'
-                + '<span class="badge badge-secondary"><h3>' + article.sourceName + ' | '
-                + article.timePublished.slice(0, 16) + ' UTC</h3></span></div></li>';
-            $('#' + clusterId + 'articles').append(articleHTML);
-        }
-        currentlyOpenClusterId = clusterId;
+        makeCluster(clusterId, parsed.articles);
     });
+}
+
+function makeCluster(clusterId, articles) {
+    const divId = clusterId + 'articles';
+    const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
+        ' data-parent="#clusters">'
+        + '<div class="card-body"><ul class="nav nav-tabs nav-fill" role="tablist">'
+        + '<li class="nav-item"><a class="nav-link active" id="articlesList-tab"' +
+        ' data-toggle="tab" href="#articlesList' + divId + '" role="tab">Articles</a></li>'
+        + '<li class="nav-item"><a class="nav-link" id="visualization-tab"' +
+        ' data-toggle="tab"' +
+        ' href="#visualization' + divId + '" role="tab">Data' +
+        ' Visualization</a></li></ul>'
+        + '<div class="tab-content">'
+
+        + '<div id="articlesList' + divId + '" class="tab-pane fade show active' +
+        ' articlesWrapper"' +
+        ' role="tabpanel">'
+        + '<ul class="list-group list-group-flush" id="' + divId + '">'
+        + '</ul></div>'
+        + '<div class="tab-pane fade viz" id="visualization' + divId + '" role="tabpanel">'
+        + '<button type="button" id="generate' + clusterId +'" class="btn btn-primary">' +
+        ' Render' +
+        ' Visualization</button></div>'
+        + '</div></div></div>';
+    $('#' + clusterId).append(articlesHtml);
+    $('#generate' + clusterId).click(function() {
+        let element = $('#visualization' + divId);
+        $('#generate' + clusterId).hide();
+        element.append('<div class="spinner-border text-primary" role="status">'
+            + '<span class="sr-only">Loading...</span>'
+            + '</div>');
+    })
+    let i;
+    console.log(articles);
+    for (i = 0; i < articles.length; i++) {
+        const article = articles[i];
+        let cleanSource = cleanSourceName(article.sourceName);
+        let articleHTML = '<li class="list-group-item"><div id="' + divId + i  + '" class="article ' + cleanSource + '"';
+        if (!sourceMap.get(cleanSource)) {
+            articleHTML += "style='display: none;'";
+        }
+        articleHTML += '> <h3><a href="' + article.url + '" target="_blank">'
+            + article.title + '</a></h3>'
+            + '<span class="badge badge-secondary"><h3>' + article.sourceName + ' | '
+            + article.timePublished.slice(0, 16) + ' UTC</h3></span></div></li>';
+        $('#' + divId).append(articleHTML);
+    }
+    currentlyOpenClusterId = clusterId;
 }
 
 function cleanSourceName(sourceName) {
     return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }
-
-function getClusterDetails(clusterId) {
-    let clusterUrl = 'api/details';
-    // add id to cluster base url
-    clusterUrl += '?id=' + clusterId;
-    // send get request
-    $.get(clusterUrl, response => {
-        const parsed = JSON.parse(response);
-        console.log(parsed);
-    });
-}
-
-
 
