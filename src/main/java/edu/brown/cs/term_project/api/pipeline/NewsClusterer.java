@@ -6,7 +6,7 @@ import edu.brown.cs.term_project.Bubble.ArticleWord;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Bubble.Similarity;
-import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.Graph.ClusterParameters;
 import edu.brown.cs.term_project.Graph.Graph;
@@ -29,17 +29,9 @@ public class NewsClusterer {
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
     Set<ArticleVertex> pulledArticles = db.getArticleVertices(params.getNumArticles());
     List<Similarity> edges = getEdges(pulledArticles, params);
-
+    // sort edges
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
-    int size = edges.size();
-    for (int i = 0; i < size; i++) {
-      if (i < pulledArticles.size() || i > (size - 25)) {
-        Similarity tempEdge = edges.get(i);
-        System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
-            + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());
-      }
-    }
-
+    // make graph from vertices and cluster
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
     graph.runClusters(params.getClusterMethod());
     if (params.getDoInsert()) {

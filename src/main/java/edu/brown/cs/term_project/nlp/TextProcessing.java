@@ -12,7 +12,8 @@ import java.util.*;
 public final class TextProcessing {
 
   /**
-   * Private constructor that is only defined because this is a utility class and we don't want a default constructor.
+   * Private constructor that is only defined because this is a utility class
+   * and we don't want a default constructor.
    */
   private TextProcessing() {
     throw new AssertionError("This constructor should never be called.");
@@ -77,6 +78,4 @@ public final class TextProcessing {
       }
     }
   }
-
-
 }

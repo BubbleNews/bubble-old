@@ -1,7 +1,7 @@
 package edu.brown.cs.term_project.Bubble;
 
 import edu.brown.cs.term_project.Database.Database;
-import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.Graph.Cluster;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 
