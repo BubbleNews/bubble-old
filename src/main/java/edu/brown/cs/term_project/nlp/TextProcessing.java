@@ -78,10 +78,5 @@ public final class TextProcessing {
     }
   }
 
-  public static void main(String[] args) throws Exception {
-    lemmizeText("hello my name is John. I am 16 years old and I am going to college. Do you want " +
-        "to join? I hope so.");
-  }
-
 
 }

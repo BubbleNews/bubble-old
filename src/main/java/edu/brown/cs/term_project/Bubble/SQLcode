@@ -1,3 +1,45 @@
+
+NEW SQL CODE:
+
+OLD (getArticlesFromCluster): SELECT title, url, date_published, source, id FROM articles WHERE " +
+             "temp_cluster_id = ?
+
+
+NEW: SELECT title, url, date_published, source, id FROM articles a
+JOIN article_cluster c ON c.article_id = a.id
+WHERE c.cluster_id = ?
+
+
+OLD (getArticleVerticesFromCluster): SELECT id, source, title, url, date_published, text FROM
+articles WHERE temp_cluster_id=?
+
+
+
+NEW: SELECT id, source, title, url, date_published, text FROM articles a
+JOIN article_cluster c ON c.article_id = a.id
+WHERE c.cluster_id = ?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------
+
+
 get articles
 
 SELECT id, title, url, date_published, text

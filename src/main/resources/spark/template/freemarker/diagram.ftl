@@ -7,12 +7,17 @@
 </head>
 <body>
 <h>Diagram!</h>
+<button type="button" class="btn btn-info">Win Percentage</button>
+<button type="button" class="btn btn-info">Number of Wins</button>
+<button type="button" class="btn btn-info">Number of Games</button>
 <div class="chord-chart"></div>
 <div class="bar-chart"></div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="https://d3js.org/d3.v5.js"></script>
-<script src="../js/diagram.js"></script>
+<script type="module" src="../js/chord-diagram.js"></script>
+<script type="module" src="../js/barchart.js"></script>
+<script type="module" src="../js/d3.js"></script>
 </body>
 </html>
