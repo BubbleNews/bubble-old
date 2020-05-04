@@ -91,21 +91,17 @@ function dateClickHandler() {
     }
 }
 
-function stringifyDate(date) {
-    const originalMonth = date.getMonth() + 1;
-    const month = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-    return date.getFullYear() + '-' + month + '-' + date.getDate();
-}
-
 function getChart(date) {
     $("#clusters").empty();
     // clear messages
     $('.message').hide();
-    const dateStr = stringifyDate(date);
-    console.log(dateStr);
     let chartUrl = 'api/chart';
     // update request url with date if needed
-    chartUrl += '?date=' + dateStr;
+    const originalMonth = date.getMonth() + 1;
+    chartUrl += '?year=' + date.getFullYear();
+    chartUrl += '&month=' + (originalMonth < 10) ? '0' + originalMonth: originalMonth;
+    chartUrl += '&day=' + date.getDate();
+    chartUrl += '&offset=' + date.getTimezoneOffset() / 60;
     // send get request
     $.get(chartUrl, function(data) {
         const parsed = JSON.parse(data);
