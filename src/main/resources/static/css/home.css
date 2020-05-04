@@ -237,3 +237,7 @@ h4 {
 .viz {
     padding-top: 1em;
 }
+
+.container {
+    min-width: 90%;
+}
