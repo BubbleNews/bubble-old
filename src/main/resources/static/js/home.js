@@ -211,7 +211,7 @@ function makeCluster(clusterId, articles) {
             + article.title + '</a></h3>'
             + '<span class="badge badge-info"><span>' + article.sourceName + ' <span class="badge'
             + ' badge-light ml-2">'
-            + articleDate.getHours() + ":" + articleDate.getMinutes() + " " + articleDate.toLocaleTimeString('en-us', {timeZoneName:'short'}).split(' ')[2]+ '</span></h3></span></div></li>';
+            + articleDate.toLocaleTimeString('en-us', {hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName:'short'})+ '</span></h3></span></div></li>';
         $('#' + divId).append(articleHTML);
     }
     currentlyOpenClusterId = clusterId;
