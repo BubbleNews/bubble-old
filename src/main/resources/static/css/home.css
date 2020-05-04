@@ -71,6 +71,10 @@
     padding: 0px 10px;
 }
 
+#mainWindow {
+    text-align: center;
+}
+
 .clusterSize {
     background: lightyellow;
     display: inline-block;

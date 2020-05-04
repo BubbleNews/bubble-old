@@ -132,6 +132,9 @@ public final class Main {
         post("/recluster", (Request request, Response response) -> {
           return ReclusterHandler.handle(request, response, DATABASE);
         });
+        get("/edge", (Request request, Response response) -> {
+          return EdgeHandler.handle(request, response, DATABASE);
+        });
       });
     });
   }

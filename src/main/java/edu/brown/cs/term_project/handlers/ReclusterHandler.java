@@ -27,7 +27,7 @@ public class ReclusterHandler {
       String entityWeightStr = request.queryParams("entityWeight");
       String titleWeightStr = request.queryParams("titleWeight");
       String clusterMethodStr = request.queryParams("clusterMethod");
-      String percentageEdgesToConsiderStr = request.queryParams("percentageEdges");
+      String percentageEdgesToConsiderStr = request.queryParams("edgeThreshold");
       double textWeight = Double.parseDouble(textWeightStr);
       double entityWeight = Double.parseDouble(entityWeightStr);
       double titleWeight = Double.parseDouble(titleWeightStr);

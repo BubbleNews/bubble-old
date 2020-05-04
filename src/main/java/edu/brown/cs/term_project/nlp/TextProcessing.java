@@ -45,7 +45,11 @@ public final class TextProcessing {
     List<String> lemmas = new ArrayList<>();
     Document doc = new Document(text.toLowerCase());
     for (Sentence sent : doc.sentences()) {
-      lemmas.addAll(sent.lemmas());
+      for (String s: sent.lemmas()) {
+        if (!RemoveStopWords.testWord(s)) {
+          lemmas.add(s);
+        }
+      }
     }
     return lemmas.toArray(new String[0]);
   }
@@ -60,11 +64,24 @@ public final class TextProcessing {
     for (String word: words) {
       // we are keeping track of number of articles a word has appeared in, so
       // if we already saw word in this article we can ignore
-      if (!alreadySeen.contains(word)) {
+      if (word.length() == 1) {
+        int w = word.length();
+      }
+      if (word.equals("and")) {
+        int w = word.length();
+      }
+      if (!alreadySeen.contains(word) && !RemoveStopWords.testWord(word)) {
+        int w = word.length();
         frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
         alreadySeen.add(word);
       }
     }
   }
+
+  public static void main(String[] args) throws Exception {
+    lemmizeText("hello my name is John. I am 16 years old and I am going to college. Do you want " +
+        "to join? I hope so.");
+  }
+
 
 }

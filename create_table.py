@@ -1,6 +1,6 @@
 import sqlite3
 
-PATH_TO_DATABASE = "data/backloaded.db"
+PATH_TO_DATABASE = "data/bubble.db"
 
 conn = sqlite3.connect(PATH_TO_DATABASE)
 c = conn.cursor()
@@ -47,7 +47,12 @@ CREATE_ARTICLES_QUERY = '''CREATE TABLE IF NOT EXISTS articles (
     FOREIGN KEY (temp_cluster_id) REFERENCES clusters(id)
 );'''
 
-
+CREATE_ARTICLE_CLUSTER_QUERY = '''CREATE TABLE IF NOT EXISTS entity (
+    article_id INT,
+    clust INT,
+    FOREIGN KEY (article_id) REFERENCES articles(id),
+    FOREIGN KEY (entity_class, entity_entity) REFERENCES entity(class, entity)
+);'''
 
 CREATE_ARTICLE_ENTITY_QUERY = '''CREATE TABLE IF NOT EXISTS article_entity (
     article_id INT,
