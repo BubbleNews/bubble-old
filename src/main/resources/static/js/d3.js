@@ -27,12 +27,12 @@ function getEdgeDetails(id1, id2) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        // renderBarPlot(parsed);
+        renderBarPlot(parsed.edge, 'all');
     });
 }
 
 function render(data) {
-    renderBarPlot(data);
+    renderBarPlot(data, 'all');
     renderChord(data);
 }
 
