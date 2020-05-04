@@ -30,7 +30,7 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/backloaded.db");
+    DATABASE = new NewsData("data/bubble.db");
     new Main(args).run();
   }
 

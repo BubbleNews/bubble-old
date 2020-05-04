@@ -4,6 +4,7 @@ import edu.brown.cs.term_project.Graph.INode;
 import edu.brown.cs.term_project.TextSimilarity.IText;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.nlp.RemoveStopWords;
 import edu.brown.cs.term_project.nlp.TextProcessing;
 
 import java.util.ArrayList;

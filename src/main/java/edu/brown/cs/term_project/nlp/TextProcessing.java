@@ -1,9 +1,6 @@
 package edu.brown.cs.term_project.nlp;
 
 import edu.brown.cs.term_project.Bubble.Entity;
-import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.Bubble.RemoveStopWords;
-import edu.brown.cs.term_project.handlers.NewsLoader;
 import edu.stanford.nlp.simple.*;
 
 import java.util.*;
