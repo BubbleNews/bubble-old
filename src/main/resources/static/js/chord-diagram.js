@@ -58,6 +58,9 @@ function renderChord(parsed) {
         .append('text')
             .text(d => d.title);
 
+    group.selectAll('text')
+        .call(wrap, 250);
+
     // make paths between articles
     svg.append('g')
         .attr('fill-opacity', edgeOpacity)
@@ -76,6 +79,31 @@ function renderChord(parsed) {
             .attr("width", targetWidth)
             .attr("height", targetWidth / aspect);
     }
+}
+
+
+function wrap(text, width) {
+    text.each(function() {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineHeight = 15, // ems
+            y = text.attr("y"),
+            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", 0);
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                const length = tspan.node().getComputedTextLength();
+                console.log(length);
+                line = [word];
+                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", lineHeight).text(word);
+            }
+        }
+    });
 }
 
 

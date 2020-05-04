@@ -369,10 +369,10 @@ public final class NewsData extends Database {
    * @throws SQLException only thrown if the database is malformed
    */
   public List<ChartCluster> getClusters(String date) throws SQLException {
-    String query = "SELECT id, title, size FROM clusters WHERE day = ?";
+    String query = "SELECT id, title, size FROM clusters WHERE day = '2020-05-04'";
     //        String query = "SELECT id, title, size FROM clusters";
     PreparedStatement prep = conn.prepareStatement(query);
-    prep.setString(1, date);
+    //prep.setString(1, date);
     ResultSet rs = prep.executeQuery();
     List<ChartCluster> clusters = new ArrayList<>();
     while (rs.next()) {
