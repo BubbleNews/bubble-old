@@ -8,16 +8,23 @@
     <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
-
-<div id="titleWrapper">
-    <h1 style="color: LightCoral">Bubble</h1>
-</div>
-
-<div id="dateWrapper">
+<div class="header">
     <div id="particles-js"></div>
-    <div id="dateAndButton">
-        <input type="date" id="date">
-        <button class="btn btn-primary btn-lg" id="dateButton" type="button">Show</button>
+    <div id="titleWrapper">
+        <h1>Bubble</h1>
+    </div>
+
+    <div id="dateWrapper">
+        <div id="dateAndButton">
+            <div class="row">
+            <input type="date" id="date">
+            </div>
+            <div class="row">
+                <div class="col my-auto">
+            <button class="btn btn-primary btn-lg"  id="dateButton" type="button">Show</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -60,7 +67,7 @@
                             auto; margin-bottom:10px;
                             ">Recluster</button>
                             <button class="btn btn-blue-grey btn-sm" type="button" style="margin:
-                            auto;
+                            auto; margin-bottom:10px;
                             ">Reset</button>
                         </div>
                     </form>
