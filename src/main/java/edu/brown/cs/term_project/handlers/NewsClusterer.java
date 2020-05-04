@@ -28,29 +28,7 @@ public class NewsClusterer {
 
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
     Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
-    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
-    Map<Entity, Double> entityMap = db.getEntityFreq();
-    int maxCount = db.getMaxVocabCount();
-    TextCorpus<Entity, ArticleVertex> entityCorpus =
-        new TextCorpus<>(entityMap, maxCount, 0);
-    TextCorpus<ArticleWord, ArticleVertex> wordCorpus =
-        new TextCorpus<>(vocabMap, maxCount, 1);
-    TextCorpus<ArticleWord, ArticleVertex> titleCorpus =
-        new TextCorpus<>(vocabMap, maxCount, 2);
-    ArrayList<Similarity> edges = new ArrayList<>();
-    System.out.println("Article Size: " + pulledArticles.size());
-    for (ArticleVertex a1: pulledArticles) {
-      for (ArticleVertex a2: pulledArticles) {
-        if (a1.getId() < a2.getId()) {
-          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, titleCorpus,
-              params.getTextWeight(),
-              params.getEntityWeight(), params.getTitleWeight());
-          a1.addEdge(tempEdge);
-          a2.addEdge(tempEdge);
-          edges.add(tempEdge);
-        }
-      }
-    }
+    List<Similarity> edges = edges(db, pulledArticles, params);
 
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     int size = edges.size();
@@ -74,6 +52,35 @@ public class NewsClusterer {
     }
     return chartClusters;
   }
+
+  public static List<Similarity> edges(NewsData db, Set<ArticleVertex> pulledArticles,
+                                       ClusterParameters params) throws SQLException {
+    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
+    Map<Entity, Double> entityMap = db.getEntityFreq();
+    int maxCount = db.getMaxVocabCount();
+    TextCorpus<Entity, ArticleVertex> entityCorpus =
+        new TextCorpus<>(entityMap, maxCount, 0);
+    TextCorpus<ArticleWord, ArticleVertex> wordCorpus =
+        new TextCorpus<>(vocabMap, maxCount, 1);
+    TextCorpus<ArticleWord, ArticleVertex> titleCorpus =
+        new TextCorpus<>(vocabMap, maxCount, 2);
+    ArrayList<Similarity> edges = new ArrayList<>();
+    System.out.println("Article Size: " + pulledArticles.size());
+    for (ArticleVertex a1 : pulledArticles) {
+      for (ArticleVertex a2 : pulledArticles) {
+        if (a1.getId() < a2.getId()) {
+          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, titleCorpus,
+              params.getTextWeight(),
+              params.getEntityWeight(), params.getTitleWeight());
+          a1.addEdge(tempEdge);
+          a2.addEdge(tempEdge);
+          edges.add(tempEdge);
+        }
+      }
+    }
+    return edges;
+  }
+
 
   private ChartCluster clusterToChartCluster(Cluster<ArticleVertex, Similarity> complexCluster) {
     List<Article> simpleArticles = new ArrayList<>();

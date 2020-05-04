@@ -7,6 +7,8 @@
 </head>
 <body>
 <h>Diagram!</h>
+<div class="chord-chart"></div>
+<div class="bar-chart"></div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>

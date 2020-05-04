@@ -1,6 +1,5 @@
 package edu.brown.cs.term_project.Bubble;
 
-import com.google.gson.Gson;
 import edu.brown.cs.term_project.Graph.IEdge;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
@@ -10,7 +9,7 @@ import java.util.Map;
 
 public class Similarity implements IEdge<ArticleVertex> {
   private final ArticleVertex src;
-  private final ArticleVertex dst;
+  private final ArticleVertex dest;
   private double distance;
   private Map<IWord, Double> wordSim;
   private Map<IWord, Double> entitySim;
@@ -20,19 +19,19 @@ public class Similarity implements IEdge<ArticleVertex> {
   private double titleDistance;
 
 
-  public Similarity(ArticleVertex src, ArticleVertex dst, TextCorpus<ArticleWord,
+  public Similarity(ArticleVertex src, ArticleVertex dest, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus,
                     TextCorpus<ArticleWord, ArticleVertex> titleCorpus, double textWeight,
                     double entityWeight, double titleWeight) {
     this.src = src;
-    this.dst = dst;
+    this.dest = dest;
     this.setDistance(entityCorpus, wordCorpus, titleCorpus, textWeight, entityWeight, titleWeight);
   }
 
 
   @Override
   public ArticleVertex getDest() {
-    return dst;
+    return dest;
   }
 
   @Override
@@ -52,18 +51,18 @@ public class Similarity implements IEdge<ArticleVertex> {
     double totalWeight = textWeight + entityWeight + titleWeight;
     final double divideZeroShift = .00000001;
 
-    this.wordDistance = textWeight / totalWeight  * wordCorpus.getSimilarity(this.src, this.dst);
-    this.titleDistance = titleWeight / totalWeight * titleCorpus.getSimilarity(this.src, this.dst);
-    this.entityDistance = entityWeight / totalWeight * entityCorpus.getSimilarity(this.src, this.dst);
+    this.wordDistance = textWeight / totalWeight  * wordCorpus.getSimilarity(this.src, this.dest);
+    this.titleDistance = titleWeight / totalWeight * titleCorpus.getSimilarity(this.src, this.dest);
+    this.entityDistance = entityWeight / totalWeight * entityCorpus.getSimilarity(this.src, this.dest);
 
     this.distance = 1 / (wordDistance + titleDistance + entityDistance + divideZeroShift);
   }
 
   public void setImportance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<ArticleWord, ArticleVertex> titleCorpus) {
-    this.entitySim = entityCorpus.getSimilarityHash(src, dst);
-    this.wordSim = wordCorpus.getSimilarityHash(src, dst);
-    this.titleSim = titleCorpus.getSimilarityHash(src, dst);
+    this.entitySim = entityCorpus.getSimilarityHash(src, dest);
+    this.wordSim = wordCorpus.getSimilarityHash(src, dest);
+    this.titleSim = titleCorpus.getSimilarityHash(src, dest);
   }
 
   public Map<IWord, Double> getWordSim() {
@@ -80,7 +79,7 @@ public class Similarity implements IEdge<ArticleVertex> {
 
 
   public SimilarityJSON toSimilarityJSON() {
-    SimilarityJSON sim = new SimilarityJSON(src.getId(), dst.getId(), this.distance,
+    SimilarityJSON sim = new SimilarityJSON(src.getId(), dest.getId(), this.distance,
         this.titleDistance, this.wordDistance, this.entityDistance);
     return sim;
   }

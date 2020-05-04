@@ -2,6 +2,7 @@ package edu.brown.cs.term_project.handlers;
 
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.Bubble.*;
+import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -41,12 +42,21 @@ public class ClusterDetailHandler {
 //        }
         // get edges between articles
         Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster);
-        Set<SimilarityJSON> jsonEdges = new HashSet<>();
+        Set<Map<IWord, Double>> entityHash = new HashSet<>();
+        Set<Map<IWord, Double>> wordHash = new HashSet<>();
+        Set<Map<IWord, Double>> titleHash = new HashSet<>();
         for (Similarity s: clusterEdges) {
-          jsonEdges.add(s.toSimilarityJSON());
+          entityHash.add(s.getEntitySim());
+          wordHash.add(s.getWordSim());
+          titleHash.add(s.getTitleSim());
         }
+        Map<IWord, Double> aggEntities = aggregate(entityHash);
+        Map<IWord, Double> aggWords = aggregate(wordHash);
+        Map<IWord, Double> aggTitle = aggregate(titleHash);
         // put edges in response
         detailResponse.setEdges(clusterEdges);
+        detailResponse.setNumVertices(articlesFromCluster.size());
+        detailResponse.setTotals(aggEntities, aggWords, aggTitle);
       }
     } catch (Exception e) {
       detailResponse.setErrorMessage(e.getMessage());
@@ -61,7 +71,7 @@ public class ClusterDetailHandler {
    * @return list of edges between articles
    * @throws SQLException should never be thrown
    */
-  private static Set<Similarity> calculateImportance(NewsData db, Set<ArticleVertex> articles) throws SQLException {
+  public static Set<Similarity> calculateImportance(NewsData db, Set<ArticleVertex> articles) throws SQLException {
     final double textWeight = 1;
     final double entityWeight = 1;
     final double titleWeight = 1;
@@ -96,11 +106,43 @@ public class ClusterDetailHandler {
     return edges;
   }
 
+  private static Map<IWord, Double> aggregate(Set<Map<IWord, Double>> maps) {
+    Map<IWord, Double> agg = new HashMap<>();
+    for (Map<IWord, Double> m: maps) {
+      m.forEach((k, v) -> agg.merge(k, v, Double::sum));
+    }
+    return agg;
+  }
+
+  /**
+   * Class for serializing a similarity edge;
+   */
+  static class SimilarityJSON {
+    private int articleId1;
+    private int articleId2;
+    private String articleTitle1;
+    private String articleTitle2;
+    private double totalDistance;
+
+    SimilarityJSON(int articleId1, int articleId2, String title1, String title2,
+                   String source1, String source2, double totalDistance) {
+      this.articleId1 = articleId1;
+      this.articleId2 = articleId2;
+      this.articleTitle1 = source1 + ": " + title1;
+      this.articleTitle2 = source2 + ": " + title2;
+      this.totalDistance = totalDistance;
+    }
+  }
+
   /**
    * Class for a response from the ClusterHandler endpoint.
    */
   private static class ClusterDetailResponse extends StandardResponse {
-    private Set<Similarity> edges;
+    private Set<SimilarityJSON> edges;
+    private int numVertices;
+    private Map<IWord, Double> totalEntities;
+    private Map<IWord, Double> totalWords;
+    private Map<IWord, Double> totalTitle;
 
     /**
      * Constructor for the response.
@@ -113,7 +155,24 @@ public class ClusterDetailHandler {
     }
 
     public void setEdges(Set<Similarity> edges) {
-      this.edges = edges;
+      Set<SimilarityJSON> finalEdges = new HashSet<>();
+      for (Similarity s: edges) {
+        Article a1 = s.getSource().getArticle();
+        Article a2 = s.getDest().getArticle();
+        finalEdges.add(new SimilarityJSON(a1.getId(), a2.getId(), a1.getTitle(),
+            a2.getTitle(), a1.getSourceName(), a2.getSourceName(), s.getDistance()));
+      }
+      this.edges = finalEdges;
+    }
+
+    public void setTotals(Map<IWord, Double> entities, Map<IWord, Double> words,
+                          Map<IWord, Double> title) {
+      this.totalEntities = entities;
+      this.totalWords = words;
+      this.totalTitle = title;
+    }
+    public void setNumVertices(int numVertices) {
+      this.numVertices = numVertices;
     }
   }
 }

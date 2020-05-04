@@ -103,11 +103,13 @@ public class ArticleVertex implements INode<Similarity>, IText {
     }
 
     for (String word: splitWords) {
-      ArticleWord articleWord = new ArticleWord(word);
-      if (wordMap.containsKey(articleWord)) {
-        wordMap.replace(articleWord, wordMap.get(articleWord) + 1);
-      } else {
-        wordMap.put(articleWord, 1.0);
+      if (!RemoveStopWords.testWord(word)) {
+        ArticleWord articleWord = new ArticleWord(word);
+        if (wordMap.containsKey(articleWord)) {
+          wordMap.replace(articleWord, wordMap.get(articleWord) + 1);
+        } else {
+          wordMap.put(articleWord, 1.0);
+        }
       }
     }
     return wordMap;
@@ -120,7 +122,8 @@ public class ArticleVertex implements INode<Similarity>, IText {
         return new HashMap<>(entities);
 
       case 1:
-        return new HashMap<>(words);
+        Map map = new HashMap<>(words);
+        return map;
 
       case 2:
         return new HashMap<>(title);
