@@ -1,5 +1,11 @@
 package edu.brown.cs.term_project.Graph;
 
+import edu.brown.cs.term_project.Bubble.Article;
+import edu.brown.cs.term_project.Bubble.ArticleVertex;
+import edu.brown.cs.term_project.handlers.ChartHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -176,5 +182,13 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
     } else {
       return 0;
     }
+  }
+
+  /**
+   * Getter for articles.
+   * @return the articles
+   */
+  public Set<T> getArticles() {
+    return articles;
   }
 }

@@ -33,7 +33,7 @@ public class ClusterDetailHandler {
       } else {
         int clusterId = Integer.parseInt(clusterIdStr);
         // get set of articles of cluster with id clusterId
-        Set<ArticleVertex> articlesFromCluster = db.getArticleVerticesFromCluster(clusterId, true);
+        Set<ArticleVertex> articlesFromCluster = db.getArticleVerticesFromCluster(clusterId);
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {

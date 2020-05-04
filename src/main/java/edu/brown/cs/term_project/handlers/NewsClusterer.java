@@ -1,24 +1,32 @@
 package edu.brown.cs.term_project.handlers;
 
+import edu.brown.cs.term_project.Bubble.Article;
 import edu.brown.cs.term_project.Bubble.ArticleVertex;
 import edu.brown.cs.term_project.Bubble.ArticleWord;
 import edu.brown.cs.term_project.Bubble.Entity;
 import edu.brown.cs.term_project.Bubble.NewsData;
 import edu.brown.cs.term_project.Bubble.Similarity;
+import edu.brown.cs.term_project.Graph.ChartCluster;
+import edu.brown.cs.term_project.Graph.Cluster;
+import edu.brown.cs.term_project.Graph.ClusterParameters;
 import edu.brown.cs.term_project.Graph.Graph;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class NewsClusterer {
-  public static void clusterArticles(NewsData db) throws SQLException {
-    final double textWeight = 1;
-    final double entityWeight = 1;
-    final double titleWeight = 1;
+  private NewsData db;
+
+  public NewsClusterer(NewsData db) {
+    this.db = db;
+  }
+
+  public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
     Set<ArticleVertex> pulledArticles = db.getArticleVertices(0);
     Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
     Map<Entity, Double> entityMap = db.getEntityFreq();
@@ -34,10 +42,9 @@ public class NewsClusterer {
     for (ArticleVertex a1: pulledArticles) {
       for (ArticleVertex a2: pulledArticles) {
         if (a1.getId() < a2.getId()) {
-
           Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, titleCorpus,
-              textWeight,
-              entityWeight, titleWeight);
+              params.getTextWeight(),
+              params.getEntityWeight(), params.getTitleWeight());
           a1.addEdge(tempEdge);
           a2.addEdge(tempEdge);
           edges.add(tempEdge);
@@ -56,11 +63,32 @@ public class NewsClusterer {
     }
 
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
-    graph.runClusters(1);
-    db.insertClusters(graph.getClusters());
+    graph.runClusters(params.getClusterMethod());
+    if (params.getDoInsert()) {
+      db.insertClusters(graph.getClusters());
+    }
+    // create list of chart clusters
+    List<ChartCluster> chartClusters = new ArrayList<>();
+    for (Cluster<ArticleVertex, Similarity> cluster: graph.getClusters()) {
+      chartClusters.add(clusterToChartCluster(cluster));
+    }
+    return chartClusters;
   }
 
+  private ChartCluster clusterToChartCluster(Cluster<ArticleVertex, Similarity> complexCluster) {
+    List<Article> simpleArticles = new ArrayList<>();
+    for (ArticleVertex complexArticle: complexCluster.getArticles()) {
+      simpleArticles.add(complexArticle.getArticle());
+    }
+    return new ChartCluster(complexCluster.getId(),
+        complexCluster.getHeadNode().getArticle().getTitle(),
+        complexCluster.getSize(), simpleArticles);
+  }
+
+
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    clusterArticles(new NewsData("data/backloaded.db"));
+    ClusterParameters params = new ClusterParameters("",false, 1, 1, 1,  1, 75);
+    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/2 days data.db"));
+    clusterer.clusterArticles(params);
   }
 }

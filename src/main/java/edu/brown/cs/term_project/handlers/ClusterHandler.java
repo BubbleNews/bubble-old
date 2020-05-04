@@ -41,8 +41,7 @@ public class ClusterHandler {
       } else {
         // get list of articles for cluster
         int clusterId = Integer.parseInt(clusterIdStr);
-        // TODO: CHANGE FROM HARDCODED
-        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId, true);
+        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId);
         clusterResponse.setArticles(articlesFromCluster);
       }
     } catch (Exception e) {
@@ -56,7 +55,7 @@ public class ClusterHandler {
    */
    private static class ClusterResponse extends StandardResponse {
     private List<Article> articles;
-    private List<Similarity> edges;
+
     /**
      * Constructor for the response.
      *
@@ -66,15 +65,10 @@ public class ClusterHandler {
     ClusterResponse(int status, String message) {
       super(status, message);
       this.articles = new ArrayList<>();
-      this.edges = new ArrayList<>();
     }
 
     public void setArticles(List<Article> articles) {
       this.articles = articles;
-    }
-
-    public void setEdges(List<Similarity> edges) {
-      this.edges = edges;
     }
   }
 }
