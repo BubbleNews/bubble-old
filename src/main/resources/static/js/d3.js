@@ -37,4 +37,4 @@ function render(data) {
 }
 
 getClusterDetails(2);
-//getEdgeDetails(35, 1);
+getEdgeDetails(20, 61);
