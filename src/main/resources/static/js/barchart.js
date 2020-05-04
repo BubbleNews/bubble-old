@@ -1,4 +1,4 @@
-export { renderBarPlot };
+export { renderBarPlot, setDataStuff, reRender };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
@@ -10,6 +10,36 @@ const dotRadius = 10;
 const distanceBetweenDots = 25;
 const distanceBetweenLabelAndDot = 20;
 
+const width = 500;
+const height = 500;
+const innerWidth = width - margin.left - margin.right;
+const innerHeight = height - margin.top - margin.bottom;
+
+const color = d3.scaleOrdinal()
+    .domain(types)
+    .range(colors);
+
+const svg = d3.select(".bar-chart")
+    .append("svg")
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    .append('g')
+        .attr('class', 'bar-labels')
+        .attr('transform', `translate(${margin.left},0)`);
+
+let dataouter;
+let words;
+let relevantWords;
+
+function setDataStuff(data, type) {
+    dataouter = data;
+    words = formatBarPlotData(data, type);
+    relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
+    renderBarPlot();
+}
+
 /**
  *
  * @param data Object of the form:
@@ -20,22 +50,7 @@ const distanceBetweenLabelAndDot = 20;
  * }
  * @param type
  */
-function renderBarPlot(data, type) {
-    const words = formatBarPlotData(data, type);
-    const relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
-
-    const width = 500;
-    const height = 30 * relevantWords.length;
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    const svg = d3.select(".bar-chart")
-        .append("svg")
-        .attr('width', width)
-        .attr('height', height)
-        .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
+function renderBarPlot() {
     const x = d3.scaleLinear()
         .domain(d3.extent(words.map(d => d.value)))
         .range([0, innerWidth]);
@@ -45,42 +60,54 @@ function renderBarPlot(data, type) {
         .range([0, innerHeight])
         .padding(0.1);
 
-    const color = d3.scaleOrdinal()
-        .domain(types)
-        .range(colors);
-
+    console.log(relevantWords);
     // add labels for each bar
-    svg.append('g')
-            .attr('class', 'bar-labels')
-            .attr('transform', `translate(${margin.left},0)`)
-        .selectAll('text')
-        .data(relevantWords)
-        .join(
-            enter => enter.append('text')
-                .attr('fill', 'red'),
-            update => update.attr('fill', 'gray'),
-            exit => {
-                console.log(exit);
-                exit.remove();
-            }
-        )
-            .attr('y', (d, i) => y(i))
-            .attr('text-anchor', 'end')
-            .attr('dy', y.bandwidth()/2)
-            .attr('dx', -labelPadding)
-            .text(d => d.word);
+    const u = svg.selectAll('.test123')
+        .data(relevantWords);
 
-    // make bars
-    const rect = svg.append('g')
-        .attr('transform', `translate(${margin.left},0)`)
-        .selectAll('rect')
-        .data(relevantWords)
-        .join('rect')
+    const gbars = u.enter().append('g').attr('class', 'test123');
+    gbars.append('rect').merge(gbars)
         .attr('x', 0)
         .attr('y', (d, i) => y(i))
         .attr('width', d => x(d.value))
         .attr('height', y.bandwidth())
         .attr('fill', d => color(d.type));
+
+    gbars.exit().remove();
+
+
+        // .join(
+        //     enter => {
+        //         const gbars = enter.append('g').attr('class', 'test123');
+        //         gbars.append('rect').merge(enter)
+        //             .attr('x', 0)
+        //             .attr('y', (d, i) => y(i))
+        //             .attr('width', d => x(d.value))
+        //             .attr('height', y.bandwidth())
+        //             .attr('fill', d => color(d.type));
+        //         // enter.append('text')
+        //         //     .attr('fill', 'red'),
+        //         //     update => update.attr('fill', 'gray')
+        //     },
+        //     exit => {
+        //
+        //     }
+        // )
+
+
+            // .attr('y', (d, i) => y(i))
+            // .attr('text-anchor', 'end')
+            // .attr('dy', y.bandwidth()/2)
+            // .attr('dx', -labelPadding)
+            // .text(d => d.word);
+
+    // // make bars
+    // const rect = svg.append('g')
+    //     .attr('transform', `translate(${margin.left},0)`)
+    //     .selectAll('rect')
+    //     .data(relevantWords)
+    //     .join('rect')
+    //     ;
 
     // make a legend group
     const legend = svg.append('g')
@@ -92,8 +119,7 @@ function renderBarPlot(data, type) {
         .append('g')
         .on('click', d => {
             console.log(d);
-            rect.exit();
-            renderBarPlot(data, d)
+            setDataStuff(dataouter, d);
         });
 
     // add dots to legend
@@ -168,5 +194,12 @@ function addToArray(map, type, arr) {
             value: map[word]
         })
     }
+}
+
+function reRender() {
+    relevantWords.pop();
+    setTimeout(() => {
+        renderBarPlot()
+    }, 1000);
 }
 

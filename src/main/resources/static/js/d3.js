@@ -1,5 +1,5 @@
 import { renderChord } from './chord-diagram.js';
-import { renderBarPlot } from './barchart.js';
+import { renderBarPlot, setDataStuff, reRender } from './barchart.js';
 
 // assigns on click functionality to buttons
 document.getElementsByClassName("btn btn-info")[0].addEventListener("click", () => {
@@ -29,12 +29,15 @@ function getEdgeDetails(id1, id2) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        renderBarPlot(parsed.edge, 'all');
+        setDataStuff(parsed.edge, 'all');
     });
 }
 
 function render(data, type) {
-    renderBarPlot(data, type);
+    console.log('test');
+    setDataStuff(data, type);
+    reRender();
+
     // renderChord(data);
 }
 
