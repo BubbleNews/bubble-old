@@ -18,6 +18,8 @@ $(document).ready(() => {
     // get current chart
     getChart(new Date());
 
+    $('#mainLoader').hide();
+
     $('.sourceToggle').click(function() {
         const button = $(this);
         const cleanSource = cleanSourceName(button.text());
@@ -39,11 +41,14 @@ $(document).ready(() => {
     // add form submit
     $('#reclusterParams').submit(function(event) {
             event.preventDefault();
+            $("#clusters").empty();
+            $('#mainLoader').show();
             const reclusterEndpoint = 'api/recluster';
             const serialized = $('#reclusterParams').serialize();
             console.log(serialized);
             $.post(reclusterEndpoint, serialized, function(data) {
                 const parsed = JSON.parse(data);
+                $('#mainLoader').hide();
                 console.log(parsed);
                 for (i = 0; i < parsed.clusters.length; i++) {
                     appendCluster(parsed.clusters[i], true);
@@ -54,6 +59,10 @@ $(document).ready(() => {
     $('.sourceToggle').each(function(index, element) {
         const source = cleanSourceName($(this).text());
         sourceMap.set(source, true);
+    });
+
+    $('#resetButton').click(function() {
+        dateClickHandler();
     });
 });
 
@@ -78,7 +87,6 @@ function dateClickHandler() {
         $('#chartMessage').show();
         return;
     } else {
-        $("#clusters").empty();
         getChart(date);
     }
 }
@@ -90,6 +98,7 @@ function stringifyDate(date) {
 }
 
 function getChart(date) {
+    $("#clusters").empty();
     // clear messages
     $('.message').hide();
     const dateStr = stringifyDate(date);
@@ -124,7 +133,7 @@ function appendCluster(cluster, reclustered) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div class='card text-center'>"
-            + "<div id=" + cluster.clusterId + " class='card-header cluster cluster" + classNum + "'>"
+            + "<div id=" + cluster.clusterId + " class='card-header cluster" + classNum + "'>"
                 +"<button class='btn btn-primary-outline' type='button' data-toggle='collapse'" +
         " data-target='#collapse" + cluster.clusterId + "'>"
                 + "<h2>" + cluster.headline
@@ -153,7 +162,7 @@ function getClusterRequest(clusterId) {
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
         // TODO: do something with parsed cluster response
-        makeCluster(clusterId, parsed);
+        makeCluster(clusterId, parsed.articles);
     });
 }
 
@@ -189,6 +198,7 @@ function makeCluster(clusterId, articles) {
             + '</div>');
     })
     let i;
+    console.log(articles);
     for (i = 0; i < articles.length; i++) {
         const article = articles[i];
         let cleanSource = cleanSourceName(article.sourceName);
@@ -200,7 +210,7 @@ function makeCluster(clusterId, articles) {
             + article.title + '</a></h3>'
             + '<span class="badge badge-secondary"><h3>' + article.sourceName + ' | '
             + article.timePublished.slice(0, 16) + ' UTC</h3></span></div></li>';
-        $('#' + clusterId + 'articles').append(articleHTML);
+        $('#' + divId).append(articleHTML);
     }
     currentlyOpenClusterId = clusterId;
 }

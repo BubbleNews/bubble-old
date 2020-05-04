@@ -75,9 +75,7 @@
                                    max="100"
                                    value="75">
                             <button class="btn btn-primary btn-sm" type="submit" style="margin: auto; margin-bottom: 10px;">Recluster</button>
-                            <button class="btn btn-blue-grey btn-sm" type="button" style="margin:
-                            auto; margin-bottom:10px;
-                            ">Reset</button>
+                            <button id="resetButton" class="btn btn-blue-grey btn-sm" type="button" style="margin:auto; margin-bottom:10px;">Reset</button>
                         </div>
                     </form>
                 </div>
@@ -87,9 +85,12 @@
             <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
             <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
         </div>
-        <div class="col-lg-8">
+        <div id="mainWindow" class="col-lg-8">
             <div id="chartMessageWrapper">
                 <div id="chartMessage"></div>
+            </div>
+            <div id="mainLoader" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
             </div>
             <div class="accordion" id="clusters"></div>
             <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
