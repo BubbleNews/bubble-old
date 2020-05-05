@@ -126,6 +126,10 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/mdb.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="../js/home.js"></script>
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="module" src="../js/chord-diagram.js"></script>
+<script type="module" src="../js/barchart.js"></script>
+<script type="module" src="../js/d3.js"></script>
+<script type="module" src="../js/home.js"></script>
 </body>
 </html>

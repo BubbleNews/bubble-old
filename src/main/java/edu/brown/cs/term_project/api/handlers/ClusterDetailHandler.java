@@ -73,6 +73,7 @@ public final class ClusterDetailHandler {
         detailResponse.setNumVertices(articlesFromCluster.size());
         detailResponse.setClusterRadius(meanRadius);
         detailResponse.setTotals(aggEntities, aggWords, aggTitle);
+        detailResponse.setClusterId(clusterId);
       }
     } catch (Exception e) {
       detailResponse.setErrorMessage(e.getMessage());
@@ -158,6 +159,7 @@ public final class ClusterDetailHandler {
     private Set<SimilarityJSON> edges;
     private int numVertices;
     private double clusterRadius;
+    private int clusterId;
     private Map<IWord, Double> entitySim;
     private Map<IWord, Double> wordSim;
     private Map<IWord, Double> titleSim;
@@ -195,6 +197,10 @@ public final class ClusterDetailHandler {
 
     public void setClusterRadius(double radius) {
       this.clusterRadius = radius;
+    }
+
+    public void setClusterId(int id) {
+      this.clusterId = id;
     }
   }
 }

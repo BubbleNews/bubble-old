@@ -25,7 +25,7 @@ function renderChord(parsed) {
     const max = 5/parsed.numVertices;
     const min = .05
     const padAngle = min + (max - min) * parsed.clusterRadius;
-    const textWidth = 250;
+    const textWidth = 125;
     let total = 0;
     let i;
     for (i = 0; i < parsed.edges.length; i++) {  //loop through the array
@@ -38,7 +38,7 @@ function renderChord(parsed) {
     const matrix = arr[1];
 
     // Creates svg for chord diagram
-    const svg = d3.select(".chord-chart")
+    const svg = d3.select("#chord" + parsed.clusterId)
         .append("svg")
             .attr("id", "mysvg")
             .attr("preserveAspectRatio", "xMinYMid")
@@ -435,9 +435,9 @@ function boxPlot(data, point) {
         .style("fill", "red");
 }
 
-boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-
-setTimeout(function () {
-    boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-
-}, 2000);
+// boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+//
+// setTimeout(function () {
+//     boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+//
+// }, 2000);
