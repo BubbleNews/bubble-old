@@ -8,6 +8,8 @@ import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,10 +35,33 @@ public final class ChartHandler {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
       // get date object
+
       QueryParamsMap qm = request.queryMap();
-      String dateString = qm.value("date");
+      String year = qm.value("year");
+      String month = qm.value("month");
+      String day = qm.value("day");
+      Integer offset = Integer.parseInt(qm.value("offset"));
+      String today = qm.value("today");
+
+
+      String date = year + "-" + month + "-" + day;
+      List<ChartCluster> clusters = new ArrayList<>();
+
+      if (today.equals("true")) {
+        clusters = db.getDataRead().getNewestClusters();
+      } else if (offset > 0) {
+        clusters = db.getDataRead().getClusters(date, offset, 1);
+      } else {
+        clusters = db.getDataRead().getClusters(date, 24 + offset, 0);
+      }
+
+
       // query database for clusters from given date
-      List<ChartCluster> clusters = db.getDataRead().getClusters(dateString);
+
+      // sort by size
+      Comparator<ChartCluster> compareBySize =
+              (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
+      clusters.sort(compareBySize);
       // pass to front handler
       chartResponse.setClusters(clusters);
     } catch (Exception e) {

@@ -210,7 +210,6 @@ public class NewsDataRead {
     return clusters;
   }
 
-<<<<<<< HEAD
 
   public List<ChartCluster> getNewestClusters() throws SQLException {
     String query = "SELECT day, hour FROM clusters ORDER BY day DESC, hour DESC LIMIT 1;";
@@ -225,9 +224,6 @@ public class NewsDataRead {
     return clusters;
   }
 
-=======
-  // TODO: Don't test
->>>>>>> c8747d8cb84b9538bd679499857a7fbcae2e751a
   /**
    * Gets the clusters for a given day. This will be passed to the front end.
    *
