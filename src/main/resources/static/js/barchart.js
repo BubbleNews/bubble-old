@@ -6,6 +6,7 @@ const margin = {left: 60, right: 10, top: 10, bottom: 0};
 const labelPadding = 10;
 const types = ['entity', 'title', 'text'];
 const colors = ['steelblue', 'red', 'orange'];
+const barHeight = 20;
 const dotRadius = 10;
 const distanceBetweenDots = 25;
 const distanceBetweenLabelAndDot = 20;
@@ -24,10 +25,11 @@ const svg = d3.select(".bar-chart")
         .attr('width', width)
         .attr('height', height)
         .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
-    .append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`);
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+const svgTransformed = svg.append('g')
+    .attr('class', 'bar-labels')
+    .attr('transform', `translate(${margin.left},0)`);
 
 
 // // make a legend group
@@ -64,6 +66,7 @@ function setDataStuff(data, type) {
 function updateDataAndRender(type) {
     words = formatBarPlotData(storedData, type);
     relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
+    console.log(relevantWords);
     renderBarPlot();
 }
 
@@ -78,18 +81,20 @@ function updateDataAndRender(type) {
  * @param type
  */
 function renderBarPlot() {
+    console.log(height);
+
     const x = d3.scaleLinear()
         .domain(d3.extent(words.map(d => d.value)))
         .range([0, innerWidth]);
 
     const y = d3.scaleBand()
-        .domain(d3.range(relevantWords.length))
+        .domain(d3.range(maxBars))
         .range([0, innerHeight])
         .padding(0.1);
 
     // does the data join with a group
     // TODO: use the new selection.join syntax
-    const groups = svg.selectAll('g')
+    const groups = svgTransformed.selectAll('g')
         .data(relevantWords);
     const groupsEnter = groups.enter().append('g');
     groupsEnter.merge(groups)
