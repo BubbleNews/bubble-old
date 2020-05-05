@@ -37,6 +37,6 @@ public final class RemoveStopWords {
   }
 
   public static boolean testWord(String word) {
-    return stopWords.contains(word) || word.length() <= 1 || word.matches("[a-z]+\\.[a-z]+");
+    return !stopWords.contains(word) && word.length() > 2;
   }
 }
