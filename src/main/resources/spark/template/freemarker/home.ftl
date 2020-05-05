@@ -117,6 +117,23 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="vizModal">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Data Visualization Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -127,6 +144,10 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/mdb.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="../js/home.js"></script>
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="module" src="../js/chord-diagram.js"></script>
+<script type="module" src="../js/barchart.js"></script>
+<script type="module" src="../js/d3.js"></script>
+<script type="module" src="../js/home.js"></script>
 </body>
 </html>
