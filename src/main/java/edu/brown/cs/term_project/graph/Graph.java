@@ -34,7 +34,6 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
     ClusterMethods.setRadiusThreshold(nodes);
   }
 
-
   public void runClusters(Integer method) {
     if (method == 1) {
       System.out.println("Clustering Method 1");
