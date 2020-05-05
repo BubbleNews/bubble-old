@@ -153,7 +153,7 @@ function appendCluster(cluster, reclustered) {
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div class='card text-center'>"
-            + "<div id=" + cluster.clusterId + " class='card-header cluster" + classNum + "'>"
+            + "<div id=" + cluster.clusterId + " class='card-header clusHead cluster" + classNum + "'>"
                 +"<button class='btn btn-primary-outline' type='button' data-toggle='collapse'" +
         " data-target='#collapse" + cluster.clusterId + "'>"
                 + "<h2>" + cluster.headline

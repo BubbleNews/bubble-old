@@ -46,7 +46,11 @@
         </div>
         <div class="col-lg-2 order-lg-last">
             <div id="reclusterWrapper" class="card sticky-top sidePanel">
-                <div class="card-header"><h4>Clustering Parameters</h4></div>
+                <div class="card-header"><h4>Clustering Parameters</h4>
+                    <button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"
+                     style="margin-bottom:10px;" data-toggle="modal" data-target="#infoModal">
+                        Info
+                    </button></div>
                 <div class="card-body" id="clusterParameters">
                     <form id="reclusterParams">
                         <div class="form-group">
@@ -81,11 +85,6 @@
                                     type="button" style="margin: 5px auto;">Reset</button>
                         </div>
                     </form>
-                    <button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"
-                            style="
-                    margin-bottom:10px;" data-toggle="modal" data-target="#infoModal">
-                        Info
-                    </button>
                 </div>
             </div>
             <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
