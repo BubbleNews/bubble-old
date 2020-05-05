@@ -1,6 +1,6 @@
 import sqlite3
 
-PATH_TO_DATABASE = "data/bubble.db"
+PATH_TO_DATABASE = "data/mock_data.db"
 
 conn = sqlite3.connect(PATH_TO_DATABASE)
 c = conn.cursor()
