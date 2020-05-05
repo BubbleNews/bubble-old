@@ -1,41 +1,46 @@
-package edu.brown.cs.term_project.api.handlers;
+package edu.brown.cs.term_project.database;
 
-import com.google.gson.Gson;
-import edu.brown.cs.term_project.bubble.*;
-import edu.brown.cs.term_project.api.response.StandardResponse;
-import edu.brown.cs.term_project.database.NewsData;
-import spark.Request;
-import spark.Response;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.bubble.ArticleVertex;
+import edu.brown.cs.term_project.bubble.ArticleWord;
+import edu.brown.cs.term_project.bubble.Entity;
+import edu.brown.cs.term_project.bubble.Similarity;
+import edu.brown.cs.term_project.api.response.ChartCluster;
+import edu.brown.cs.term_project.clustering.Cluster;
+import edu.brown.cs.term_project.similarity.IWord;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
-/**
- * Class that handles calling the Python API to get updated news headlines
- * and entity information from scraper/algorithm, will be called by scheduled
- * cron job.
- */
-public class UpdateHandler {
+public final class NewsData extends Database {
+  private Connection conn;
+  private NewsDataRead dataRead;
+  private NewsDataWrite dataWrite;
 
   /**
-   * Handles a request to the /update API.
+   * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and
+   * error checks the file.
    *
-   * @param request  the request
-   * @param response the response
-   * @param db the database
-   * @return a JSON response with status and message.
+   * @param filename the filename that the user wants to query from
+   * @throws SQLException           if sql error
+   * @throws ClassNotFoundException if issue setting up database connection
    */
-  public static String handle(Request request, Response response, NewsData db) throws Exception {
-    StandardResponse updateResponse = new StandardResponse(0, "");
-    try {
+  public NewsData(String filename) throws SQLException, ClassNotFoundException {
+    super(filename);
+    conn = super.getConn();
+    dataRead = new NewsDataRead(conn);
+    dataWrite = new NewsDataWrite(conn);
+  }
 
+  public NewsDataRead getDataRead() {
+    return dataRead;
+  }
 
-    } catch (Exception e) {
-      // there has been an error so update response to reflect that
-      updateResponse.setStatus(1);
-      updateResponse.setMessage(e.getMessage());
-    }
-    // convert to particles.json and return
-    return new Gson().toJson(updateResponse);
+  public NewsDataWrite getDataWrite() {
+    return dataWrite;
   }
 
   public static void main(String[] args) throws Exception {
@@ -56,13 +61,7 @@ public class UpdateHandler {
 //            + "wood surface ! no greasy feel -- and a fantastic smell ! '' -- Tiffany SadowskiGet"
 //            + " it from Amazon for $ 8.48 + -lrb- available in eight size -rrb- ."
 //    );
-//
 //    NewsData db = new NewsData("data/backloaded.db");
-//    db.insertArticleAndEntities(testArticle, new HashMap<>());
-
-//    ArrayList<ArticleJSON> testList = new ArrayList<>();
-//    testList.add(testArticle);
-//    //processJSONArticles(testList, db);
-//    clusterArticles(db);
+//    db.insertArticle(testArticle);
   }
 }

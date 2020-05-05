@@ -1,8 +1,8 @@
 package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.database.NewsData;
 import edu.brown.cs.term_project.api.response.StandardResponse;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -40,7 +40,7 @@ public final class ClusterHandler {
       } else {
         // get list of articles for cluster
         int clusterId = Integer.parseInt(clusterIdStr);
-        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId);
+        List<Article> articlesFromCluster = db.getDataRead().getArticlesFromCluster(clusterId);
         clusterResponse.setArticles(articlesFromCluster);
       }
     } catch (Exception e) {

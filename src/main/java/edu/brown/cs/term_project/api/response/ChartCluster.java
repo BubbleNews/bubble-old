@@ -1,6 +1,6 @@
 package edu.brown.cs.term_project.api.response;
 
-import edu.brown.cs.term_project.Bubble.Article;
+import edu.brown.cs.term_project.bubble.Article;
 
 import java.util.List;
 

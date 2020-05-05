@@ -1,8 +1,9 @@
 package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.*;
+import edu.brown.cs.term_project.bubble.*;
 import edu.brown.cs.term_project.api.response.StandardResponse;
+import edu.brown.cs.term_project.database.NewsData;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
@@ -34,7 +35,7 @@ public class EdgeHandler {
         int id1 = Integer.parseInt(a1);
         int id2 = Integer.parseInt(a2);
         // get set of articles of cluster with id clusterId
-        Set<ArticleVertex> articlesFromCluster = db.getArticlePair(id1, id2);
+        Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticlePair(id1, id2);
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {
