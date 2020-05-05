@@ -2,7 +2,7 @@ import { renderChord } from './chord-diagram.js';
 import { renderBarPlot, setDataStuff, updateDataAndRender, renderFirst } from './barchart.js';
 export { getEdgeDetails};
 
-export function getClusterDetails(clusterId, articleIds, type) {
+export function getClusterDetails(clusterId, clusterMeanRadius, articleIds, type) {
 
     $('.entityBut' + clusterId).click(function() {
         updateDataAndRender('entity')});
@@ -14,10 +14,14 @@ export function getClusterDetails(clusterId, articleIds, type) {
         updateDataAndRender('all')});
 
     const serializedArticleIds = JSON.stringify(articleIds);
+    const serializedClusterParams = $('#reclusterParams').serialize();
 
     let clusterUrl = 'api/details';
     // add id to cluster base url
-    clusterUrl += '?clusterId=' + clusterId + '&articleIds=' + serializedArticleIds;
+    clusterUrl += '?clusterId=' + clusterId;
+    clusterUrl += '&clusterMeanRadius=' + clusterMeanRadius;
+    clusterUrl += '&articleIds=' + serializedArticleIds;
+    clusterUrl += '&' + serializedClusterParams;
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
@@ -27,8 +31,11 @@ export function getClusterDetails(clusterId, articleIds, type) {
 
 function getEdgeDetails(id1, id2) {
     let clusterUrl = 'api/edge';
+    const serializedClusterParams = $('#reclusterParams').serialize();
+
     // add id to cluster base url
     clusterUrl += '?id1=' + id1 + '&id2=' + id2;
+    clusterUrl += '&' + serializedClusterParams;
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);

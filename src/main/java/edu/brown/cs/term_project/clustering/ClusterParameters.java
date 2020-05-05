@@ -11,7 +11,6 @@ public class ClusterParameters {
   public static final double DEFAULT_TEXT_WEIGHT = 1;
   public static final double DEFAULT_ENTITY_WEIGHT = 1;
   public static final double DEFAULT_TITLE_WEIGHT = 1;
-  public static final int DEFAULT_CLUSTER_METHOD = 1;
 
   // date of clusters
   private String date;
@@ -21,10 +20,6 @@ public class ClusterParameters {
   private double textWeight;
   private double entityWeight;
   private double titleWeight;
-  // which clustering method to use
-  private int clusterMethod;
-  // clustering
-  private double percentageEdgesToConsider;
   // max number of articles to get from the database
   private int numArticles;
 
@@ -36,7 +31,6 @@ public class ClusterParameters {
     this.textWeight = DEFAULT_TEXT_WEIGHT;
     this.entityWeight = DEFAULT_ENTITY_WEIGHT;
     this.titleWeight = DEFAULT_TITLE_WEIGHT;
-    this.clusterMethod = DEFAULT_CLUSTER_METHOD;
     this.numArticles = DEFAULT_NUM_ARTICLES;
   }
 
@@ -45,8 +39,6 @@ public class ClusterParameters {
     this.textWeight = parseDouble(qm.value("textWeight"));
     this.entityWeight = parseDouble(qm.value("entityWeight"));
     this.titleWeight = parseDouble(qm.value("titleWeight"));
-    this.clusterMethod = Integer.parseInt(qm.value("clusterMethod"));
-    this.percentageEdgesToConsider = parseDouble(qm.value("edgeThreshold"));
     this.numArticles = Integer.parseInt(qm.value("numArticles"));
     this.doInsert = false;
   }
@@ -65,14 +57,6 @@ public class ClusterParameters {
 
   public double getTitleWeight() {
     return titleWeight;
-  }
-
-  public double getPercentageEdgesToConsider() {
-    return percentageEdgesToConsider;
-  }
-
-  public int getClusterMethod() {
-    return clusterMethod;
   }
 
   public int getNumArticles() {
@@ -97,14 +81,6 @@ public class ClusterParameters {
 
   public void setTitleWeight(double titleWeight) {
     this.titleWeight = titleWeight;
-  }
-
-  public void setClusterMethod(int clusterMethod) {
-    this.clusterMethod = clusterMethod;
-  }
-
-  public void setPercentageEdgesToConsider(double percentageEdgesToConsider) {
-    this.percentageEdgesToConsider = percentageEdgesToConsider;
   }
 
   public void setNumArticles(int numArticles) {

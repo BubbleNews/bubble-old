@@ -3,6 +3,8 @@ package edu.brown.cs.term_project.api.handlers;
 import com.google.gson.Gson;
 import edu.brown.cs.term_project.bubble.*;
 import edu.brown.cs.term_project.api.response.StandardResponse;
+import edu.brown.cs.term_project.clustering.Cluster;
+import edu.brown.cs.term_project.clustering.ClusterParameters;
 import edu.brown.cs.term_project.database.NewsData;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -27,6 +29,7 @@ public class EdgeHandler {
     EdgeResponse detailResponse = new EdgeResponse(0, "");
     try {
       QueryParamsMap qm = request.queryMap();
+      ClusterParameters params = new ClusterParameters(qm);
       String a1 = qm.value("id1");
       String a2 = qm.value("id2");
       if (a1 == null || a1.equals("") || a2 == null || a2.equals("")) {
@@ -43,7 +46,7 @@ public class EdgeHandler {
 //        }
         // get edges between articles
         Set<Similarity> clusterEdges = ClusterDetailHandler.calculateImportance(db,
-            articlesFromCluster);
+            articlesFromCluster, params);
         for (Similarity s: clusterEdges) {
 
           detailResponse.setEdge(s);

@@ -33,11 +33,8 @@ public class NewsClusterer {
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     // make graph from vertices and cluster
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
-    // set threshold according to cluster params if params are for reclustering
-    if (!params.getDoInsert()) {
-      graph.setThreshold(params.getPercentageEdgesToConsider());
-    }
-    graph.runClusters(params.getClusterMethod());
+
+    graph.runClusters(1);
     if (params.getDoInsert()) {
       db.getDataWrite().insertClusters(graph.getClusters());
     }
