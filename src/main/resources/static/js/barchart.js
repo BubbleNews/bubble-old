@@ -24,10 +24,33 @@ const svg = d3.select(".bar-chart")
         .attr('width', width)
         .attr('height', height)
         .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+// make a legend group
+const legend = svg.append('g')
+    .attr('class', 'legend')
+    .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
+    .selectAll('myLabels')
+    .data(types)
+    .enter()
     .append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`);
+    .on('click', d => {
+        console.log(d);
+        setDataStuff(dataouter, d);
+    });
+
+// add dots to legend
+legend.append('circle')
+    .attr('cy', (d,i) => i * distanceBetweenDots)
+    .attr('r', dotRadius)
+    .attr('fill', d => color(d));
+
+// add labels to legend
+legend.append('text')
+    .attr('x', distanceBetweenLabelAndDot)
+    .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+    .attr('fill', d => color(d))
+    .text(d => d);
 
 let dataouter;
 let words;
@@ -60,66 +83,56 @@ function renderBarPlot() {
         .range([0, innerHeight])
         .padding(0.1);
 
-    console.log(relevantWords);
-    // add labels for each bar
-    svg.selectAll('rect')
-        .data(relevantWords)
-        .join('rect'
-            // enter => {
-            //     enter.append('g').attr('class', 'test123').call(
-            //         gbar => gbar.append('rect')
-            //             .attr('x', 0)
-            //             .attr('y', (d, i) => y(i))
-            //             .attr('width', d => x(d.value))
-            //             .attr('height', y.bandwidth())
-            //             .attr('fill', d => color(d.type))
-            //     );
-            // }
-        )
-        .attr('x', 0)
-        .attr('y', (d, i) => y(i))
-        .attr('width', d => x(d.value))
-        .attr('height', y.bandwidth())
-        .attr('fill', d => color(d.type));
-            // .attr('y', (d, i) => y(i))
-            // .attr('text-anchor', 'end')
-            // .attr('dy', y.bandwidth()/2)
-            // .attr('dx', -labelPadding)
-            // .text(d => d.word);
+    // const yAxis = g =>
+    //     g.attr('transform', `translate(${margin.left},0)`)
+    //         .call(d3.axisLeft(y).tickSize(0));
+    // svg.append('g').call(yAxis);
 
-    // // make bars
-    // const rect = svg.append('g')
-    //     .attr('transform', `translate(${margin.left},0)`)
-    //     .selectAll('rect')
+    const barLabels = svg.append('g')
+        .attr('class', 'bar-labels')
+        .attr('transform', `translate(${margin.left},0)`)
+
+    console.log(relevantWords);
+    const groups = barLabels.selectAll('.bar-labels')
+        .data(relevantWords);
+
+    console.log(groups);
+
+    const groupsEnter = groups.enter().append('g');
+    groupsEnter
+        .merge(groups)
+            .attr('transform', (d, i) => `translate(0,${y(i)})`);
+    groups.exit().remove();
+
+    groupsEnter.append('rect')
+        .merge(groups.select('rect'))
+            .attr('width', d => x(d.value))
+            .attr('height', y.bandwidth())
+            .attr('fill', d => color(d.type));
+
+    groupsEnter.append('text')
+        .merge(groups.select('text'))
+        .attr('x', -labelPadding)
+        .attr('y', y.bandwidth() / 2)
+        .attr('text-anchor', 'end')
+        .text(d => d.word);
+
+    // svg.selectAll('rect')
     //     .data(relevantWords)
     //     .join('rect')
-    //     ;
-
-    // make a legend group
-    const legend = svg.append('g')
-        .attr('class', 'legend')
-        .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
-        .selectAll('myLabels')
-        .data(types)
-        .enter()
-        .append('g')
-        .on('click', d => {
-            console.log(d);
-            setDataStuff(dataouter, d);
-        });
-
-    // add dots to legend
-    legend.append('circle')
-        .attr('cy', (d,i) => i * distanceBetweenDots)
-        .attr('r', dotRadius)
-        .attr('fill', d => color(d));
-
-    // add labels to legend
-    legend.append('text')
-        .attr('x', distanceBetweenLabelAndDot)
-        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-        .attr('fill', d => color(d))
-        .text(d => d)
+    //     .attr('x', 0)
+    //     .attr('y', (d, i) => y(i))
+    //     .attr('width', d => x(d.value))
+    //     .attr('height', y.bandwidth())
+    //     .attr('fill', d => color(d.type));
+    //
+    // svg.selectAll('text')
+    //     .data(relevantWords)
+    //     .join('text')
+    //     .attr('x', -labelPadding)
+    //     .attr('y', (d, i) => y(i) + y.bandwidth() / 2)
+    //     .attr('text-anchor', 'end')
+    //     .text(d => d.word);
 }
 
 function sliceWords(words, thresholdPercent, maxBars) {
@@ -183,9 +196,9 @@ function addToArray(map, type, arr) {
 }
 
 function reRender() {
-    relevantWords.pop();
-    setTimeout(() => {
-        renderBarPlot()
-    }, 1000);
+    // relevantWords.pop();
+    // setTimeout(() => {
+    //     renderBarPlot()
+    // }, 1000);
 }
 
