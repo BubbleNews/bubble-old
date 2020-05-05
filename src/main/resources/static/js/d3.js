@@ -21,7 +21,6 @@ export function getClusterDetails(clusterId, articleIds, type) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        renderChord(parsed);
         render(parsed, type);
     });
 }
@@ -38,7 +37,8 @@ function getEdgeDetails(id1, id2) {
 }
 
 function render(data, type) {
-
+    console.log('hello');
+    renderChord(data);
     renderFirst(data, data.clusterId, type);
     //setDataStuff(data, type);
     // renderChord(data);

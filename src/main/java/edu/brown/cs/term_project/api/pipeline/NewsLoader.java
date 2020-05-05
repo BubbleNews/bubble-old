@@ -134,11 +134,11 @@ public class NewsLoader {
   }
 
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/bubble.db"), "http://127.0.0" +
+    NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"), "http://127.0.0" +
         ".1:5000/scrape");
 //    Date now = new Date();
 //    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(5, 16, 1, 8);
+    loader.executeBatches(10, 10, 1, 8);
 //    String[] test = TextProcessing.lemmizeText("Afrobeat Legend Tony Allen, " +
 //        "Fela Kutis Drummer, Has Died At Age 79");
 //    String[] another = new String[]{"hello", "this", "is", "another", "string"};

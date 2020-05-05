@@ -11,15 +11,13 @@ let indices = {};
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
  */
 function renderChord(parsed) {
-    const margin = {top:180, left: 400, right: 400, bottom: 180};
-    const width = 1500
-    const height = 700 + margin.top + margin.bottom;
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-    const aspect = width / height;
-    const textGap = 20;
-    const outerRadius = Math.min(innerWidth, innerHeight) * 0.5;
+    const outerRadius = 400;
     const innerRadius = outerRadius - 20;
+    const margin = {top:180, left: 300, right: 300, bottom: 180};
+    const height = outerRadius * 2 + margin.top + margin.bottom;
+    const width = outerRadius * 2 + margin.left + margin.right;
+    const textGap = 20;
+
     const edgeOpacity = 0.67;
     const max = 5/parsed.numVertices;
     const min = .05

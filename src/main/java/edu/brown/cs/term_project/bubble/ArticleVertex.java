@@ -120,8 +120,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
         return new HashMap<>(entities);
 
       case 1:
-        Map map = new HashMap<>(words);
-        return map;
+        return new HashMap<>(words);
 
       case 2:
         return new HashMap<>(title);
@@ -152,20 +151,6 @@ public class ArticleVertex implements INode<Similarity>, IText {
       default:
         return null;
     }
-  }
-
-  public Map<IWord, Double> getEntitiesImportance() {
-    return entitiesImportance;
-  }
-
-
-  public Map<IWord, Double> getWordsImportance() {
-    return wordsImportance;
-  }
-
-
-  public Map<IWord, Double> getTitleImportance() {
-    return titleImportance;
   }
 
   @Override

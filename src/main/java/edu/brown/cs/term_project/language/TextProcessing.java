@@ -10,6 +10,8 @@ import java.util.*;
  * https://stanfordnlp.github.io/CoreNLP/simple.html
  */
 public final class TextProcessing {
+  private static final Set<String> ignoredEntities = new HashSet<>(
+          Arrays.asList("NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "O"));
 
   /**
    * Private constructor that is only defined because this is a utility class
@@ -30,11 +32,14 @@ public final class TextProcessing {
     for (Sentence sent : doc.sentences()) {
       List<String> entityTypes = sent.nerTags();
       for (int i = 0; i < entityTypes.size(); i++) {
-        Entity entity = new Entity(sent.word(i), entityTypes.get(i));
-        if (entityFrequencies.containsKey(entity)) {
-          entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
-        } else {
-          entityFrequencies.put(entity, 1);
+        String word = sent.word(i);
+        if (RemoveStopWords.testWord(word) && !TextProcessing.ignoredEntities.contains(word)) {
+          Entity entity = new Entity(word, entityTypes.get(i));
+          if (entityFrequencies.containsKey(entity)) {
+            entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
+          } else {
+            entityFrequencies.put(entity, 1);
+          }
         }
       }
     }
@@ -47,7 +52,7 @@ public final class TextProcessing {
     Document doc = new Document(text.toLowerCase());
     for (Sentence sent : doc.sentences()) {
       for (String s: sent.lemmas()) {
-        if (!RemoveStopWords.testWord(s)) {
+        if (RemoveStopWords.testWord(s)) {
           lemmas.add(s);
         }
       }
@@ -71,7 +76,7 @@ public final class TextProcessing {
       if (word.equals("and")) {
         int w = word.length();
       }
-      if (!alreadySeen.contains(word) && !RemoveStopWords.testWord(word)) {
+      if (!alreadySeen.contains(word) && RemoveStopWords.testWord(word)) {
         int w = word.length();
         frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
         alreadySeen.add(word);
