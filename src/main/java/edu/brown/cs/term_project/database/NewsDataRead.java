@@ -192,15 +192,14 @@ public class NewsDataRead {
    * Gets the clusters for a given day. This will be passed to the front end.
    *
    * @param date the date to search for (java.util.Date)
+   * @param hours the amount to off set the hours
+   * @param addDays the amount of days to add to the date passed in
    * @return a set of cluster objects
    * @throws SQLException only thrown if the database is malformed
    */
-  public List<ChartCluster> getClusters(String date) throws SQLException {
-    String query =
-        "SELECT id, title, size FROM clusters WHERE day = ? ORDER BY size desc";
-    //        String query = "SELECT id, title, size FROM clusters";
+  public List<ChartCluster> getClusters(String date, int hours, int addDays) throws SQLException {
+    String query = "SELECT day, hour FROM clusters ORDER BY day DESC, hour DESC";
     PreparedStatement prep = conn.prepareStatement(query);
-    prep.setString(1, date);
     ResultSet rs = prep.executeQuery();
     List<ChartCluster> clusters = new ArrayList<>();
     while (rs.next()) {
@@ -211,6 +210,20 @@ public class NewsDataRead {
 //      articles = getArticlesFromCluster(clusterId);
       ChartCluster cluster = new ChartCluster(clusterId, headline, size, articles);
       clusters.add(cluster);
+    }
+    return clusters;
+  }
+
+
+  public List<ChartCluster> getNewestClusters() throws SQLException {
+    String query = "SELECT day, hour FROM clusters ORDER BY day DESC, hour DESC LIMIT 1;";
+    PreparedStatement prep = conn.prepareStatement(query);
+    ResultSet rs = prep.executeQuery();
+    List<ChartCluster> clusters = new ArrayList<>();
+    if (rs.next()) {
+      String day = rs.getString(1);
+      int hour = rs.getInt(2);
+      clusters = getClusters(day, hour, 0);
     }
     return clusters;
   }
