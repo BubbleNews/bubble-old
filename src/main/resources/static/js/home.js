@@ -97,11 +97,19 @@ function getChart(date) {
     $('.message').hide();
     let chartUrl = 'api/chart';
     // update request url with date if needed
+
+    const today = new Date();
+    let isToday = false;
+    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === date.getFullYear()) {
+        isToday = true;
+    }
+
     const originalMonth = date.getMonth() + 1;
     chartUrl += '?year=' + date.getFullYear();
     chartUrl += '&month=' + (originalMonth < 10) ? '0' + originalMonth: originalMonth;
     chartUrl += '&day=' + date.getDate();
     chartUrl += '&offset=' + date.getTimezoneOffset() / 60;
+    chartUrl += '&isToday=' + isToday;
     // send get request
     $.get(chartUrl, function(data) {
         const parsed = JSON.parse(data);
