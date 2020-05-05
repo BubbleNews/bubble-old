@@ -2,17 +2,17 @@ import { renderChord } from './chord-diagram.js';
 import { renderBarPlot, setDataStuff, updateDataAndRender } from './barchart.js';
 export { getEdgeDetails};
 
-// assigns on click functionality to buttons
-// document.getElementsByClassName("btn btn-info")[0].addEventListener("click", () => {
-//     updateDataAndRender('entity')});
-// document.getElementsByClassName("btn btn-info")[1].addEventListener("click", () => {
-//     updateDataAndRender('text')});
-// document.getElementsByClassName("btn btn-info")[2].addEventListener("click", () => {
-//     updateDataAndRender('title')});
-// document.getElementsByClassName("btn btn-info")[3].addEventListener("click", () => {
-//     updateDataAndRender('all')});
-
 export function getClusterDetails(clusterId, type) {
+
+    $('.entityBut' + clusterId).click(function() {
+        updateDataAndRender('entity')});
+    $('.textBut' + clusterId).click(function() {
+        updateDataAndRender('text')});
+    $('.titleBut' + clusterId).click(function() {
+        updateDataAndRender('title')});
+    $('.allBut' + clusterId).click(function() {
+        updateDataAndRender('all')});
+
     let clusterUrl = 'api/details';
     // add id to cluster base url
     clusterUrl += '?id=' + clusterId;
