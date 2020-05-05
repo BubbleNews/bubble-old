@@ -84,7 +84,7 @@ public class NewsDataRead {
     return getArticleVerticesHelper(prep);
   }
 
-  public Set<ArticleVertex> getArticleVertices(int maxNumArticles) throws SQLException {
+  public Set<ArticleVertex> getArticleVertices(String int maxNumArticles) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
         + "text FROM articles "
         + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < DATETIME('now') "

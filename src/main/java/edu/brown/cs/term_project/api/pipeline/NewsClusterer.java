@@ -74,6 +74,17 @@ public class NewsClusterer {
         }
       }
     }
+
+    edges.sort(Comparator.comparingDouble(Similarity::getDistance));
+    int size = edges.size();
+    for (int i = 0; i < size; i++) {
+      if (i < pulledArticles.size() || i > (size - 25)) {
+        Similarity tempEdge = edges.get(i);
+        System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
+            + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());
+      }
+    }
+
     return edges;
   }
 
