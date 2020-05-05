@@ -1,24 +1,12 @@
 package edu.brown.cs.term_project.database;
 
-import edu.brown.cs.term_project.bubble.Article;
-import edu.brown.cs.term_project.bubble.ArticleVertex;
-import edu.brown.cs.term_project.bubble.ArticleWord;
-import edu.brown.cs.term_project.bubble.Entity;
-import edu.brown.cs.term_project.bubble.Similarity;
-import edu.brown.cs.term_project.api.response.ChartCluster;
-import edu.brown.cs.term_project.clustering.Cluster;
-import edu.brown.cs.term_project.similarity.IWord;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
 
 public final class NewsData extends Database {
-  private Connection conn;
-  private NewsDataRead dataRead;
-  private NewsDataWrite dataWrite;
+  private final Connection conn;
+  private final NewsDataRead dataRead;
+  private final NewsDataWrite dataWrite;
 
   /**
    * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and

@@ -21,8 +21,10 @@ const color = d3.scaleOrdinal()
     .range(colors);
 
 let svg;
+let svgTransformed;
 
 function renderFirst(data, id, type) {
+    console.log('hello am i here');
     svg = d3.select("#bar" + id)
         .append("svg")
         .attr('width', width)
@@ -30,31 +32,35 @@ function renderFirst(data, id, type) {
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-const svgTransformed = svg.append('g')
-    .attr('class', 'bar-labels')
-    .attr('transform', `translate(${margin.left},0)`);
+    svgTransformed = svg.append('g')
+        .attr('class', 'bar-labels')
+        .attr('transform', `translate(${margin.left},0)`);
 
 // make a legend group
-const legend = svg.append('g')
-    .attr('class', 'legend')
-    .attr('transform', `translate(${innerWidth - 70},${innerHeight / 2})`)
-    .selectAll('myLabels')
-    .data(types)
-    .enter()
-    .append('g')
+    const legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', `translate(${innerWidth - 70},${innerHeight / 2})`)
+        .selectAll('myLabels')
+        .data(types)
+        .enter()
+        .append('g')
 
 // add dots to legend
-legend.append('circle')
-    .attr('cy', (d,i) => i * distanceBetweenDots)
-    .attr('r', dotRadius)
-    .attr('fill', d => color(d));
+    legend.append('circle')
+        .attr('cy', (d,i) => i * distanceBetweenDots)
+        .attr('r', dotRadius)
+        .attr('fill', d => color(d));
 
 // add labels to legend
-legend.append('text')
-    .attr('x', distanceBetweenLabelAndDot)
-    .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-    .attr('fill', d => color(d))
-    .text(d => d);
+    legend.append('text')
+        .attr('x', distanceBetweenLabelAndDot)
+        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+        .attr('fill', d => color(d))
+        .text(d => d);
+
+    setDataStuff(data, type);
+}
+
 
 let words;
 let relevantWords;
@@ -71,9 +77,6 @@ function updateDataAndRender(type) {
     console.log(relevantWords);
     renderBarPlot();
 }
-
-
-
 
 /**
  *
@@ -104,7 +107,6 @@ function renderBarPlot() {
     const groupsEnter = groups.enter().append('g');
     groupsEnter.merge(groups)
             .attr('transform', (d, i) => `translate(0,${y(i)})`);
-
 
     groups.exit().remove();
     // make bars

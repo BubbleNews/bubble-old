@@ -19,7 +19,6 @@ export function getClusterDetails(clusterId, type) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        renderChord(parsed);
         render(parsed, type);
     });
 }
@@ -36,13 +35,14 @@ function getEdgeDetails(id1, id2) {
 }
 
 function render(data, type) {
-
+    console.log('hello');
+    renderChord(data);
     renderFirst(data, data.clusterId, type);
     //setDataStuff(data, type);
     // renderChord(data);
 }
-
-getClusterDetails(2);
-getEdgeDetails(20, 61);
-
-getEdgeDetails(1, 2);
+//
+// getClusterDetails(2);
+// getEdgeDetails(20, 61);
+//
+// getEdgeDetails(1, 2);

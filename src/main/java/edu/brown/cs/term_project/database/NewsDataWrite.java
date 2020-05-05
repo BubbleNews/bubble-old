@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,9 +93,7 @@ public class NewsDataWrite {
       int articleId, HashMap<Entity, Integer> entityFrequencyMap) throws SQLException {
     // loop through all entities and insert
     for (Entity entity : entityFrequencyMap.keySet()) {
-      if (!(entity.getClassType().length() == 1)) {
         insertEntity(articleId, entity, entityFrequencyMap.get(entity));
-      }
     }
   }
 
@@ -111,7 +108,7 @@ public class NewsDataWrite {
    * @throws SQLException if there is an error inserting/updating into the database
    */
   private void insertEntity(int articleId, Entity entity, int numOccurrences) throws SQLException {
-    // first insert into entity
+    // insert literal entity word into the entity table if it hasn't been seen before
     PreparedStatement prep = conn.prepareStatement("INSERT OR IGNORE INTO entity (class, entity, "
         + "count) VALUES (?, ?, 0);");
     prep.setString(1, entity.getClassType());
@@ -119,6 +116,7 @@ public class NewsDataWrite {
     prep.execute();
     prep.close();
 
+    // add 1 to document frequency (always guaranteed that this article hasn't been seen yet)
     PreparedStatement prep2 = conn.prepareStatement("UPDATE entity SET count = count + 1 WHERE "
         + "entity = ? AND class = ?;");
     prep2.setString(1, entity.getWord());
@@ -126,6 +124,7 @@ public class NewsDataWrite {
     prep2.execute();
     prep2.close();
 
+    // adds pairing between article and count of entity
     PreparedStatement prep3 = conn.prepareStatement("INSERT INTO article_entity (article_id, "
         + "entity_class, entity_entity, count) VALUES (?, ?, ?, ?);");
     prep3.setInt(1, articleId);
@@ -177,7 +176,7 @@ public class NewsDataWrite {
   public void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
     Calendar rightNow = Calendar.getInstance();
     int hour = rightNow.get(Calendar.HOUR_OF_DAY);
-    Boolean finalCluster = (hour == 23);
+    boolean finalCluster = (hour == 23);
     for (Cluster<ArticleVertex, Similarity> c : clusters) {
       insertCluster(c, hour, finalCluster);
       int clusterId = getClusterId(c.getHeadNode().getId());
