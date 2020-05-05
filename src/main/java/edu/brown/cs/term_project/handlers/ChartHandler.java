@@ -37,20 +37,18 @@ public final class ChartHandler {
 
 
       String date = year + "-" + month + "-" + day;
+      List<ChartCluster> clusters = new ArrayList<>();
 
       if (today.equals("true")) {
-        db.getMostRecent()
+        clusters = db.getMostRecent();
       } else if (offset > 0) {
-        db.getClusters(date, offset, 1)
+        clusters = db.getClusters(date, offset, 1);
       } else {
-        db.getClusters(date, 24 + offset, 0)
+        clusters = db.getClusters(date, 24 + offset, 0);
       }
 
 
-
-
       // query database for clusters from given date
-      List<ChartCluster> clusters = db.getClusters(dateString);
 
       // sort by size
       Comparator<ChartCluster> compareBySize =
