@@ -1,16 +1,16 @@
 import { renderChord } from './chord-diagram.js';
-import { renderBarPlot, setDataStuff, reRender } from './barchart.js';
+import { renderBarPlot, setDataStuff, updateDataAndRender } from './barchart.js';
 export { getClusterDetails};
 
 // assigns on click functionality to buttons
 document.getElementsByClassName("btn btn-info")[0].addEventListener("click", () => {
-    getClusterDetails(2,'entity')});
+    updateDataAndRender('entity')});
 document.getElementsByClassName("btn btn-info")[1].addEventListener("click", () => {
-    getClusterDetails(2,'text')});
+    updateDataAndRender('text')});
 document.getElementsByClassName("btn btn-info")[2].addEventListener("click", () => {
-    getClusterDetails(2,'title')});
+    updateDataAndRender('title')});
 document.getElementsByClassName("btn btn-info")[3].addEventListener("click", () => {
-    getClusterDetails(2,'all')});
+    updateDataAndRender('all')});
 
 function getClusterDetails(clusterId, type) {
     let clusterUrl = 'api/details';
@@ -35,10 +35,7 @@ function getEdgeDetails(id1, id2) {
 }
 
 function render(data, type) {
-    console.log('test');
     setDataStuff(data, type);
-    reRender();
-
     // renderChord(data);
 }
 

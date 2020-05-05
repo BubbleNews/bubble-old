@@ -1,4 +1,4 @@
-export { renderBarPlot, setDataStuff, reRender };
+export { renderBarPlot, setDataStuff, updateDataAndRender };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
@@ -29,13 +29,39 @@ const svg = d3.select(".bar-chart")
         .attr('class', 'bar-labels')
         .attr('transform', `translate(${margin.left},0)`);
 
-let dataouter;
+// // make a legend group
+// const legend = svg.append('g')
+//     .attr('class', 'legend')
+//     .attr('transform', `translate(400,200)`)
+//     .selectAll('myLabels')
+//     .data(types)
+//     .enter()
+//     .append('g')
+//
+// // add dots to legend
+// legend.append('circle')
+//     .attr('cy', (d,i) => i * distanceBetweenDots)
+//     .attr('r', dotRadius)
+//     .attr('fill', d => color(d));
+//
+// // add labels to legend
+// legend.append('text')
+//     .attr('x', distanceBetweenLabelAndDot)
+//     .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+//     .attr('fill', d => color(d))
+//     .text(d => console.log(d));
+
+let storedData;
 let words;
 let relevantWords;
 
 function setDataStuff(data, type) {
-    dataouter = data;
-    words = formatBarPlotData(data, type);
+    storedData = data;
+    updateDataAndRender(type);
+}
+
+function updateDataAndRender(type) {
+    words = formatBarPlotData(storedData, type);
     relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
     renderBarPlot();
 }
@@ -60,78 +86,41 @@ function renderBarPlot() {
         .range([0, innerHeight])
         .padding(0.1);
 
-    // const yAxis = g =>
-    //     g.attr('transform', `translate(${margin.left},0)`)
-    //         .call(d3.axisLeft(y).tickSize(0));
-    // svg.append('g').call(yAxis);
-
-    console.log(relevantWords);
+    // does the data join with a group
+    // TODO: use the new selection.join syntax
     const groups = svg.selectAll('g')
         .data(relevantWords);
-
     const groupsEnter = groups.enter().append('g');
     groupsEnter
         .merge(groups)
             .attr('transform', (d, i) => `translate(0,${y(i)})`);
     groups.exit().remove();
-
+    // make bars
     groupsEnter.append('rect')
         .merge(groups.select('rect'))
             .attr('width', d => x(d.value))
             .attr('height', y.bandwidth())
             .attr('fill', d => color(d.type));
-
+    // labels for bars
     groupsEnter.append('text')
         .merge(groups.select('text'))
         .attr('x', -labelPadding)
         .attr('y', y.bandwidth() / 2)
         .attr('text-anchor', 'end')
         .text(d => d.word);
-
-    // svg.selectAll('rect')
-    //     .data(relevantWords)
-    //     .join('rect')
-    //     .attr('x', 0)
-    //     .attr('y', (d, i) => y(i))
-    //     .attr('width', d => x(d.value))
-    //     .attr('height', y.bandwidth())
-    //     .attr('fill', d => color(d.type));
-    //
-    // svg.selectAll('text')
-    //     .data(relevantWords)
-    //     .join('text')
-    //     .attr('x', -labelPadding)
-    //     .attr('y', (d, i) => y(i) + y.bandwidth() / 2)
-    //     .attr('text-anchor', 'end')
-    //     .text(d => d.word);
-
-    // make a legend group
-    const legend = svg.append('g')
-        .attr('class', 'legend')
-        .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
-        .selectAll('myLabels')
-        .data(types)
-        .enter()
-        .append('g')
-        .on('click', d => {
-            console.log(d);
-            setDataStuff(dataouter, d);
-        });
-
-    // add dots to legend
-    legend.append('circle')
-        .attr('cy', (d,i) => i * distanceBetweenDots)
-        .attr('r', dotRadius)
-        .attr('fill', d => color(d));
-
-    // add labels to legend
-    legend.append('text')
-        .attr('x', distanceBetweenLabelAndDot)
-        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-        .attr('fill', d => color(d))
-        .text(d => d);
 }
 
+/**
+ * Only display the appropriate number of bars which is the minimum of:
+ * - number of bars needed to sum up to thresholdPercent of the total edge/article/cluster score
+ * - maxBars
+ * @param words - input array of words
+ * @param thresholdPercent - decimal percent of how much cluster to reveal (higher number
+ * means more bars will be displayed and 1 means all bars will be displayed)
+ * @param maxBars - maximum number of bars to show (sometimes less bars than this will be shown
+ * depending on thresholdPercent)
+ * @returns {*}
+ */
 function sliceWords(words, thresholdPercent, maxBars) {
     let sum = 0;
     words.forEach(w => sum += w.value);
@@ -148,9 +137,9 @@ function sliceWords(words, thresholdPercent, maxBars) {
 }
 
 /**
- *
- * @param hashmaps
- * @param type
+ * Convert data from the format received from the Java Handler to arrays for d3
+ * @param hashmaps - object received from DetailClusterHandler or EdgeHandler
+ * @param type - the kind of words to show. One of: 'all','text','entity','title'
  * @returns []
  */
 function formatBarPlotData(hashmaps, type) {
@@ -182,6 +171,13 @@ function formatBarPlotData(hashmaps, type) {
     return data;
 }
 
+/**
+ * Converts JS object to array of smaller JS objects where each position in the array
+ * is a key, value pair of the original map
+ * @param map - object to convert
+ * @param type - one of: 'all','text','entity','title'
+ * @param arr - array to add objects to
+ */
 function addToArray(map, type, arr) {
     for (let word in map) {
         arr.push({
@@ -190,12 +186,5 @@ function addToArray(map, type, arr) {
             value: map[word]
         })
     }
-}
-
-function reRender() {
-    // relevantWords.pop();
-    // setTimeout(() => {
-    //     renderBarPlot()
-    // }, 1000);
 }
 
