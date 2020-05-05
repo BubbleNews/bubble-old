@@ -5,7 +5,6 @@ export { renderChord };
 // map from article ID -> index in matrix array
 let indices = {};
 
-
 /**
  * Render the chord diagram
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
@@ -24,8 +23,7 @@ function renderChord(parsed) {
     const padAngle = min + (max - min) * parsed.clusterRadius
     const textWidth = 250;
     let total = 0;
-    let i;
-    for (i = 0; i < parsed.edges.length; i++) {  //loop through the array
+    for (let i = 0; i < parsed.edges.length; i++) {  //loop through the array
         total += parsed.edges[i].totalDistance;  //Do the math!
     }
 
@@ -45,21 +43,21 @@ function renderChord(parsed) {
         .append('g')
         .attr('transform', `translate(${margin.left + outerRadius},${margin.top + outerRadius})`);
 
-    //
+    // make inner flowy bits
     const chords = d3.chord()
         .padAngle(padAngle)
         .sortSubgroups(d3.descending)(matrix);
 
-    //
+    // make outer circle bits
     const arc = d3.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius);
 
-    //
+    // color scale
     const color = d3.scaleOrdinal(d3.schemeCategory10);
     const ribbon = d3.ribbon().radius(innerRadius);
 
-    //
+    // group for the actual chord diagram elements
     const group = svg.selectAll('g')
         .data(chords.groups)
         .join('g')

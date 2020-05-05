@@ -66,17 +66,6 @@
                                    max="1"
                                    value=".5" step="0.01">
 
-                            <select name="clusterMethod" class="browser-default custom-select">
-                                <option selected value="1">Cluster Method 1</option>
-                                <option value="2">Cluster Method 2</option>
-                            </select>
-
-                            <label for="edgeThreshold">Edge Percentage Threshold</label>
-                            <input name="edgeThreshold" type="number" class="form-control" id="edgeThreshold" min="0"
-                                   max="1"
-                                   step="0.01"
-                                   value="0.1">
-
                             <label for="numArticles">Maximum Number of Articles</label>
                             <input name="numArticles" type="number" class="form-control" id="numArticles" min="0"
                                    max="200"

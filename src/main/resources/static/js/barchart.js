@@ -1,6 +1,8 @@
-export { renderBarPlot, setDataStuff, renderFirst, updateDataAndRender };
+export { initializeBarChart, updateBarChart };
 
+//decimal percent of how much cluster to reveal (higher number -> more bars displayed; 1 -> all bars displayed)
 const numBarsToDisplayThresholdPercent = 0.95;
+// maximum number of bars to show (sometimes less bars than this will be shown depending on thresholdPercent)
 const maxBars = 20;
 const margin = {left: 60, right: 0, top: 10, bottom: 0};
 const labelPadding = 10;
@@ -20,23 +22,18 @@ const color = d3.scaleOrdinal()
     .domain(types)
     .range(colors);
 
-let svg;
 let svgTransformed;
 
-function renderFirst(data, id, type) {
-    console.log('hello am i here');
-    svg = d3.select("#bar" + id)
+function initializeBarChart(data, id, type) {
+    // make svg
+    const svg = d3.select("#bar" + id)
         .append("svg")
         .attr('width', width)
         .attr('height', height)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    svgTransformed = svg.append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`);
-
-// make a legend group
+    // make a legend group
     const legend = svg.append('g')
         .attr('class', 'legend')
         .attr('transform', `translate(${innerWidth - 70},${innerHeight / 2})`)
@@ -45,37 +42,30 @@ function renderFirst(data, id, type) {
         .enter()
         .append('g')
 
-// add dots to legend
+    // add dots to legend
     legend.append('circle')
         .attr('cy', (d,i) => i * distanceBetweenDots)
         .attr('r', dotRadius)
         .attr('fill', d => color(d));
 
-// add labels to legend
+    // add labels to legend
     legend.append('text')
         .attr('x', distanceBetweenLabelAndDot)
         .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
         .attr('fill', d => color(d))
         .text(d => d);
 
-    setDataStuff(data, type);
+    // translate to accommodate margins
+    svgTransformed = svg.append('g')
+        .attr('class', 'bar-labels')
+        .attr('transform', `translate(${margin.left},0)`);
+
+    updateBarChart(data, type);
 }
 
-
-let words;
-let relevantWords;
-let storedData;
-
-function setDataStuff(data, type) {
-    storedData = data;
-    updateDataAndRender(type);
-}
-
-function updateDataAndRender(type) {
-    words = formatBarPlotData(storedData, type);
-    relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
-    console.log(relevantWords);
-    renderBarPlot();
+function updateBarChart(data, type) {
+    const words = formatBarPlotData(data, type);
+    renderBarPlot(words);
 }
 
 /**
@@ -88,11 +78,10 @@ function updateDataAndRender(type) {
  * }
  * @param type
  */
-function renderBarPlot() {
-    console.log(height);
-
+function renderBarPlot(words) {
+    console.log(words);
     const x = d3.scaleLinear()
-        .domain(d3.extent(words.map(d => d.value)))
+        .domain([0,d3.max(words.map(d => d.value))])
         .range([0, innerWidth]);
 
     const y = d3.scaleBand()
@@ -103,7 +92,7 @@ function renderBarPlot() {
     // does the data join with a group
     // TODO: use the new selection.join syntax
     const groups = svgTransformed.selectAll('g')
-        .data(relevantWords);
+        .data(words);
     const groupsEnter = groups.enter().append('g');
     groupsEnter.merge(groups)
             .attr('transform', (d, i) => `translate(0,${y(i)})`);
@@ -129,16 +118,14 @@ function renderBarPlot() {
  * - number of bars needed to sum up to thresholdPercent of the total edge/article/cluster score
  * - maxBars
  * @param words - input array of words
- * @param thresholdPercent - decimal percent of how much cluster to reveal (higher number
- * means more bars will be displayed and 1 means all bars will be displayed)
- * @param maxBars - maximum number of bars to show (sometimes less bars than this will be shown
- * depending on thresholdPercent)
+ * @param thresholdPercent -
+ * @param maxBars -
  * @returns {*}
  */
-function sliceWords(words, thresholdPercent, maxBars) {
+function sliceWords(words) {
     let sum = 0;
     words.forEach(w => sum += w.value);
-    const threshold = sum * thresholdPercent;
+    const threshold = sum * numBarsToDisplayThresholdPercent;
 
     let numItems = 0;
     let increasingSum = 0;
@@ -146,6 +133,8 @@ function sliceWords(words, thresholdPercent, maxBars) {
         increasingSum += words[numItems].value;
         numItems++;
     }
+
+    console.log(`only displaying ${numItems} bars`);
 
     return words.slice(0, Math.min(numItems, maxBars));
 }
@@ -182,7 +171,8 @@ function formatBarPlotData(hashmaps, type) {
     }
 
     data.sort((a,b) => b.value - a.value);
-    return data;
+    console.log(data);
+    return sliceWords(data, maxBars);
 }
 
 /**

@@ -50,9 +50,9 @@ $(document).ready(() => {
             clusterMap.clear();
             $('#mainLoader').show();
             let reclusterEndpoint = 'api/recluster';
-            const date = $('#date').val();
+            const date = new Date($('#date').val());
             const isToday = isDateToday(date);
-            reclusterEndpoint += '?serialized' + $('#reclusterParams').serialize();
+            reclusterEndpoint += '?' + $('#reclusterParams').serialize();
             reclusterEndpoint += '?year=' + date.getFullYear();
             const originalMonth = date.getMonth() + 1;
             const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
@@ -73,6 +73,7 @@ $(document).ready(() => {
                         ' clusters found with these parameters</h2></div>');
                     $('#chartMessage').show();
                 }
+                let i;
                 for (i = 0; i < parsed.clusters.length; i++) {
                     appendCluster(parsed.clusters[i], true);
                 }
@@ -179,6 +180,7 @@ function getChart(date) {
 }
 
 function appendCluster(cluster, reclustered) {
+    clusterMap.set(cluster.clusterId, cluster);
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div class='card text-center'>"
@@ -261,7 +263,9 @@ function makeCluster(clusterId, articles) {
         let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
-        getClusterDetails(clusterId, articles.map(a => a.id), "all");
+        const meanRadius = clusterMap.get(clusterId).meanRadius;
+        const articleIds = articles.map(a => a.id);
+        getClusterDetails(clusterId, meanRadius, articleIds);
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 
