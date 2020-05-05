@@ -1,5 +1,5 @@
 import { renderChord } from './chord-diagram.js';
-import { renderBarPlot, setDataStuff, renderFirst } from './barchart.js';
+import { renderBarPlot, setDataStuff, updateDataAndRender, renderFirst } from './barchart.js';
 export { getEdgeDetails};
 
 export function getClusterDetails(clusterId, type) {
@@ -31,7 +31,7 @@ function getEdgeDetails(id1, id2) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        render(parsed, 'all');
+        setDataStuff(parsed.edge, 'all');
     });
 }
 

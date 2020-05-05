@@ -1,4 +1,4 @@
-export { renderBarPlot, setDataStuff, renderFirst };
+export { renderBarPlot, setDataStuff, renderFirst, updateDataAndRender };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
@@ -58,37 +58,20 @@ function renderFirst(data, id, type) {
 
 let words;
 let relevantWords;
+let storedData;
 
-function setDataStuff(datahash, type) {
-    const entities = datahash.entitySim;
-    const text = datahash.wordSim;
-    const title = datahash.titleSim;
-    const data = [];
+function setDataStuff(data, type) {
+    storedData = data;
+    updateDataAndRender(type);
+}
 
-    switch (type) {
-        case 'entity':
-            addToArray(entities, type, data);
-            break;
-
-        case 'text':
-            addToArray(text, type, data);
-            break;
-
-        case 'title':
-            addToArray(title, type, data);
-            break;
-
-        default:
-            addToArray(entities, 'entity', data);
-            addToArray(text, 'text', data);
-            addToArray(title, 'title', data);
-    }
-
-    data.sort((a,b) => b.value - a.value);
-    words = data;
+function updateDataAndRender(type) {
+    words = formatBarPlotData(storedData, type);
     relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
     renderBarPlot();
 }
+
+
 
 
 /**
@@ -168,34 +151,34 @@ function sliceWords(words, thresholdPercent, maxBars) {
  * @param type - the kind of words to show. One of: 'all','text','entity','title'
  * @returns []
  */
-// function formatBarPlotData(hashmaps, type) {
-//     const entities = hashmaps.entitySim;
-//     const text = hashmaps.wordSim;
-//     const title = hashmaps.titleSim;
-//     const data = [];
-//
-//     switch (type) {
-//         case 'entity':
-//             addToArray(entities, type, data);
-//             break;
-//
-//         case 'text':
-//             addToArray(text, type, data);
-//             break;
-//
-//         case 'title':
-//             addToArray(title, type, data);
-//             break;
-//
-//         default:
-//             addToArray(entities, 'entity', data);
-//             addToArray(text, 'text', data);
-//             addToArray(title, 'title', data);
-//     }
-//
-//     data.sort((a,b) => b.value - a.value);
-//     return data;
-// }
+function formatBarPlotData(hashmaps, type) {
+    const entities = hashmaps.entitySim;
+    const text = hashmaps.wordSim;
+    const title = hashmaps.titleSim;
+    const data = [];
+
+    switch (type) {
+        case 'entity':
+            addToArray(entities, type, data);
+            break;
+
+        case 'text':
+            addToArray(text, type, data);
+            break;
+
+        case 'title':
+            addToArray(title, type, data);
+            break;
+
+        default:
+            addToArray(entities, 'entity', data);
+            addToArray(text, 'text', data);
+            addToArray(title, 'title', data);
+    }
+
+    data.sort((a,b) => b.value - a.value);
+    return data;
+}
 
 /**
  * Converts JS object to array of smaller JS objects where each position in the array
