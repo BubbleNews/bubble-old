@@ -1,4 +1,4 @@
-package edu.brown.cs.term_project.api.response;
+package edu.brown.cs.term_project.Bubble;
 
 /**
  * Class for serializing a similarity edge;

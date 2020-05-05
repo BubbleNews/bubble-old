@@ -73,13 +73,14 @@
 
                             <label for="edgeThreshold">Edge Percentage Threshold</label>
                             <input name="edgeThreshold" type="number" class="form-control" id="edgeThreshold" min="0"
-                                   max="100"
-                                   value="75">
+                                   max="1"
+                                   step="0.01"
+                                   value="0.1">
 
                             <label for="numArticles">Maximum Number of Articles</label>
                             <input name="numArticles" type="number" class="form-control" id="numArticles" min="0"
                                    max="200"
-                                   value="75" style="margin-bottom: 5px;">
+                                   value="100" style="margin-bottom: 5px;">
                             <button class="btn btn-primary btn-sm" type="submit" style="margin: 5px auto;">Recluster</button>
                             <button id="resetButton" class="btn btn-blue-grey btn-sm"
                                     type="button" style="margin: 5px auto;">Reset</button>
