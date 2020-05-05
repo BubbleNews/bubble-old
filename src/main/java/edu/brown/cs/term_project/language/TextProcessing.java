@@ -11,7 +11,7 @@ import java.util.*;
  */
 public final class TextProcessing {
   private static final Set<String> ignoredEntities = new HashSet<>(
-          Arrays.asList("NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "O"));
+          Arrays.asList("NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "ORDINAL", "O"));
 
   /**
    * Private constructor that is only defined because this is a utility class
@@ -33,8 +33,9 @@ public final class TextProcessing {
       List<String> entityTypes = sent.nerTags();
       for (int i = 0; i < entityTypes.size(); i++) {
         String word = sent.word(i);
-        if (RemoveStopWords.testWord(word) && !TextProcessing.ignoredEntities.contains(word)) {
-          Entity entity = new Entity(word, entityTypes.get(i));
+        String entityType = entityTypes.get(i);
+        if (RemoveStopWords.testWord(word) && !TextProcessing.ignoredEntities.contains(entityType)) {
+          Entity entity = new Entity(word, entityType);
           if (entityFrequencies.containsKey(entity)) {
             entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
           } else {

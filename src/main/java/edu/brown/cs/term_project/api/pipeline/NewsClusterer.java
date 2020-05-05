@@ -88,8 +88,8 @@ public class NewsClusterer {
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//    ClusterParameters params = new ClusterParameters("", true, 1, 1, 1,  1, 75);
-//    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/bubble.db"));
-//    clusterer.clusterArticles(params);
+    ClusterParameters params = new ClusterParameters();
+    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/mock_data.db"));
+    clusterer.clusterArticles(params);
   }
 }

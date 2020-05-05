@@ -21,7 +21,7 @@ function renderChord(parsed) {
     const edgeOpacity = 0.67;
     const max = 5/parsed.numVertices;
     const min = .05
-    const padAngle = min + (max - min) * parsed.clusterRadius;
+    const padAngle = min + (max - min) * parsed.clusterRadius
     const textWidth = 250;
     let total = 0;
     let i;
