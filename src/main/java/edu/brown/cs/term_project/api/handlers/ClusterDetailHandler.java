@@ -42,6 +42,7 @@ public final class ClusterDetailHandler {
     ClusterDetailResponse detailResponse = new ClusterDetailResponse(0, "");
     try {
       QueryParamsMap qm = request.queryMap();
+      int clusterId = Integer.parseInt(qm.value("clusterId"));
       String serializedIds = qm.value("articleIds")
           .replace('[', '(')
           .replace(']', ')');
@@ -49,7 +50,8 @@ public final class ClusterDetailHandler {
 //      ClusterParameters params = new ClusterParameters(qm);
 
       // get set of articles of cluster with id clusterId
-      Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticleVerticesFromArticleIds(serializedIds);
+      Set<ArticleVertex> articlesFromCluster =
+          db.getDataRead().getArticleVerticesFromArticleIds(serializedIds);
 //      double meanRadius = db.getDataRead().getClusterMeanRadiusPercentile(clusterId);
       double meanRadius = 1;
 //        // fill article map
@@ -75,7 +77,7 @@ public final class ClusterDetailHandler {
       detailResponse.setNumVertices(articlesFromCluster.size());
       detailResponse.setClusterRadius(meanRadius);
       detailResponse.setTotals(aggEntities, aggWords, aggTitle);
-      detailResponse.setClusterId(1);
+      detailResponse.setClusterId(clusterId);
 
     } catch (Exception e) {
       detailResponse.setErrorMessage(e.getMessage());

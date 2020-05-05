@@ -193,8 +193,6 @@ function getClusterRequest(clusterId) {
 }
 
 function makeCluster(clusterId, articles) {
-    // add to cluster map
-    clusterMap.set(clusterId, articles);
     const divId = clusterId + 'articles';
     const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
         ' data-parent="#clusters">'
@@ -239,7 +237,7 @@ function makeCluster(clusterId, articles) {
         let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
-        getClusterDetails(clusterId, sourceMap.get(clusterId).map(a => a.id), "all");
+        getClusterDetails(clusterId, articles.map(a => a.id), "all");
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 

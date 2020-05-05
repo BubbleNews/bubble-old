@@ -17,7 +17,7 @@ export function getClusterDetails(clusterId, articleIds, type) {
 
     let clusterUrl = 'api/details';
     // add id to cluster base url
-    clusterUrl += '?articleIds=' + serializedArticleIds;
+    clusterUrl += '?clusterId=' + clusterId + '&articleIds=' + serializedArticleIds;
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
@@ -44,7 +44,7 @@ function render(data, type) {
     // renderChord(data);
 }
 
-getClusterDetails(2);
-getEdgeDetails(20, 61);
-
-getEdgeDetails(1, 2);
+// getClusterDetails(2);
+// getEdgeDetails(20, 61);
+//
+// getEdgeDetails(1, 2);
