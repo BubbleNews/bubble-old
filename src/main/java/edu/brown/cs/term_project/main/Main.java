@@ -119,7 +119,7 @@ public final class Main {
         get("/details", (Request request, Response response) -> {
           return ClusterDetailHandler.handle(request, response, DATABASE);
         });
-        post("/recluster", (Request request, Response response) -> {
+        get("/recluster", (Request request, Response response) -> {
           return ReclusterHandler.handle(request, response, DATABASE);
         });
         get("/edge", (Request request, Response response) -> {

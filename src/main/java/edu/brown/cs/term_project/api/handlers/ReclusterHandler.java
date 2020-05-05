@@ -6,6 +6,7 @@ import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.clustering.ClusterParameters;
 import edu.brown.cs.term_project.api.response.ChartResponse;
 import edu.brown.cs.term_project.api.pipeline.NewsClusterer;
+import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 import java.util.Comparator;
@@ -30,8 +31,9 @@ public final class ReclusterHandler {
   public static String handle(Request request, Response response, NewsData db) {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
+      QueryParamsMap qm = request.queryMap();
       // create a parameters object from the request parameters
-      ClusterParameters params = new ClusterParameters(request.queryMap());
+      ClusterParameters params = new ClusterParameters(qm);
       // make a new clusterer and cluster
       NewsClusterer clusterer = new NewsClusterer(db);
       List<ChartCluster> newClusters = clusterer.clusterArticles(params);
