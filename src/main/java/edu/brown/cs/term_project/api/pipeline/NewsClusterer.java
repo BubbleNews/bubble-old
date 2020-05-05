@@ -84,7 +84,7 @@ public class NewsClusterer {
     }
     return new ChartCluster(complexCluster.getId(),
         complexCluster.getHeadNode().getArticle().getTitle(),
-        complexCluster.getSize(), simpleArticles);
+        complexCluster.getSize(), complexCluster.getAvgRadius(), simpleArticles);
   }
 
   public static void main(String[] args) throws SQLException, ClassNotFoundException {

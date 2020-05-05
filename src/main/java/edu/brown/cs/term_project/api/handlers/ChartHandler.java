@@ -41,7 +41,7 @@ public final class ChartHandler {
       String month = qm.value("month");
       String day = qm.value("day");
       Integer offset = Integer.parseInt(qm.value("offset"));
-      String today = qm.value("today");
+      String today = qm.value("isToday");
 
 
       String date = year + "-" + month + "-" + day;

@@ -135,10 +135,14 @@ function getChart(date) {
         isToday = true;
     }
 
-    const originalMonth = date.getMonth() + 1;
+
     chartUrl += '?year=' + date.getFullYear();
-    chartUrl += '&month=' + (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-    chartUrl += '&day=' + date.getDate();
+    const originalMonth = date.getMonth() + 1;
+    const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
+    chartUrl += ('&month=' + newMonth);
+    const originalDay = date.getDate();
+    const newDay = (originalMonth < 10) ? '0' + originalDay: originalDay;
+    chartUrl += ('&day=' + newDay);
     chartUrl += '&offset=' + date.getTimezoneOffset() / 60;
     chartUrl += '&isToday=' + isToday;
     // send get request
