@@ -15,6 +15,12 @@ import java.util.*;
 public final class ChartHandler {
 
   /**
+   * Constructor - should never be called.
+   */
+  private ChartHandler() {
+  }
+
+  /**
    * Handles a request to the /chart API by getting the clusters for the inputted
    * day.
    * @param request the request

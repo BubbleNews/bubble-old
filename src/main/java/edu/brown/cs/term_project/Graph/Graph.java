@@ -23,7 +23,8 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
     this.clusters = new HashSet<>();
     System.out.println("nodes: " + nodes.size());
     System.out.println("edges: " + edges.size());
-    setThreshold(); // set threshold based on node count
+    // set default threshold so twice as many edges as nodes
+    this.threshold = Math.min(1.0 * nodes.size() / edges.size(), 1);
     System.out.println("thresh: " + threshold);
     ClusterMethods.setRadiusThreshold(nodes);
   }
@@ -45,13 +46,11 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
 
   /**
    * Sets the threshold (precent) for which edges to keep from the original graph.
+   *
+   * @param threshold the new threshold
    */
-  public void setThreshold() {
-    System.out.println(nodes.size());
-    System.out.println(edges.size());
-    this.threshold = Math.min(1.0 * nodes.size() / edges.size(), 1); //set so that number of edges
-    // will be
-    // twice the number of nodes
+  public void setThreshold(double threshold) {
+    this.threshold = threshold;
   }
 
   public Set<Cluster<T, S>> getClusters() {

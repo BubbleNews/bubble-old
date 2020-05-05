@@ -3,7 +3,6 @@ package edu.brown.cs.term_project.Bubble;
 import edu.brown.cs.term_project.Graph.IEdge;
 import edu.brown.cs.term_project.TextSimilarity.IWord;
 import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
-import edu.brown.cs.term_project.api.response.SimilarityJSON;
 
 import java.util.Map;
 
