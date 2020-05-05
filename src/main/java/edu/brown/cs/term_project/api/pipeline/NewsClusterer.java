@@ -27,7 +27,7 @@ public class NewsClusterer {
   }
 
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(params.getNumArticles());
+    Set<ArticleVertex> pulledArticles = db.getDataRead().getArticleVertices(params.getNumArticles());
     List<Similarity> edges = getEdges(pulledArticles, params);
     // sort edges
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
@@ -39,7 +39,7 @@ public class NewsClusterer {
     }
     graph.runClusters(params.getClusterMethod());
     if (params.getDoInsert()) {
-      db.insertClusters(graph.getClusters());
+      db.getDataWrite().insertClusters(graph.getClusters());
     }
     // create list of chart clusters
     List<ChartCluster> chartClusters = new ArrayList<>();
@@ -51,9 +51,9 @@ public class NewsClusterer {
 
   public List<Similarity> getEdges(Set<ArticleVertex> pulledArticles,
                                    ClusterParameters params) throws SQLException {
-    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
-    Map<Entity, Double> entityMap = db.getEntityFreq();
-    int maxCount = db.getMaxVocabCount();
+    Map<ArticleWord, Double> vocabMap = db.getDataRead().getVocabFreq();
+    Map<Entity, Double> entityMap = db.getDataRead().getEntityFreq();
+    int maxCount = db.getDataRead().getMaxVocabCount();
     TextCorpus<Entity, ArticleVertex> entityCorpus =
         new TextCorpus<>(entityMap, maxCount, 0);
     TextCorpus<ArticleWord, ArticleVertex> wordCorpus =

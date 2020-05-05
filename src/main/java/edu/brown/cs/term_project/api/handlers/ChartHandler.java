@@ -7,7 +7,8 @@ import edu.brown.cs.term_project.api.response.ChartResponse;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-import java.util.*;
+
+import java.util.List;
 
 /**
  * A class for handling requests to the /chart API.
@@ -35,7 +36,7 @@ public final class ChartHandler {
       QueryParamsMap qm = request.queryMap();
       String dateString = qm.value("date");
       // query database for clusters from given date
-      List<ChartCluster> clusters = db.getClusters(dateString);
+      List<ChartCluster> clusters = db.getDataRead().getClusters(dateString);
       // pass to front handler
       chartResponse.setClusters(clusters);
     } catch (Exception e) {

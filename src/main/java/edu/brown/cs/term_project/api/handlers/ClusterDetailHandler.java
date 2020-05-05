@@ -48,8 +48,8 @@ public final class ClusterDetailHandler {
       } else {
         int clusterId = Integer.parseInt(clusterIdStr);
         // get set of articles of cluster with id clusterId
-        Set<ArticleVertex> articlesFromCluster = db.getArticleVerticesFromCluster(clusterId);
-        double meanRadius = db.getClusterMeanRadiusPercentile(clusterId);
+        Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticleVerticesFromCluster(clusterId);
+        double meanRadius = db.getDataRead().getClusterMeanRadiusPercentile(clusterId);
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {
@@ -93,9 +93,9 @@ public final class ClusterDetailHandler {
     final double entityWeight = 1;
     final double titleWeight = 1;
     Set<Similarity> edges = new HashSet<>();
-    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
-    Map<Entity, Double> entityMap = db.getEntityFreq();
-    int maxCount = db.getMaxVocabCount();
+    Map<ArticleWord, Double> vocabMap = db.getDataRead().getVocabFreq();
+    Map<Entity, Double> entityMap = db.getDataRead().getEntityFreq();
+    int maxCount = db.getDataRead().getMaxVocabCount();
 
     TextCorpus<Entity, ArticleVertex> entityCorpus =
         new TextCorpus<>(entityMap, maxCount, 0);

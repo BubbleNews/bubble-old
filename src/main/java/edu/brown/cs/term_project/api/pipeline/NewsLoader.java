@@ -117,7 +117,7 @@ public class NewsLoader {
       article.setContent(String.join("~^", lemmizedText));
       System.out.println("Updating database");
       // insert article and its entities into the database
-      db.insertArticleAndEntities(article, entityFrequencies);
+      db.getDataWrite().insertArticleAndEntities(article, entityFrequencies);
       // add to the total batch word occurrence map
       Set<String> uniqueWords = new HashSet<>(Arrays.asList(lemmizedTextAndTitle));
       for (String uniqueWord: uniqueWords) {
@@ -130,7 +130,7 @@ public class NewsLoader {
 //      TextProcessing.updateOccurrenceMap(occurenceMap, lemmizedTextAndTitle);
     }
     // update vocab counts in database
-    db.updateVocabCounts(occurenceMap);
+    db.getDataWrite().updateVocabCounts(occurenceMap);
   }
 
   public static void main(String[] args) throws Exception {

@@ -40,7 +40,7 @@ public final class ClusterHandler {
       } else {
         // get list of articles for cluster
         int clusterId = Integer.parseInt(clusterIdStr);
-        List<Article> articlesFromCluster = db.getArticlesFromCluster(clusterId);
+        List<Article> articlesFromCluster = db.getDataRead().getArticlesFromCluster(clusterId);
         clusterResponse.setArticles(articlesFromCluster);
       }
     } catch (Exception e) {
