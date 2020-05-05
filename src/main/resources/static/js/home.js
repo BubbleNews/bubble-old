@@ -86,9 +86,12 @@ $('#date').datepicker();
 
 function dateClickHandler() {
     let dateVal = $('#date').val();
-    const dateString = new Date(dateVal).toLocaleDateString();
-    $('#date').val(dateString);
-    dateVal = $('#date').val();
+    const dateDashed = dateVal.split("-");
+    if (dateDashed.length === 3) {
+        const dateString = dateDashed[1] + '/' + dateDashed[2] + '/' + dateDashed[0]
+        $('#date').val(dateString);
+        dateVal = dateString;
+    }
     const dateArr = dateVal.split('/').map(x => parseInt(x));
     const date = new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
     console.log(date);

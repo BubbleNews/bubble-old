@@ -22,7 +22,8 @@
             </div>
             <div class="row">
                 <div class="col my-auto">
-            <button class="btn btn-primary btn-lg"  id="dateButton" type="button">Show</button>
+            <button class="btn btn-primary btn-lg"  id="dateButton" type="button"
+            style="margin-top: 1em;">Show</button>
                 </div>
             </div>
         </div>
