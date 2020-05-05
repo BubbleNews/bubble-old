@@ -11,10 +11,9 @@ let indices = {};
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
  */
 function renderChord(parsed) {
-    console.log(parsed);
-    const margin = {top:70, left: 500, right: 500, bottom: 10};
+    const margin = {top:180, left: 400, right: 400, bottom: 180};
     const width = 1500
-    const height = 700;
+    const height = 700 + margin.top + margin.bottom;
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
     const aspect = width / height;
@@ -25,7 +24,7 @@ function renderChord(parsed) {
     const max = 5/parsed.numVertices;
     const min = .05
     const padAngle = min + (max - min) * parsed.clusterRadius;
-    const textWidth = 125;
+    const textWidth = 250;
     let total = 0;
     let i;
     for (i = 0; i < parsed.edges.length; i++) {  //loop through the array
@@ -81,7 +80,8 @@ function renderChord(parsed) {
             translate(${outerRadius + textGap},0) rotate(${-1 * (d.angle * 180 / Math.PI - 90)})`)
         .attr('text-anchor', "middle")
         .append('text')
-            .text(d => d.title);
+            .text(d => d.title)
+        .attr("font-size", "25px")
 
     // Wraps text to a specific text width
     group.selectAll('text')
@@ -168,9 +168,9 @@ function wrap(text, width) {
  */
 function getHeight(d, lines) {
         if (Math.cos(d.angle) > 0) {
-            return -12 * Math.cos(d.angle) * (lines);
+            return -25 * Math.cos(d.angle) * (lines);
         } else {
-            return -20 * Math.cos(d.angle);
+            return -28 * Math.cos(d.angle);
         }
     }
 
@@ -183,9 +183,9 @@ function getHeight(d, lines) {
  */
 function getWidth(d, lines, textWidth) {
     if (Math.cos(d.angle) > 0) {
-        return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*15*(lines);
+        return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*20*(lines);
     } else {
-        return Math.sin(d.angle) * (textWidth / 2) - + Math.sin(d.angle)*Math.cos(d.angle)*3;
+        return Math.sin(d.angle) * (textWidth / 2) - + Math.sin(d.angle)*Math.cos(d.angle)*20;
     }
 }
 
@@ -300,8 +300,6 @@ function boxPlot(data, point) {
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    console.log(data);
-
 // Compute summary statistics used for the box:
     let sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
         .key(d => "true")
@@ -315,9 +313,6 @@ function boxPlot(data, point) {
             return({q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max})
         })
         .entries(data);
-
-    console.log("hi");
-    console.log(sumstat);
 
     // Show the Y scale
     const y = d3.scaleBand()
@@ -378,8 +373,6 @@ function boxPlot(data, point) {
         .style("width", 40);
 
     // rectangle for the main box
-
-    console.log(x(sumstat[0].value.q3))//-x(sumstat[0].value.q1))
     svg
         .selectAll("boxes")
         .data(sumstat)
