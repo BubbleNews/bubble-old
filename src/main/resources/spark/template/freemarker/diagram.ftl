@@ -7,13 +7,13 @@
 </head>
 <body>
 <h>Diagram!</h>
-<button type="button" class="btn btn-info">Entity</button>
-<button type="button" class="btn btn-info">Text</button>
-<button type="button" class="btn btn-info">Title</button>
-<button type="button" class="btn btn-info">All</button>
-<div class="chord-chart"></div>
+<button type="button" class="entityBut2">Entity</button>
+<button type="button" class="textBut2">Text</button>
+<button type="button" class="titleBut2">Title</button>
+<button type="button" class="allBut2">All</button>
+<div id="chord2" class="chord-chart"></div>
 <div id="box-plot"></div>
-<div class="bar-chart"></div>
+<div id="bar2" class="bar-chart"></div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>

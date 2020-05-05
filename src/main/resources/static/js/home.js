@@ -237,7 +237,7 @@ function makeCluster(clusterId, articles) {
         let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
-        getClusterDetails(clusterId, articles.map(a => a.id), "all");
+        getClusterDetails(clusterId, articles.map(a => a.id));
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 

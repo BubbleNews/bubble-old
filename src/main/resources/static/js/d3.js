@@ -1,27 +1,30 @@
 import { renderChord } from './chord-diagram.js';
-import { renderBarPlot, setDataStuff, updateDataAndRender, renderFirst } from './barchart.js';
-export { getEdgeDetails};
+import { updateBarChart, initializeBarChart } from './barchart.js';
+export { getEdgeDetails, getClusterDetails};
 
-export function getClusterDetails(clusterId, articleIds, type) {
+let clusterIdState;
+let clusterData;
+let edgeData;
 
-    $('.entityBut' + clusterId).click(function() {
-        updateDataAndRender('entity')});
-    $('.textBut' + clusterId).click(function() {
-        updateDataAndRender('text')});
-    $('.titleBut' + clusterId).click(function() {
-        updateDataAndRender('title')});
-    $('.allBut' + clusterId).click(function() {
-        updateDataAndRender('all')});
+function getClusterDetails(clusterId, articleIds) {
+    // this will be used to select the appropriate svg elements
+    clusterIdState = clusterId;
+
+    // set up buttons
+    $('.entityBut' + clusterId).click(() => updateDashboardByType('entity'));
+    $('.textBut' + clusterId).click(() => updateDashboardByType('text'));
+    $('.titleBut' + clusterId).click(() => updateDashboardByType('title'));
+    $('.allBut' + clusterId).click(() => updateDashboardByType('all'));
 
     const serializedArticleIds = JSON.stringify(articleIds);
+    const clusterUrl = `api/details?clusterId=${clusterId}&articleIds=${serializedArticleIds}`;
 
-    let clusterUrl = 'api/details';
-    // add id to cluster base url
-    clusterUrl += '?clusterId=' + clusterId + '&articleIds=' + serializedArticleIds;
+    clusterIdState = clusterId;
     // send get request
     $.get(clusterUrl, response => {
-        const parsed = JSON.parse(response);
-        render(parsed, type);
+        clusterData = JSON.parse(response);
+        console.log(clusterData);
+        initializeBarChart(clusterData, clusterIdState, 'all');
     });
 }
 
@@ -32,19 +35,17 @@ function getEdgeDetails(id1, id2) {
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
-        setDataStuff(parsed.edge, 'all');
+        edgeData = parsed.edge;
+        console.log(parsed);
+
+        updateBarChart(parsed.edge, 'all');
     });
 }
 
-function render(data, type) {
-    console.log('hello');
-    renderChord(data);
-    renderFirst(data, data.clusterId, type);
-    //setDataStuff(data, type);
-    // renderChord(data);
+function updateDashboardByType(type) {
+    // renderChord(clusterData);
+    updateBarChart(clusterData, type);
 }
 
-// getClusterDetails(2);
-// getEdgeDetails(20, 61);
-//
-// getEdgeDetails(1, 2);
+getClusterDetails(2, [6,58,13,39,63]);
+// getEdgeDetails(6, 58);
