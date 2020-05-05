@@ -230,7 +230,7 @@ h4 {
 
 @media screen and (max-width: 768px) {
     .sticky-top {
-        position:relative !important;
+        position: static !important;
     }
 }
 
@@ -240,4 +240,12 @@ h4 {
 
 .container {
     min-width: 90%;
+}
+
+.modal-footer {
+    justify-content: center;
+}
+
+.tab-pane {
+    background-color: white;
 }

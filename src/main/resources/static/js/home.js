@@ -71,22 +71,23 @@ $(document).ready(() => {
     });
 
     $('#resetButton').click(function() {
+        addDate();
         dateClickHandler();
     });
 });
 
 
 function addDate() {
-    const today = new Date().toISOString().split('T')[0].split('-');
-    $('#date').val(today[1] + '/' + today[2] + '/' + today[0]);
+    const today = new Date().toLocaleDateString()
+    $('#date').val(today);
 }
 
 $('#date').datepicker();
 
 function dateClickHandler() {
     let dateVal = $('#date').val();
-    const dateString = new Date(dateVal).toISOString().split('T')[0].split('-');
-    $('#date').val(dateString[1] + '/' + dateString[2] + '/' + dateString[0]);
+    const dateString = new Date(dateVal).toLocaleDateString();
+    $('#date').val(dateString);
     dateVal = $('#date').val();
     const dateArr = dateVal.split('/').map(x => parseInt(x));
     const date = new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);

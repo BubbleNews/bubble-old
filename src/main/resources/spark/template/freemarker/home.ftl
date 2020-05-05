@@ -74,17 +74,19 @@
                             <label for="numArticles">Maximum Number of Articles</label>
                             <input name="numArticles" type="number" class="form-control" id="numArticles" min="0"
                                    max="200"
-                                   value="75">
-                            <button class="btn btn-primary btn-sm" type="submit" style="margin:
-                            auto; margin-bottom: 10px; margin-top: 10px;">Recluster</button>
-                            <button id="resetButton" class="btn btn-blue-grey btn-sm" type="button" style="margin:auto; margin-bottom:10px;">Reset</button>
+                                   value="75" style="margin-bottom: 5px;">
+                            <button class="btn btn-primary btn-sm" type="submit" style="margin: 5px auto;">Recluster</button>
+                            <button id="resetButton" class="btn btn-blue-grey btn-sm"
+                                    type="button" style="margin: 5px auto;">Reset</button>
                         </div>
                     </form>
+                    <button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"
+                            style="
+                    margin-bottom:10px;" data-toggle="modal" data-target="#infoModal">
+                        Info
+                    </button>
                 </div>
             </div>
-            <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
-            <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
-            <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
             <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
         </div>
         <div id="mainWindow" class="col-lg-8">
@@ -96,6 +98,23 @@
             </div>
             <div class="accordion" id="clusters"></div>
             <div class="hidden-lg hidden-md hidden-sm">&nbsp;</div>
+        </div>
+        <div class="modal fade right" tabindex="-1" role="dialog" id="infoModal">
+            <div class="modal-dialog modal-full-height modal-right" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">How Bubble Works</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
