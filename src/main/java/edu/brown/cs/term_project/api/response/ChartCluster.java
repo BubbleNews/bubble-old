@@ -11,12 +11,15 @@ public class ChartCluster {
     private int clusterId;
     private String headline;
     private int size;
+    private double meanRadius;
     private List<Article> articles;
 
-    public ChartCluster(int clusterId, String headline, int size, List<Article> articles) {
+    public ChartCluster(int clusterId, String headline, int size,
+                        double meanRadius, List<Article> articles) {
         this.clusterId = clusterId;
         this.headline = headline;
         this.size = size;
+        this.meanRadius = meanRadius;
         this.articles = articles;
     }
 

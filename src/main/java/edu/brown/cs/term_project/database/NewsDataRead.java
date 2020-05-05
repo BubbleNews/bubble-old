@@ -175,30 +175,47 @@ public class NewsDataRead {
    * Gets the clusters for a given day. This will be passed to the front end.
    *
    * @param date the date to search for (java.util.Date)
+   * @param hours the amount to off set the hours
+   * @param addDays the amount of days to add to the date passed in
    * @return a set of cluster objects
    * @throws SQLException only thrown if the database is malformed
    */
-  public List<ChartCluster> getClusters(String date) throws SQLException {
-    String query =
-        "SELECT id, title, size FROM clusters WHERE day = ? ORDER BY size desc";
-    //        String query = "SELECT id, title, size FROM clusters";
+  public List<ChartCluster> getClusters(String date, int hours, int addDays) throws SQLException {
+    String query = "SELECT id, title, size, avg_radius FROM clusters WHERE day = DATE(?, ?) AND hour = ?;";
     PreparedStatement prep = conn.prepareStatement(query);
     prep.setString(1, date);
+    String daysToAdd = "+" + addDays + " days";
+    prep.setString(2, daysToAdd);
+    prep.setInt(3, hours);
     ResultSet rs = prep.executeQuery();
     List<ChartCluster> clusters = new ArrayList<>();
     while (rs.next()) {
       int clusterId = rs.getInt(1);
       String headline = rs.getString(2);
       int size = rs.getInt(3);
+      double meanRadius = rs.getDouble(4);
       List<Article> articles = new ArrayList<>();
-//      articles = getArticlesFromCluster(clusterId);
-      ChartCluster cluster = new ChartCluster(clusterId, headline, size, articles);
+      //articles = getArticlesFromCluster(clusterId);
+      ChartCluster cluster = new ChartCluster(clusterId, headline, size, meanRadius, articles);
       clusters.add(cluster);
     }
     return clusters;
   }
 
-  // TODO: Don't test
+
+  public List<ChartCluster> getNewestClusters() throws SQLException {
+    String query = "SELECT day, hour FROM clusters ORDER BY day DESC, hour DESC LIMIT 1;";
+    PreparedStatement prep = conn.prepareStatement(query);
+    ResultSet rs = prep.executeQuery();
+    List<ChartCluster> clusters = new ArrayList<>();
+    if (rs.next()) {
+      String day = rs.getString(1);
+      int hour = rs.getInt(2);
+      clusters = getClusters(day, hour, 0);
+    }
+    return clusters;
+  }
+
   /**
    * Gets the clusters for a given day. This will be passed to the front end.
    *
