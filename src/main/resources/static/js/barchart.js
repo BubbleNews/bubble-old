@@ -24,33 +24,10 @@ const svg = d3.select(".bar-chart")
         .attr('width', width)
         .attr('height', height)
         .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
-
-// make a legend group
-const legend = svg.append('g')
-    .attr('class', 'legend')
-    .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
-    .selectAll('myLabels')
-    .data(types)
-    .enter()
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .append('g')
-    .on('click', d => {
-        console.log(d);
-        setDataStuff(dataouter, d);
-    });
-
-// add dots to legend
-legend.append('circle')
-    .attr('cy', (d,i) => i * distanceBetweenDots)
-    .attr('r', dotRadius)
-    .attr('fill', d => color(d));
-
-// add labels to legend
-legend.append('text')
-    .attr('x', distanceBetweenLabelAndDot)
-    .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-    .attr('fill', d => color(d))
-    .text(d => d);
+        .attr('class', 'bar-labels')
+        .attr('transform', `translate(${margin.left},0)`);
 
 let dataouter;
 let words;
@@ -88,15 +65,9 @@ function renderBarPlot() {
     //         .call(d3.axisLeft(y).tickSize(0));
     // svg.append('g').call(yAxis);
 
-    const barLabels = svg.append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`)
-
     console.log(relevantWords);
-    const groups = barLabels.selectAll('.bar-labels')
+    const groups = svg.selectAll('g')
         .data(relevantWords);
-
-    console.log(groups);
 
     const groupsEnter = groups.enter().append('g');
     groupsEnter
@@ -133,6 +104,32 @@ function renderBarPlot() {
     //     .attr('y', (d, i) => y(i) + y.bandwidth() / 2)
     //     .attr('text-anchor', 'end')
     //     .text(d => d.word);
+
+    // make a legend group
+    const legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', `translate(${innerWidth - 100},${innerHeight - 100})`)
+        .selectAll('myLabels')
+        .data(types)
+        .enter()
+        .append('g')
+        .on('click', d => {
+            console.log(d);
+            setDataStuff(dataouter, d);
+        });
+
+    // add dots to legend
+    legend.append('circle')
+        .attr('cy', (d,i) => i * distanceBetweenDots)
+        .attr('r', dotRadius)
+        .attr('fill', d => color(d));
+
+    // add labels to legend
+    legend.append('text')
+        .attr('x', distanceBetweenLabelAndDot)
+        .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+        .attr('fill', d => color(d))
+        .text(d => d);
 }
 
 function sliceWords(words, thresholdPercent, maxBars) {
