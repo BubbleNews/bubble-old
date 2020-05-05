@@ -50,9 +50,9 @@ $(document).ready(() => {
             clusterMap.clear();
             $('#mainLoader').show();
             let reclusterEndpoint = 'api/recluster';
-            const date = $('#date').val();
+            const date = new Date($('#date').val());
             const isToday = isDateToday(date);
-            reclusterEndpoint += '?serialized' + $('#reclusterParams').serialize();
+            reclusterEndpoint += '?' + $('#reclusterParams').serialize();
             reclusterEndpoint += '?year=' + date.getFullYear();
             const originalMonth = date.getMonth() + 1;
             const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
