@@ -52,16 +52,17 @@ $(document).ready(() => {
             let reclusterEndpoint = 'api/recluster';
             const date = new Date($('#date').val());
             const isToday = isDateToday(date);
-            reclusterEndpoint += '?' + $('#reclusterParams').serialize();
-            reclusterEndpoint += '?year=' + date.getFullYear();
+            const year = date.getFullYear();
             const originalMonth = date.getMonth() + 1;
             const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-            reclusterEndpoint += ('&month=' + newMonth);
             const originalDay = date.getDate();
             const newDay = (originalMonth < 10) ? '0' + originalDay: originalDay;
-            reclusterEndpoint += ('&day=' + newDay);
-            reclusterEndpoint += '&offset=' + date.getTimezoneOffset() / 60;
-            reclusterEndpoint += '&isToday=' + isToday;
+            const offset = date.getTimezoneOffset() / 60;
+            const serializedClusterParams = $('#reclusterParams').serialize();
+
+            reclusterEndpoint += `?year=${year}&month=${newMonth}&day=${newDay}
+                &offset${offset}&${serializedClusterParams}`;
+
             $.get(reclusterEndpoint, function(data) {
                 const parsed = JSON.parse(data);
                 $('#mainLoader').hide();
