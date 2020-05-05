@@ -11,7 +11,7 @@
 <button type="button" class="btn btn-info">Text</button>
 <button type="button" class="btn btn-info">Title</button>
 <button type="button" class="btn btn-info">All</button>
-<div id="chords" class="chord-chart"></div>
+<div class="chord-chart"></div>
 <div id="box-plot"></div>
 <div class="bar-chart"></div>
 

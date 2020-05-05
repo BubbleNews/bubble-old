@@ -29,8 +29,6 @@ const svg = d3.select(".bar-chart")
         .attr('class', 'bar-labels')
         .attr('transform', `translate(${margin.left},0)`);
 
-const t = svg.transition()
-    .duration(750);
 
 // // make a legend group
 // const legend = svg.append('g')
@@ -94,10 +92,7 @@ function renderBarPlot() {
     const groups = svg.selectAll('g')
         .data(relevantWords);
     const groupsEnter = groups.enter().append('g');
-    groupsEnter.call(enter => enter.transition(t)
-        .attr('transform', (d, i) => `translate(0,${y(i)})`));
-    groupsEnter
-        .merge(groups)
+    groupsEnter.merge(groups)
             .attr('transform', (d, i) => `translate(0,${y(i)})`);
 
 

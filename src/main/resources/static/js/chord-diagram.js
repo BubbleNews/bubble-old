@@ -1,4 +1,4 @@
-import { getClusterDetails } from './d3.js';
+import { getEdgeDetails } from './d3.js';
 export { renderChord };
 
 
@@ -24,7 +24,7 @@ function renderChord(parsed) {
     const edgeOpacity = 0.67;
     const max = 5/parsed.numVertices;
     const min = .05
-    const padAngle = min + (max - min)*parsed.clusterRadius;
+    const padAngle = min + (max - min) * parsed.clusterRadius;
     const textWidth = 250;
     let total = 0;
     let i;
@@ -37,10 +37,8 @@ function renderChord(parsed) {
     const titles = arr[0];
     const matrix = arr[1];
 
-
-
     // Creates svg for chord diagram
-    const svg = d3.select("#chords")
+    const svg = d3.select(".chord-chart")
         .append("svg")
             .attr("id", "mysvg")
             .attr("preserveAspectRatio", "xMinYMid")
@@ -49,7 +47,6 @@ function renderChord(parsed) {
             .attr("viewBox", [0, 0, width, height])
         .append('g')
         .attr('transform', `translate(${margin.left + outerRadius},${margin.top + outerRadius})`);
-
 
     //
     const chords = d3.chord()
@@ -110,8 +107,7 @@ function renderChord(parsed) {
                 .attr("fill", d => interpolateColor(d, color))
                 .attr("stroke", d => d3.rgb(color(d.target.index)).darker());
         })
-        .on("click", getEdge(d));
-
+        .on("click", d => getEdge(d));
 }
 
 /**
@@ -127,6 +123,7 @@ function getEdge(d) {
             a2 = key
         }
     }
+    getEdgeDetails(a1,a2);
 }
 
 
@@ -170,7 +167,6 @@ function wrap(text, width) {
  * @returns {number}
  */
 function getHeight(d, lines) {
-    console.log("height" + lines)
         if (Math.cos(d.angle) > 0) {
             return -12 * Math.cos(d.angle) * (lines);
         } else {
@@ -186,7 +182,6 @@ function getHeight(d, lines) {
  * @returns {number}
  */
 function getWidth(d, lines, textWidth) {
-    console.log("width" + lines);
     if (Math.cos(d.angle) > 0) {
         return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*15*(lines);
     } else {
@@ -256,7 +251,6 @@ function getChordDataMatrix(parsed) {
         matrix[i][i] = 0;
     }
 
-    console.log(edges);
     // fill in matrix with distances
     edges.forEach(edge => {
         // get index of source and destination articles in matrix
@@ -439,13 +433,11 @@ function boxPlot(data, point) {
         .attr("cy", margin.top + y.bandwidth()/2)
         .attr("r", 6)
         .style("fill", "red");
-
-
 }
 
-// boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-//
-// setTimeout(function () {
-//     boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-//
-// }, 2000);
+boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+
+setTimeout(function () {
+    boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+
+}, 2000);

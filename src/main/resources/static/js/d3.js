@@ -1,6 +1,6 @@
 import { renderChord } from './chord-diagram.js';
 import { renderBarPlot, setDataStuff, updateDataAndRender } from './barchart.js';
-export { getClusterDetails};
+export { getEdgeDetails};
 
 // assigns on click functionality to buttons
 document.getElementsByClassName("btn btn-info")[0].addEventListener("click", () => {
