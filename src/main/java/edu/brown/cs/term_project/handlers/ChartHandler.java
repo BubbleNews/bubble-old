@@ -29,8 +29,25 @@ public final class ChartHandler {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
       // get date object
-      QueryParamsMap qm = request.queryMap();
-      String dateString = qm.value("date");
+      String year = request.queryParams("year");
+      String month = request.queryParams("month");
+      String day = request.queryParams("day");
+      Integer offset = Integer.parseInt(request.queryParams("offset"));
+      String today = request.queryParams("today");
+
+
+      String date = year + "-" + month + "-" + day;
+
+      if (today.equals("true")) {
+        db.getMostRecent()
+      } else if (offset > 0) {
+        db.getClusters(date, offset, 1)
+      } else {
+        db.getClusters(date, 24 + offset, 0)
+      }
+
+
+
 
       // query database for clusters from given date
       List<ChartCluster> clusters = db.getClusters(dateString);

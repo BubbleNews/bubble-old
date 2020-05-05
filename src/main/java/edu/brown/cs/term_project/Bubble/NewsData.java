@@ -370,14 +370,19 @@ public final class NewsData extends Database {
    * Gets the clusters for a given day. This will be passed to the front end.
    *
    * @param date the date to search for (java.util.Date)
+   * @param hours the amount to off set the hours
+   * @param addDays the amount of days to add to the date passed in
    * @return a set of cluster objects
    * @throws SQLException only thrown if the database is malformed
    */
-  public List<ChartCluster> getClusters(String date) throws SQLException {
-    String query = "SELECT id, title, size FROM clusters WHERE day = ?";
+  public List<ChartCluster> getClusters(String date, int hours, int addDays) throws SQLException {
+    String query = "SELECT id, title, size FROM clusters WHERE day = DATE(?, '+? days') AND hours"
+       + " = ?";
     //        String query = "SELECT id, title, size FROM clusters";
     PreparedStatement prep = conn.prepareStatement(query);
     prep.setString(1, date);
+    prep.setInt(2, addDays);
+    prep.setInt(3, hours);
     ResultSet rs = prep.executeQuery();
     List<ChartCluster> clusters = new ArrayList<>();
     while (rs.next()) {
