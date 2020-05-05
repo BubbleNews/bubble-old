@@ -213,18 +213,21 @@ function makeCluster(clusterId, articles) {
         + '<span class="sr-only">Loading...</span>'
         + '</div>'
         + '<div class="diagram' + clusterId + '">'
-        + '<button type="button" class="btn btn-info">Entity</button>\n'
-        + '<button type="button" class="btn btn-info">Text</button>\n'
-        + '<button type="button" class="btn btn-info">Title</button>\n'
-        + '<button type="button" class="btn btn-info">All</button>\n'
+        + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Entity</button>\n'
+        + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
+        + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
+        + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
         + '<div class="chord-chart" id="chord' + clusterId + '"></div>'
         + '<div class="box-plot" id="box' + clusterId + '"></div>'
-        + '<div class="bar-chart"  id="bar' + clusterId + '"></div></div>'
+        + '<div class="bar-chart"  id="bar' + clusterId + '"></div>'
+        + '<button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"'
+        + 'style="margin-bottom:10px;" data-toggle="modal"'
+        + ' data-target="#vizModal">Info</button></div>'
         + '</div>'
         + '</div></div></div>';
     $('#' + clusterId).append(articlesHtml);
-    $('.spin' + divId).hide();
-    $('.diagram' + divId).hide();
+    $('.spin' + clusterId).hide();
+    $('.diagram' + clusterId).hide();
     $('#generate' + clusterId).click(function() {
         let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
