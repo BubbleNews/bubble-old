@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class NewsClusterer {
+  private static final int DEFAULT_CLUSTER_METHOD = 1;
+
   private NewsData db;
 
   public NewsClusterer(NewsData db) {
@@ -34,7 +36,7 @@ public class NewsClusterer {
     // make graph from vertices and cluster
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
 
-    graph.runClusters(1);
+    graph.runClusters(DEFAULT_CLUSTER_METHOD);
     if (params.getDoInsert()) {
       db.getDataWrite().insertClusters(graph.getClusters());
     }
