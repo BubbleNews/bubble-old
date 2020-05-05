@@ -49,10 +49,20 @@ $(document).ready(() => {
             $("#clusters").empty();
             clusterMap.clear();
             $('#mainLoader').show();
-            const reclusterEndpoint = 'api/recluster';
-            const serialized = $('#reclusterParams').serialize();
-            console.log(serialized);
-            $.post(reclusterEndpoint, serialized, function(data) {
+            let reclusterEndpoint = 'api/recluster';
+            const date = $('#date').val();
+            const isToday = isDateToday(date);
+            reclusterEndpoint += '?serialized' + $('#reclusterParams').serialize();
+            reclusterEndpoint += '?year=' + date.getFullYear();
+            const originalMonth = date.getMonth() + 1;
+            const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
+            reclusterEndpoint += ('&month=' + newMonth);
+            const originalDay = date.getDate();
+            const newDay = (originalMonth < 10) ? '0' + originalDay: originalDay;
+            reclusterEndpoint += ('&day=' + newDay);
+            reclusterEndpoint += '&offset=' + date.getTimezoneOffset() / 60;
+            reclusterEndpoint += '&isToday=' + isToday;
+            $.get(reclusterEndpoint, function(data) {
                 const parsed = JSON.parse(data);
                 $('#mainLoader').hide();
                 console.log(parsed);
@@ -121,6 +131,11 @@ function dateClickHandler() {
 //     return date.getFullYear() + '-' + month + '-' + day;
 // }
 
+function isDateToday(date) {
+    const today = new Date();
+    return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === date.getFullYear();
+}
+
 function getChart(date) {
     $("#clusters").empty();
     clusterMap.clear();
@@ -128,12 +143,7 @@ function getChart(date) {
     $('.message').hide();
     let chartUrl = 'api/chart';
     // update request url with date if needed
-
-    const today = new Date();
-    let isToday = false;
-    if (date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === date.getFullYear()) {
-        isToday = true;
-    }
+    const isToday = isDateToday(date);
 
 
     chartUrl += '?year=' + date.getFullYear();
