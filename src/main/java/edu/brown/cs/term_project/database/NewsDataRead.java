@@ -84,14 +84,38 @@ public class NewsDataRead {
     return getArticleVerticesHelper(prep);
   }
 
-  public Set<ArticleVertex> getArticleVertices(String int maxNumArticles) throws SQLException {
+  public Set<ArticleVertex> getArticleVertices(String date, int offset, int hoursBack,
+                                               boolean current, boolean positiveOffset,
+                                               int maxNumArticles) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
         + "text FROM articles "
-        + "WHERE date_pulled >= DATETIME('now', '-24 hours') AND date_pulled < DATETIME('now') "
+        + "WHERE date_pulled >= DATETIME(DATETIME(?, ?), ?) AND date_pulled < DATETIME(?,?) "
         + "ORDER BY date_published "
         + "LIMIT (?);"
     );
-    prep.setInt(1, maxNumArticles);
+    String timeOffset = "";
+    if (positiveOffset) {
+      timeOffset = "+" + offset + " hours";
+    } else {
+      timeOffset = "-" + offset + " hours";
+    }
+    String hourOffset = "-" + hoursBack + " hours";
+    String defaultBack = "+0 hours";
+    if (current) {
+      prep.setString(1, "now");
+      prep.setString(2, defaultBack);
+      prep.setString(3, hourOffset);
+      prep.setString(4, "now");
+      prep.setString(5, defaultBack);
+      prep.setInt(6, maxNumArticles);
+    } else {
+      prep.setString(1, date);
+      prep.setString(2, timeOffset);
+      prep.setString(3, hourOffset);
+      prep.setString(4, date);
+      prep.setString(5, timeOffset);
+      prep.setInt(6, maxNumArticles);
+    }
     return getArticleVerticesHelper(prep);
   }
 

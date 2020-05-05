@@ -21,6 +21,7 @@ public class ClusterParameters {
   public static final String DEFAULT_DAY = String.valueOf(calendar.DAY_OF_MONTH);
   public static final boolean DEFAULT_IS_TODAY = true;
   public static final int DEFAULT_OFFSET = 0;
+  public static final int DEFAULT_HOURS = 24;
 
 
   // date of clusters
@@ -41,27 +42,56 @@ public class ClusterParameters {
   private String day;
   private boolean isToday;
   private int offset;
+  private int hours;
 
 
-  public ClusterParameters() {
+  public ClusterParameters(int hours, boolean doInsert) {
     // default clustering parameters
-    this.doInsert = true;
+    this.doInsert = doInsert;
     this.textWeight = DEFAULT_TEXT_WEIGHT;
     this.entityWeight = DEFAULT_ENTITY_WEIGHT;
     this.titleWeight = DEFAULT_TITLE_WEIGHT;
     this.clusterMethod = DEFAULT_CLUSTER_METHOD;
     this.numArticles = DEFAULT_NUM_ARTICLES;
     this.year = DEFAULT_YEAR;
+    this.month = DEFAULT_MONTH;
+    this.day = DEFAULT_DAY;
+    this.isToday = DEFAULT_IS_TODAY;
+    this.offset = DEFAULT_OFFSET;
+    this.hours = hours;
+  }
+
+  public ClusterParameters(String year, String month, String day,
+                           boolean isToday, int offset, int hours, boolean doInsert) {
+    // default clustering parameters
+    this.doInsert = doInsert;
+    this.textWeight = DEFAULT_TEXT_WEIGHT;
+    this.entityWeight = DEFAULT_ENTITY_WEIGHT;
+    this.titleWeight = DEFAULT_TITLE_WEIGHT;
+    this.clusterMethod = DEFAULT_CLUSTER_METHOD;
+    this.numArticles = DEFAULT_NUM_ARTICLES;
+    this.year = DEFAULT_YEAR;
+    this.month = DEFAULT_MONTH;
+    this.day = DEFAULT_DAY;
+    this.isToday = DEFAULT_IS_TODAY;
+    this.offset = DEFAULT_OFFSET;
+    this.hours = DEFAULT_HOURS;
   }
 
   public ClusterParameters(QueryParamsMap qm) {
+    this.doInsert = false;
     this.textWeight = parseDouble(qm.value("textWeight"));
     this.entityWeight = parseDouble(qm.value("entityWeight"));
     this.titleWeight = parseDouble(qm.value("titleWeight"));
     this.clusterMethod = Integer.parseInt(qm.value("clusterMethod"));
     this.percentageEdgesToConsider = parseDouble(qm.value("edgeThreshold"));
     this.numArticles = Integer.parseInt(qm.value("numArticles"));
-    this.doInsert = false;
+    this.year = qm.value("year");
+    this.month = qm.value("month");
+    this.day = qm.value("day");
+    this.isToday = Boolean.parseBoolean(qm.value("isToday"));
+    this.offset = Integer.parseInt(qm.value("offset"));
+    this.hours = DEFAULT_HOURS;
   }
 
   public boolean getDoInsert() {
@@ -92,9 +122,15 @@ public class ClusterParameters {
     return numArticles;
   }
 
-  public void setDate(String date) {
-    this.date = date;
+  public String getDate() {
+    return year + "-" + month + "-" + day;
   }
+
+  public int getHours() {
+    return hours;
+  }
+
+
 
   public void setDoInsert(boolean doInsert) {
     this.doInsert = doInsert;

@@ -41,13 +41,12 @@ public final class ChartHandler {
       String month = qm.value("month");
       String day = qm.value("day");
       Integer offset = Integer.parseInt(qm.value("offset"));
-      String today = qm.value("isToday");
+      Boolean today = Boolean.parseBoolean(qm.value("isToday"));
 
 
       String date = year + "-" + month + "-" + day;
-      List<ChartCluster> clusters = new ArrayList<>();
-
-      if (today.equals("true")) {
+      List<ChartCluster> clusters;
+      if (today) {
         clusters = db.getDataRead().getNewestClusters();
       } else if (offset > 0) {
         clusters = db.getDataRead().getClusters(date, offset, 1);
