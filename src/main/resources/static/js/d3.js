@@ -6,7 +6,7 @@ let clusterIdState;
 let clusterData;
 let edgeData;
 
-function getClusterDetails(clusterId, clusterMeanRadius, articleIds) {
+function getClusterDetails(clusterId, clusterMeanRadius, articleIds, callback) {
     // this will be used to select the appropriate svg elements
     clusterIdState = clusterId;
 
