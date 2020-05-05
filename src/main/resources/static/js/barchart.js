@@ -62,18 +62,18 @@ function renderBarPlot() {
 
     console.log(relevantWords);
     // add labels for each bar
-    const u = svg.selectAll('.test123')
+    let u = svg.selectAll('rect')
         .data(relevantWords);
 
-    const gbars = u.enter().append('g').attr('class', 'test123');
-    gbars.append('rect').merge(gbars)
+    //const gbars = u.enter()//.append('g').attr('class', 'test123');
+        u.enter().append('rect').merge(u)
         .attr('x', 0)
         .attr('y', (d, i) => y(i))
         .attr('width', d => x(d.value))
         .attr('height', y.bandwidth())
         .attr('fill', d => color(d.type));
 
-    gbars.exit().remove();
+    u.exit().remove();
 
 
         // .join(
