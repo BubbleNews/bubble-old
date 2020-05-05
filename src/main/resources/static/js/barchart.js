@@ -2,7 +2,7 @@ export { renderBarPlot, setDataStuff, updateDataAndRender };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
-const margin = {left: 60, right: 10, top: 10, bottom: 0};
+const margin = {left: 60, right: 0, top: 10, bottom: 0};
 const labelPadding = 10;
 const types = ['entity', 'title', 'text'];
 const colors = ['steelblue', 'red', 'orange'];
@@ -31,28 +31,27 @@ const svgTransformed = svg.append('g')
     .attr('class', 'bar-labels')
     .attr('transform', `translate(${margin.left},0)`);
 
+// make a legend group
+const legend = svg.append('g')
+    .attr('class', 'legend')
+    .attr('transform', `translate(${innerWidth - 70},${innerHeight / 2})`)
+    .selectAll('myLabels')
+    .data(types)
+    .enter()
+    .append('g')
 
-// // make a legend group
-// const legend = svg.append('g')
-//     .attr('class', 'legend')
-//     .attr('transform', `translate(400,200)`)
-//     .selectAll('myLabels')
-//     .data(types)
-//     .enter()
-//     .append('g')
-//
-// // add dots to legend
-// legend.append('circle')
-//     .attr('cy', (d,i) => i * distanceBetweenDots)
-//     .attr('r', dotRadius)
-//     .attr('fill', d => color(d));
-//
-// // add labels to legend
-// legend.append('text')
-//     .attr('x', distanceBetweenLabelAndDot)
-//     .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-//     .attr('fill', d => color(d))
-//     .text(d => console.log(d));
+// add dots to legend
+legend.append('circle')
+    .attr('cy', (d,i) => i * distanceBetweenDots)
+    .attr('r', dotRadius)
+    .attr('fill', d => color(d));
+
+// add labels to legend
+legend.append('text')
+    .attr('x', distanceBetweenLabelAndDot)
+    .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+    .attr('fill', d => color(d))
+    .text(d => d);
 
 let storedData;
 let words;
