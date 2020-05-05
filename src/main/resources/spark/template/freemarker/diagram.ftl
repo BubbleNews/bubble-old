@@ -12,7 +12,7 @@
 <button type="button" class="titleBut2">Title</button>
 <button type="button" class="allBut2">All</button>
 <div id="chord2" class="chord-chart"></div>
-<div id="box-plot"></div>
+<div id="box2"></div>
 <div id="bar2" class="bar-chart"></div>
 
 

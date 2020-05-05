@@ -24,6 +24,7 @@ function getClusterDetails(clusterId, articleIds) {
     $.get(clusterUrl, response => {
         clusterData = JSON.parse(response);
         console.log(clusterData);
+        renderChord(clusterData);
         initializeBarChart(clusterData, clusterIdState, 'all');
     });
 }
