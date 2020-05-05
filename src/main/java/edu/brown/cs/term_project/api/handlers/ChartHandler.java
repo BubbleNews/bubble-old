@@ -1,18 +1,25 @@
 package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.database.NewsData;
 import edu.brown.cs.term_project.api.response.ChartCluster;
 import edu.brown.cs.term_project.api.response.ChartResponse;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-import java.util.*;
+
+import java.util.List;
 
 /**
  * A class for handling requests to the /chart API.
  */
 public final class ChartHandler {
+
+  /**
+   * Constructor - should never be called.
+   */
+  private ChartHandler() {
+  }
 
   /**
    * Handles a request to the /chart API by getting the clusters for the inputted
@@ -29,7 +36,7 @@ public final class ChartHandler {
       QueryParamsMap qm = request.queryMap();
       String dateString = qm.value("date");
       // query database for clusters from given date
-      List<ChartCluster> clusters = db.getClusters(dateString);
+      List<ChartCluster> clusters = db.getDataRead().getClusters(dateString);
       // pass to front handler
       chartResponse.setClusters(clusters);
     } catch (Exception e) {

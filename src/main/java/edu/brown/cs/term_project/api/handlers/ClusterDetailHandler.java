@@ -1,13 +1,13 @@
 package edu.brown.cs.term_project.api.handlers;
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.ArticleVertex;
-import edu.brown.cs.term_project.Bubble.ArticleWord;
-import edu.brown.cs.term_project.Bubble.Entity;
-import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.Bubble.Similarity;
-import edu.brown.cs.term_project.TextSimilarity.IWord;
-import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.bubble.ArticleVertex;
+import edu.brown.cs.term_project.bubble.ArticleWord;
+import edu.brown.cs.term_project.bubble.Entity;
+import edu.brown.cs.term_project.database.NewsData;
+import edu.brown.cs.term_project.bubble.Similarity;
+import edu.brown.cs.term_project.similarity.IWord;
+import edu.brown.cs.term_project.similarity.TextCorpus;
 import edu.brown.cs.term_project.api.response.StandardResponse;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -48,8 +48,8 @@ public final class ClusterDetailHandler {
       } else {
         int clusterId = Integer.parseInt(clusterIdStr);
         // get set of articles of cluster with id clusterId
-        Set<ArticleVertex> articlesFromCluster = db.getArticleVerticesFromCluster(clusterId);
-        double meanRadius = db.getClusterMeanRadiusPercentile(clusterId);
+        Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticleVerticesFromCluster(clusterId);
+        double meanRadius = db.getDataRead().getClusterMeanRadiusPercentile(clusterId);
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {
@@ -73,6 +73,7 @@ public final class ClusterDetailHandler {
         detailResponse.setNumVertices(articlesFromCluster.size());
         detailResponse.setClusterRadius(meanRadius);
         detailResponse.setTotals(aggEntities, aggWords, aggTitle);
+        detailResponse.setClusterId(clusterId);
       }
     } catch (Exception e) {
       detailResponse.setErrorMessage(e.getMessage());
@@ -93,9 +94,9 @@ public final class ClusterDetailHandler {
     final double entityWeight = 1;
     final double titleWeight = 1;
     Set<Similarity> edges = new HashSet<>();
-    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
-    Map<Entity, Double> entityMap = db.getEntityFreq();
-    int maxCount = db.getMaxVocabCount();
+    Map<ArticleWord, Double> vocabMap = db.getDataRead().getVocabFreq();
+    Map<Entity, Double> entityMap = db.getDataRead().getEntityFreq();
+    int maxCount = db.getDataRead().getMaxVocabCount();
 
     TextCorpus<Entity, ArticleVertex> entityCorpus =
         new TextCorpus<>(entityMap, maxCount, 0);
@@ -158,6 +159,7 @@ public final class ClusterDetailHandler {
     private Set<SimilarityJSON> edges;
     private int numVertices;
     private double clusterRadius;
+    private int clusterId;
     private Map<IWord, Double> entitySim;
     private Map<IWord, Double> wordSim;
     private Map<IWord, Double> titleSim;
@@ -195,6 +197,10 @@ public final class ClusterDetailHandler {
 
     public void setClusterRadius(double radius) {
       this.clusterRadius = radius;
+    }
+
+    public void setClusterId(int id) {
+      this.clusterId = id;
     }
   }
 }

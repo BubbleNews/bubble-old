@@ -1,4 +1,4 @@
-export { renderBarPlot, setDataStuff, updateDataAndRender };
+export { renderBarPlot, setDataStuff, renderFirst, updateDataAndRender };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
@@ -20,8 +20,11 @@ const color = d3.scaleOrdinal()
     .domain(types)
     .range(colors);
 
-const svg = d3.select(".bar-chart")
-    .append("svg")
+let svg;
+
+function renderFirst(data, id, type) {
+    svg = d3.select("#bar" + id)
+        .append("svg")
         .attr('width', width)
         .attr('height', height)
         .append('g')
@@ -53,9 +56,9 @@ legend.append('text')
     .attr('fill', d => color(d))
     .text(d => d);
 
-let storedData;
 let words;
 let relevantWords;
+let storedData;
 
 function setDataStuff(data, type) {
     storedData = data;
@@ -68,6 +71,9 @@ function updateDataAndRender(type) {
     console.log(relevantWords);
     renderBarPlot();
 }
+
+
+
 
 /**
  *

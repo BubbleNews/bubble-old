@@ -1,6 +1,6 @@
 package edu.brown.cs.term_project.api.handlers;
 
-import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.database.NewsData;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -26,7 +26,7 @@ public class HomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) throws Exception {
-    Set<String> sources = db.getSources();
+    Set<String> sources = db.getDataRead().getSources();
     List<String> sourceList = new ArrayList<>(sources);
     Collections.sort(sourceList);
     Map<String, Object> variables = new HashMap<>();

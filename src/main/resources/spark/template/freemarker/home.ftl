@@ -73,13 +73,14 @@
 
                             <label for="edgeThreshold">Edge Percentage Threshold</label>
                             <input name="edgeThreshold" type="number" class="form-control" id="edgeThreshold" min="0"
-                                   max="100"
-                                   value="75">
+                                   max="1"
+                                   step="0.01"
+                                   value="0.1">
 
                             <label for="numArticles">Maximum Number of Articles</label>
                             <input name="numArticles" type="number" class="form-control" id="numArticles" min="0"
                                    max="200"
-                                   value="75" style="margin-bottom: 5px;">
+                                   value="100" style="margin-bottom: 5px;">
                             <button class="btn btn-primary btn-sm" type="submit" style="margin: 5px auto;">Recluster</button>
                             <button id="resetButton" class="btn btn-blue-grey btn-sm"
                                     type="button" style="margin: 5px auto;">Reset</button>
@@ -116,6 +117,23 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="vizModal">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Data Visualization Info</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -126,6 +144,10 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/mdb.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="../js/home.js"></script>
+<script src="https://d3js.org/d3.v5.js"></script>
+<script type="module" src="../js/chord-diagram.js"></script>
+<script type="module" src="../js/barchart.js"></script>
+<script type="module" src="../js/d3.js"></script>
+<script type="module" src="../js/home.js"></script>
 </body>
 </html>

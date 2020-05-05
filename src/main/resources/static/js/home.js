@@ -1,3 +1,4 @@
+import {getClusterDetails} from './d3.js';
 let currentlyOpenClusterId = null;
 
 const sourceMap = new Map()
@@ -207,16 +208,35 @@ function makeCluster(clusterId, articles) {
         + '<div class="tab-pane fade viz" id="visualization' + divId + '" role="tabpanel">'
         + '<button type="button" id="generate' + clusterId +'" class="btn btn-primary">' +
         ' Render' +
-        ' Visualization</button></div>'
+        ' Visualization</button>'
+        + '<div class="spinner-border text-primary spin' + clusterId +'" role="status">'
+        + '<span class="sr-only">Loading...</span>'
+        + '</div>'
+        + '<div class="diagram' + clusterId + '">'
+        + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Entity</button>\n'
+        + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
+        + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
+        + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
+        + '<div class="chord-chart" id="chord' + clusterId + '"></div>'
+        + '<div class="box-plot" id="box' + clusterId + '"></div>'
+        + '<div class="bar-chart"  id="bar' + clusterId + '"></div>'
+        + '<button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"'
+        + 'style="margin-bottom:10px;" data-toggle="modal"'
+        + ' data-target="#vizModal">Info</button></div>'
+        + '</div>'
         + '</div></div></div>';
     $('#' + clusterId).append(articlesHtml);
+    $('.spin' + clusterId).hide();
+    $('.diagram' + clusterId).hide();
     $('#generate' + clusterId).click(function() {
         let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
-        element.append('<div class="spinner-border text-primary" role="status">'
-            + '<span class="sr-only">Loading...</span>'
-            + '</div>');
-    })
+        $('.spin' + clusterId).show();
+        getClusterDetails(clusterId, "all");
+        $('.spin' + clusterId).hide();
+        $('.diagram' + clusterId).show();
+
+    });
     let i;
     console.log(articles);
     for (i = 0; i < articles.length; i++) {

@@ -3,7 +3,7 @@ export { renderChord };
 
 
 // map from article ID -> index in matrix array
-const indices = {};
+let indices = {};
 
 
 /**
@@ -11,9 +11,9 @@ const indices = {};
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
  */
 function renderChord(parsed) {
-    const margin = {top:70, left: 500, right: 500, bottom: 10};
+    const margin = {top:180, left: 400, right: 400, bottom: 180};
     const width = 1500
-    const height = 700;
+    const height = 700 + margin.top + margin.bottom;
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
     const aspect = width / height;
@@ -37,7 +37,7 @@ function renderChord(parsed) {
     const matrix = arr[1];
 
     // Creates svg for chord diagram
-    const svg = d3.select(".chord-chart")
+    const svg = d3.select("#chord" + parsed.clusterId)
         .append("svg")
             .attr("id", "mysvg")
             .attr("preserveAspectRatio", "xMinYMid")
@@ -80,7 +80,8 @@ function renderChord(parsed) {
             translate(${outerRadius + textGap},0) rotate(${-1 * (d.angle * 180 / Math.PI - 90)})`)
         .attr('text-anchor', "middle")
         .append('text')
-            .text(d => d.title);
+            .text(d => d.title)
+        .attr("font-size", "25px")
 
     // Wraps text to a specific text width
     group.selectAll('text')
@@ -167,9 +168,9 @@ function wrap(text, width) {
  */
 function getHeight(d, lines) {
         if (Math.cos(d.angle) > 0) {
-            return -12 * Math.cos(d.angle) * (lines);
+            return -25 * Math.cos(d.angle) * (lines);
         } else {
-            return -20 * Math.cos(d.angle);
+            return -28 * Math.cos(d.angle);
         }
     }
 
@@ -182,9 +183,9 @@ function getHeight(d, lines) {
  */
 function getWidth(d, lines, textWidth) {
     if (Math.cos(d.angle) > 0) {
-        return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*15*(lines);
+        return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*20*(lines);
     } else {
-        return Math.sin(d.angle) * (textWidth / 2) - + Math.sin(d.angle)*Math.cos(d.angle)*3;
+        return Math.sin(d.angle) * (textWidth / 2) - + Math.sin(d.angle)*Math.cos(d.angle)*20;
     }
 }
 
@@ -237,6 +238,7 @@ function getDistance(d, total, pad, num) {
  * @returns {[][]}
  */
 function getChordDataMatrix(parsed) {
+    indices = {};
     const edges = parsed['edges'];
     const numVertices = parsed['numVertices'];
     const titles = [];
@@ -290,7 +292,7 @@ function boxPlot(data, point) {
        const height = 150 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-    let svg = d3.select("#box-plot")
+    let svg = d3.select("#box2")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -428,8 +430,8 @@ function boxPlot(data, point) {
 }
 
 boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-
-setTimeout(function () {
-    boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-
-}, 2000);
+//
+// setTimeout(function () {
+//     boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+//
+// }, 2000);

@@ -1,16 +1,16 @@
 package edu.brown.cs.term_project.api.pipeline;
 
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.ArticleVertex;
-import edu.brown.cs.term_project.Bubble.ArticleWord;
-import edu.brown.cs.term_project.Bubble.Entity;
-import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.Bubble.Similarity;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.bubble.ArticleVertex;
+import edu.brown.cs.term_project.bubble.ArticleWord;
+import edu.brown.cs.term_project.bubble.Entity;
+import edu.brown.cs.term_project.database.NewsData;
+import edu.brown.cs.term_project.bubble.Similarity;
 import edu.brown.cs.term_project.api.response.ChartCluster;
-import edu.brown.cs.term_project.Graph.Cluster;
-import edu.brown.cs.term_project.Graph.ClusterParameters;
-import edu.brown.cs.term_project.Graph.Graph;
-import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.clustering.Cluster;
+import edu.brown.cs.term_project.clustering.ClusterParameters;
+import edu.brown.cs.term_project.graph.Graph;
+import edu.brown.cs.term_project.similarity.TextCorpus;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,15 +27,19 @@ public class NewsClusterer {
   }
 
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
-    Set<ArticleVertex> pulledArticles = db.getArticleVertices(params.getNumArticles());
+    Set<ArticleVertex> pulledArticles = db.getDataRead().getArticleVertices(params.getNumArticles());
     List<Similarity> edges = getEdges(pulledArticles, params);
     // sort edges
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     // make graph from vertices and cluster
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
+    // set threshold according to cluster params if params are for reclustering
+    if (!params.getDoInsert()) {
+      graph.setThreshold(params.getPercentageEdgesToConsider());
+    }
     graph.runClusters(params.getClusterMethod());
     if (params.getDoInsert()) {
-      db.insertClusters(graph.getClusters());
+      db.getDataWrite().insertClusters(graph.getClusters());
     }
     // create list of chart clusters
     List<ChartCluster> chartClusters = new ArrayList<>();
@@ -47,9 +51,9 @@ public class NewsClusterer {
 
   public List<Similarity> getEdges(Set<ArticleVertex> pulledArticles,
                                    ClusterParameters params) throws SQLException {
-    Map<ArticleWord, Double> vocabMap = db.getVocabFreq();
-    Map<Entity, Double> entityMap = db.getEntityFreq();
-    int maxCount = db.getMaxVocabCount();
+    Map<ArticleWord, Double> vocabMap = db.getDataRead().getVocabFreq();
+    Map<Entity, Double> entityMap = db.getDataRead().getEntityFreq();
+    int maxCount = db.getDataRead().getMaxVocabCount();
     TextCorpus<Entity, ArticleVertex> entityCorpus =
         new TextCorpus<>(entityMap, maxCount, 0);
     TextCorpus<ArticleWord, ArticleVertex> wordCorpus =
