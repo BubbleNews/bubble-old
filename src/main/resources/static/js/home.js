@@ -241,7 +241,8 @@ function makeCluster(clusterId, articles) {
         + '<span class="sr-only">Loading...</span>'
         + '</div>'
         + '<div class="diagram' + clusterId + '">'
-        + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Entity</button>\n'
+        + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Key' +
+        ' Word</button>'
         + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
         + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
         + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
