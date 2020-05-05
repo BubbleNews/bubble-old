@@ -1,5 +1,10 @@
 package edu.brown.cs.term_project.clustering;
 
+import spark.QueryParamsMap;
+import spark.Request;
+
+import static java.lang.Double.parseDouble;
+
 public class ClusterParameters {
   // default clustering parameters
   public static final int DEFAULT_NUM_ARTICLES = 2400;
@@ -33,6 +38,17 @@ public class ClusterParameters {
     this.titleWeight = DEFAULT_TITLE_WEIGHT;
     this.clusterMethod = DEFAULT_CLUSTER_METHOD;
     this.numArticles = DEFAULT_NUM_ARTICLES;
+  }
+
+  public ClusterParameters(QueryParamsMap qm) {
+    this.date = qm.value("date");
+    this.textWeight = parseDouble(qm.value("textWeight"));
+    this.entityWeight = parseDouble(qm.value("entityWeight"));
+    this.titleWeight = parseDouble(qm.value("titleWeight"));
+    this.clusterMethod = Integer.parseInt(qm.value("clusterMethod"));
+    this.percentageEdgesToConsider = parseDouble(qm.value("edgeThreshold"));
+    this.numArticles = Integer.parseInt(qm.value("numArticles"));
+    this.doInsert = false;
   }
 
   public boolean getDoInsert() {

@@ -30,17 +30,8 @@ public final class ReclusterHandler {
   public static String handle(Request request, Response response, NewsData db) {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
-      // create a parameters object to store parameters
-      ClusterParameters params = new ClusterParameters();
-      params.setDate(request.queryParams("date"));
-      params.setTextWeight(Double.parseDouble(request.queryParams("textWeight")));
-      params.setEntityWeight(Double.parseDouble(request.queryParams("entityWeight")));
-      params.setTitleWeight(Double.parseDouble(request.queryParams("titleWeight")));
-      params.setClusterMethod(Integer.parseInt(request.queryParams("clusterMethod")));
-      params.setPercentageEdgesToConsider(Double.parseDouble(request.queryParams("edgeThreshold")));
-      params.setNumArticles(Integer.parseInt(request.queryParams("numArticles")));
-      params.setDoInsert(false);
-
+      // create a parameters object from the request parameters
+      ClusterParameters params = new ClusterParameters(request.queryMap());
       // make a new clusterer and cluster
       NewsClusterer clusterer = new NewsClusterer(db);
       List<ChartCluster> newClusters = clusterer.clusterArticles(params);

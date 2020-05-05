@@ -42,39 +42,41 @@ public final class ClusterDetailHandler {
     ClusterDetailResponse detailResponse = new ClusterDetailResponse(0, "");
     try {
       QueryParamsMap qm = request.queryMap();
-      String clusterIdStr = qm.value("id");
-      if (clusterIdStr == null || clusterIdStr.equals("")) {
-        detailResponse.setErrorMessage("No cluster id given.");
-      } else {
-        int clusterId = Integer.parseInt(clusterIdStr);
-        // get set of articles of cluster with id clusterId
-        Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticleVerticesFromCluster(clusterId);
-        double meanRadius = db.getDataRead().getClusterMeanRadiusPercentile(clusterId);
+      String serializedIds = qm.value("articleIds")
+          .replace('[', '(')
+          .replace(']', ')');
+
+//      ClusterParameters params = new ClusterParameters(qm);
+
+      // get set of articles of cluster with id clusterId
+      Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticleVerticesFromArticleIds(serializedIds);
+//      double meanRadius = db.getDataRead().getClusterMeanRadiusPercentile(clusterId);
+      double meanRadius = 1;
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {
 //          articleMap.put(a.getId(), a);
 //        }
-        // get edges between articles
-        Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster);
-        Set<Map<IWord, Double>> entityHash = new HashSet<>();
-        Set<Map<IWord, Double>> wordHash = new HashSet<>();
-        Set<Map<IWord, Double>> titleHash = new HashSet<>();
-        for (Similarity s: clusterEdges) {
-          entityHash.add(s.getEntitySim());
-          wordHash.add(s.getWordSim());
-          titleHash.add(s.getTitleSim());
-        }
-        Map<IWord, Double> aggEntities = aggregate(entityHash);
-        Map<IWord, Double> aggWords = aggregate(wordHash);
-        Map<IWord, Double> aggTitle = aggregate(titleHash);
-        // put edges in response
-        detailResponse.setEdges(clusterEdges);
-        detailResponse.setNumVertices(articlesFromCluster.size());
-        detailResponse.setClusterRadius(meanRadius);
-        detailResponse.setTotals(aggEntities, aggWords, aggTitle);
-        detailResponse.setClusterId(clusterId);
+      // get edges between articles
+      Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster);
+      Set<Map<IWord, Double>> entityHash = new HashSet<>();
+      Set<Map<IWord, Double>> wordHash = new HashSet<>();
+      Set<Map<IWord, Double>> titleHash = new HashSet<>();
+      for (Similarity s: clusterEdges) {
+        entityHash.add(s.getEntitySim());
+        wordHash.add(s.getWordSim());
+        titleHash.add(s.getTitleSim());
       }
+      Map<IWord, Double> aggEntities = aggregate(entityHash);
+      Map<IWord, Double> aggWords = aggregate(wordHash);
+      Map<IWord, Double> aggTitle = aggregate(titleHash);
+      // put edges in response
+      detailResponse.setEdges(clusterEdges);
+      detailResponse.setNumVertices(articlesFromCluster.size());
+      detailResponse.setClusterRadius(meanRadius);
+      detailResponse.setTotals(aggEntities, aggWords, aggTitle);
+      detailResponse.setClusterId(1);
+
     } catch (Exception e) {
       detailResponse.setErrorMessage(e.getMessage());
     }

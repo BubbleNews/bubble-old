@@ -2,7 +2,7 @@ import { renderChord } from './chord-diagram.js';
 import { renderBarPlot, setDataStuff, renderFirst } from './barchart.js';
 export { getEdgeDetails};
 
-export function getClusterDetails(clusterId, type) {
+export function getClusterDetails(clusterId, articleIds, type) {
 
     $('.entityBut' + clusterId).click(function() {
         updateDataAndRender('entity')});
@@ -13,9 +13,11 @@ export function getClusterDetails(clusterId, type) {
     $('.allBut' + clusterId).click(function() {
         updateDataAndRender('all')});
 
+    const serializedArticleIds = JSON.stringify(articleIds);
+
     let clusterUrl = 'api/details';
     // add id to cluster base url
-    clusterUrl += '?id=' + clusterId;
+    clusterUrl += '?articleIds=' + serializedArticleIds;
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);

@@ -1,7 +1,9 @@
 import {getClusterDetails} from './d3.js';
 let currentlyOpenClusterId = null;
 
-const sourceMap = new Map()
+const sourceMap = new Map();
+
+const clusterMap = new Map();
 
 $(document).ready(() => {
 
@@ -45,6 +47,7 @@ $(document).ready(() => {
     $('#reclusterParams').submit(function(event) {
             event.preventDefault();
             $("#clusters").empty();
+            clusterMap.clear();
             $('#mainLoader').show();
             const reclusterEndpoint = 'api/recluster';
             const serialized = $('#reclusterParams').serialize();
@@ -100,6 +103,7 @@ function dateClickHandler() {
     $("#chartMessage").hide();
     if (date > new Date()) {
         $("#clusters").empty();
+        clusterMap.clear();
         $('#chartMessage').empty();
         $('#chartMessage').append('<div class="alert alert-danger"><h2>Cannot find articles from' +
             ' the future.</h2></div>');
@@ -120,6 +124,7 @@ function stringifyDate(date) {
 
 function getChart(date) {
     $("#clusters").empty();
+    clusterMap.clear();
     // clear messages
     $('.message').hide();
     const dateStr = stringifyDate(date);
@@ -188,6 +193,8 @@ function getClusterRequest(clusterId) {
 }
 
 function makeCluster(clusterId, articles) {
+    // add to cluster map
+    clusterMap.set(clusterId, articles);
     const divId = clusterId + 'articles';
     const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
         ' data-parent="#clusters">'
@@ -232,7 +239,7 @@ function makeCluster(clusterId, articles) {
         let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
-        getClusterDetails(clusterId, "all");
+        getClusterDetails(clusterId, sourceMap.get(clusterId).map(a => a.id), "all");
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 
