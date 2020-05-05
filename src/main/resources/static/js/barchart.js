@@ -1,4 +1,4 @@
-export { renderBarPlot, setDataStuff, updateDataAndRender };
+export { renderBarPlot, setDataStuff, renderFirst };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
@@ -19,16 +19,20 @@ const color = d3.scaleOrdinal()
     .domain(types)
     .range(colors);
 
-const svg = d3.select(".bar-chart")
-    .append("svg")
+let svg;
+
+function renderFirst(data, id, type) {
+    svg = d3.select("#bar" + id)
+        .append("svg")
         .attr('width', width)
         .attr('height', height)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
-    .append('g')
+        .append('g')
         .attr('class', 'bar-labels')
         .attr('transform', `translate(${margin.left},0)`);
-
+    setDataStuff(data, type)
+}
 
 // // make a legend group
 // const legend = svg.append('g')
@@ -52,20 +56,40 @@ const svg = d3.select(".bar-chart")
 //     .attr('fill', d => color(d))
 //     .text(d => console.log(d));
 
-let storedData;
 let words;
 let relevantWords;
 
-function setDataStuff(data, type) {
-    storedData = data;
-    updateDataAndRender(type);
-}
+function setDataStuff(datahash, type) {
+    const entities = datahash.entitySim;
+    const text = datahash.wordSim;
+    const title = datahash.titleSim;
+    const data = [];
 
-function updateDataAndRender(type) {
-    words = formatBarPlotData(storedData, type);
+    switch (type) {
+        case 'entity':
+            addToArray(entities, type, data);
+            break;
+
+        case 'text':
+            addToArray(text, type, data);
+            break;
+
+        case 'title':
+            addToArray(title, type, data);
+            break;
+
+        default:
+            addToArray(entities, 'entity', data);
+            addToArray(text, 'text', data);
+            addToArray(title, 'title', data);
+    }
+
+    data.sort((a,b) => b.value - a.value);
+    words = data;
     relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
     renderBarPlot();
 }
+
 
 /**
  *
@@ -144,34 +168,34 @@ function sliceWords(words, thresholdPercent, maxBars) {
  * @param type - the kind of words to show. One of: 'all','text','entity','title'
  * @returns []
  */
-function formatBarPlotData(hashmaps, type) {
-    const entities = hashmaps.entitySim;
-    const text = hashmaps.wordSim;
-    const title = hashmaps.titleSim;
-    const data = [];
-
-    switch (type) {
-        case 'entity':
-            addToArray(entities, type, data);
-            break;
-
-        case 'text':
-            addToArray(text, type, data);
-            break;
-
-        case 'title':
-            addToArray(title, type, data);
-            break;
-
-        default:
-            addToArray(entities, 'entity', data);
-            addToArray(text, 'text', data);
-            addToArray(title, 'title', data);
-    }
-
-    data.sort((a,b) => b.value - a.value);
-    return data;
-}
+// function formatBarPlotData(hashmaps, type) {
+//     const entities = hashmaps.entitySim;
+//     const text = hashmaps.wordSim;
+//     const title = hashmaps.titleSim;
+//     const data = [];
+//
+//     switch (type) {
+//         case 'entity':
+//             addToArray(entities, type, data);
+//             break;
+//
+//         case 'text':
+//             addToArray(text, type, data);
+//             break;
+//
+//         case 'title':
+//             addToArray(title, type, data);
+//             break;
+//
+//         default:
+//             addToArray(entities, 'entity', data);
+//             addToArray(text, 'text', data);
+//             addToArray(title, 'title', data);
+//     }
+//
+//     data.sort((a,b) => b.value - a.value);
+//     return data;
+// }
 
 /**
  * Converts JS object to array of smaller JS objects where each position in the array

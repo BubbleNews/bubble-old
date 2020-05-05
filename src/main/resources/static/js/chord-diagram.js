@@ -3,7 +3,7 @@ export { renderChord };
 
 
 // map from article ID -> index in matrix array
-const indices = {};
+let indices = {};
 
 
 /**
@@ -238,6 +238,7 @@ function getDistance(d, total, pad, num) {
  * @returns {[][]}
  */
 function getChordDataMatrix(parsed) {
+    indices = {};
     const edges = parsed['edges'];
     const numVertices = parsed['numVertices'];
     const titles = [];
@@ -291,7 +292,7 @@ function boxPlot(data, point) {
        const height = 150 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-    let svg = d3.select("#box-plot")
+    let svg = d3.select("#box2")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -435,7 +436,7 @@ function boxPlot(data, point) {
         .style("fill", "red");
 }
 
-// boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
 //
 // setTimeout(function () {
 //     boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
