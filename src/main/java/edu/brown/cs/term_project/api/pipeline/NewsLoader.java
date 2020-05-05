@@ -4,10 +4,10 @@ import com.google.common.collect.ObjectArrays;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.Entity;
-import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.nlp.TextProcessing;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.bubble.Entity;
+import edu.brown.cs.term_project.database.NewsData;
+import edu.brown.cs.term_project.language.TextProcessing;
 
 import java.net.URI;
 import java.net.http.HttpClient;

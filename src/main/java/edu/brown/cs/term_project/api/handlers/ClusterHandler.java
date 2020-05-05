@@ -1,8 +1,8 @@
 package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.database.NewsData;
 import edu.brown.cs.term_project.api.response.StandardResponse;
 import spark.QueryParamsMap;
 import spark.Request;

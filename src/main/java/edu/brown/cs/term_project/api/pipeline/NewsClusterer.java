@@ -1,16 +1,16 @@
 package edu.brown.cs.term_project.api.pipeline;
 
-import edu.brown.cs.term_project.Bubble.Article;
-import edu.brown.cs.term_project.Bubble.ArticleVertex;
-import edu.brown.cs.term_project.Bubble.ArticleWord;
-import edu.brown.cs.term_project.Bubble.Entity;
-import edu.brown.cs.term_project.Bubble.NewsData;
-import edu.brown.cs.term_project.Bubble.Similarity;
+import edu.brown.cs.term_project.bubble.Article;
+import edu.brown.cs.term_project.bubble.ArticleVertex;
+import edu.brown.cs.term_project.bubble.ArticleWord;
+import edu.brown.cs.term_project.bubble.Entity;
+import edu.brown.cs.term_project.database.NewsData;
+import edu.brown.cs.term_project.bubble.Similarity;
 import edu.brown.cs.term_project.api.response.ChartCluster;
-import edu.brown.cs.term_project.Graph.Cluster;
-import edu.brown.cs.term_project.Graph.ClusterParameters;
-import edu.brown.cs.term_project.Graph.Graph;
-import edu.brown.cs.term_project.TextSimilarity.TextCorpus;
+import edu.brown.cs.term_project.clustering.Cluster;
+import edu.brown.cs.term_project.clustering.ClusterParameters;
+import edu.brown.cs.term_project.graph.Graph;
+import edu.brown.cs.term_project.similarity.TextCorpus;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

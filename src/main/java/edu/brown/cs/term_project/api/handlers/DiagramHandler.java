@@ -1,6 +1,6 @@
 package edu.brown.cs.term_project.api.handlers;
 
-import edu.brown.cs.term_project.Bubble.NewsData;
+import edu.brown.cs.term_project.database.NewsData;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
