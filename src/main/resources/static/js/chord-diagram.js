@@ -11,7 +11,6 @@ let indices = {};
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
  */
 function renderChord(parsed) {
-    console.log(parsed);
     const margin = {top:180, left: 400, right: 400, bottom: 180};
     const width = 1500
     const height = 700 + margin.top + margin.bottom;
@@ -301,8 +300,6 @@ function boxPlot(data, point) {
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-    console.log(data);
-
 // Compute summary statistics used for the box:
     let sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
         .key(d => "true")
@@ -316,9 +313,6 @@ function boxPlot(data, point) {
             return({q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max})
         })
         .entries(data);
-
-    console.log("hi");
-    console.log(sumstat);
 
     // Show the Y scale
     const y = d3.scaleBand()
@@ -379,8 +373,6 @@ function boxPlot(data, point) {
         .style("width", 40);
 
     // rectangle for the main box
-
-    console.log(x(sumstat[0].value.q3))//-x(sumstat[0].value.q1))
     svg
         .selectAll("boxes")
         .data(sumstat)

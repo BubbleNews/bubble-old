@@ -2,10 +2,11 @@ export { renderBarPlot, setDataStuff, renderFirst, updateDataAndRender };
 
 const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
-const margin = {left: 60, right: 10, top: 10, bottom: 0};
+const margin = {left: 60, right: 0, top: 10, bottom: 0};
 const labelPadding = 10;
 const types = ['entity', 'title', 'text'];
 const colors = ['steelblue', 'red', 'orange'];
+const barHeight = 20;
 const dotRadius = 10;
 const distanceBetweenDots = 25;
 const distanceBetweenLabelAndDot = 20;
@@ -27,34 +28,33 @@ function renderFirst(data, id, type) {
         .attr('width', width)
         .attr('height', height)
         .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`)
-        .append('g')
-        .attr('class', 'bar-labels')
-        .attr('transform', `translate(${margin.left},0)`);
-    setDataStuff(data, type)
-}
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-// // make a legend group
-// const legend = svg.append('g')
-//     .attr('class', 'legend')
-//     .attr('transform', `translate(400,200)`)
-//     .selectAll('myLabels')
-//     .data(types)
-//     .enter()
-//     .append('g')
-//
-// // add dots to legend
-// legend.append('circle')
-//     .attr('cy', (d,i) => i * distanceBetweenDots)
-//     .attr('r', dotRadius)
-//     .attr('fill', d => color(d));
-//
-// // add labels to legend
-// legend.append('text')
-//     .attr('x', distanceBetweenLabelAndDot)
-//     .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
-//     .attr('fill', d => color(d))
-//     .text(d => console.log(d));
+const svgTransformed = svg.append('g')
+    .attr('class', 'bar-labels')
+    .attr('transform', `translate(${margin.left},0)`);
+
+// make a legend group
+const legend = svg.append('g')
+    .attr('class', 'legend')
+    .attr('transform', `translate(${innerWidth - 70},${innerHeight / 2})`)
+    .selectAll('myLabels')
+    .data(types)
+    .enter()
+    .append('g')
+
+// add dots to legend
+legend.append('circle')
+    .attr('cy', (d,i) => i * distanceBetweenDots)
+    .attr('r', dotRadius)
+    .attr('fill', d => color(d));
+
+// add labels to legend
+legend.append('text')
+    .attr('x', distanceBetweenLabelAndDot)
+    .attr('y', (d,i) => i * distanceBetweenDots + dotRadius / 2)
+    .attr('fill', d => color(d))
+    .text(d => d);
 
 let words;
 let relevantWords;
@@ -68,6 +68,7 @@ function setDataStuff(data, type) {
 function updateDataAndRender(type) {
     words = formatBarPlotData(storedData, type);
     relevantWords = sliceWords(words, numBarsToDisplayThresholdPercent, maxBars);
+    console.log(relevantWords);
     renderBarPlot();
 }
 
@@ -85,18 +86,20 @@ function updateDataAndRender(type) {
  * @param type
  */
 function renderBarPlot() {
+    console.log(height);
+
     const x = d3.scaleLinear()
         .domain(d3.extent(words.map(d => d.value)))
         .range([0, innerWidth]);
 
     const y = d3.scaleBand()
-        .domain(d3.range(relevantWords.length))
+        .domain(d3.range(maxBars))
         .range([0, innerHeight])
         .padding(0.1);
 
     // does the data join with a group
     // TODO: use the new selection.join syntax
-    const groups = svg.selectAll('g')
+    const groups = svgTransformed.selectAll('g')
         .data(relevantWords);
     const groupsEnter = groups.enter().append('g');
     groupsEnter.merge(groups)
