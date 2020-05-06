@@ -5,11 +5,14 @@ const sourceMap = new Map();
 
 const clusterMap = new Map();
 
+/**
+ * Setup the webpage
+ */
 $(document).ready(() => {
 
     /* startup particlejs */
-    particlesJS.load('particles-js', '../json/particles.json', function() {
-        console.log('callback - particles.js config loaded');
+    particlesJS.load('particles-js', '../json/particles.json',
+        function() {
     });
 
     // add date selector
@@ -23,8 +26,10 @@ $(document).ready(() => {
     // get current chart
     getChart(new Date());
 
+    // hide loading wheel
     $('#mainLoader').hide();
 
+    // Add click functions for all the source buttons
     $('.sourceToggle').click(function() {
         const button = $(this);
         const cleanSource = cleanSourceName(button.text());
@@ -43,56 +48,63 @@ $(document).ready(() => {
             button.addClass("btn-success");
         }
     });
-    // add form submit
+    // add form submit for reclustering
     $('#reclusterParams').submit(function(event) {
             event.preventDefault();
             $("#clusters").empty();
             clusterMap.clear();
+            // show loading wheel
             $('#mainLoader').show();
             let reclusterEndpoint = 'api/recluster';
+            // get correct date to pull articles from
             const date = new Date($('#date').val());
             const isToday = isDateToday(date);
             const year = date.getFullYear();
+            // months get returned as 0 - 11 so we add one
             const originalMonth = date.getMonth() + 1;
+            // add 0 to front of month and day if needed (for correct formatting)
             const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
             const originalDay = date.getDate();
             const newDay = (originalMonth < 10) ? '0' + originalDay: originalDay;
             const offset = date.getTimezoneOffset() / 60;
             const serializedClusterParams = $('#reclusterParams').serialize();
-
+            // send get request
             reclusterEndpoint += `?year=${year}&month=${newMonth}&day=${newDay}
                 &offset=${offset}&isToday=${isToday}&${serializedClusterParams}`;
 
             $.get(reclusterEndpoint, function(data) {
                 const parsed = JSON.parse(data);
                 $('#mainLoader').hide();
-                console.log(parsed);
                 $('#chartMessage').hide();
                 if (parsed.clusters.length == 0) {
+                    // display message saying no clusters found with these parameters
                     $('#chartMessage').empty();
                     $('#chartMessage').append('<div class="alert alert-danger"><h2>No' +
                         ' clusters found with these parameters</h2></div>');
                     $('#chartMessage').show();
                 }
+                // show the new clusters
                 let i;
                 for (i = 0; i < parsed.clusters.length; i++) {
                     appendCluster(parsed.clusters[i], true);
                 }
             });
     });
-
+    // set all the source buttons to have their name
     $('.sourceToggle').each(function(index, element) {
         const source = cleanSourceName($(this).text());
         sourceMap.set(source, true);
     });
-
+    // add click handler for reset button
     $('#resetButton').click(function() {
         addDate();
         dateClickHandler();
     });
 });
 
-
+/**
+ * Sets date to current date when loading website
+ */
 function addDate() {
     const today = new Date().toLocaleDateString()
     $('#date').val(today);
@@ -100,20 +112,27 @@ function addDate() {
 
 $('#date').datepicker();
 
+/**
+ * Handler for selecting a new date
+ */
 function dateClickHandler() {
+    // get the date val
     let dateVal = $('#date').val();
+    // if mobile datepickers are used, the date is returend in a different format split by dashes
+    // and we must convert it
     const dateDashed = dateVal.split("-");
     if (dateDashed.length === 3) {
         const dateString = dateDashed[1] + '/' + dateDashed[2] + '/' + dateDashed[0]
         $('#date').val(dateString);
         dateVal = dateString;
     }
+    // create a new date object with the date
     const dateArr = dateVal.split('/').map(x => parseInt(x));
     const date = new Date(dateArr[2], dateArr[0] - 1, dateArr[1]);
-    console.log(date);
     // check if date is later than today
     $("#chartMessage").hide();
     if (date > new Date()) {
+        // display message saying we can't display news from the future
         $("#clusters").empty();
         clusterMap.clear();
         $('#chartMessage').empty();
@@ -125,20 +144,25 @@ function dateClickHandler() {
         getChart(date);
     }
 }
-// function stringifyDate(date) {
-//     const originalMonth = date.getMonth() + 1;
-//     const month = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-//     const originalDay = date.getDate();
-//     const day = (originalDay < 10) ? '0' + originalDay: originalDay;
-//     return date.getFullYear() + '-' + month + '-' + day;
-// }
 
+/**
+ * Given a date, checks if that date is the current day in the user's local time
+ * @param date date the user selected
+ * @returns {boolean} true if the selected date is the current day in the user's local time, false
+ * otherwise
+ */
 function isDateToday(date) {
     const today = new Date();
-    return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === date.getFullYear();
+    return date.getDate() === today.getDate() && date.getMonth() === today.getMonth()
+        && date.getFullYear() === date.getFullYear();
 }
 
+/**
+ * Gets the new clusters/articles when someone clicks the show button on a new date
+ * @param date the date the user selected
+ */
 function getChart(date) {
+    // clear existing clusters
     $("#clusters").empty();
     clusterMap.clear();
     // clear messages
@@ -146,8 +170,6 @@ function getChart(date) {
     let chartUrl = 'api/chart';
     // update request url with date if needed
     const isToday = isDateToday(date);
-
-
     chartUrl += '?year=' + date.getFullYear();
     const originalMonth = date.getMonth() + 1;
     const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
@@ -157,14 +179,13 @@ function getChart(date) {
     chartUrl += ('&day=' + newDay);
     chartUrl += '&offset=' + date.getTimezoneOffset() / 60;
     chartUrl += '&isToday=' + isToday;
-    // send get request
+    // send get request to get new clusters
     $.get(chartUrl, function(data) {
         const parsed = JSON.parse(data);
-        // TODO: do something with parsed chart response
         const clusters = parsed.clusters;
-        console.log(parsed);
         $('#chartMessage').hide();
         if (clusters.length == 0) {
+            // if we get no articles display a message
             $('#chartMessage').empty();
             $('#chartMessage').append('<div class="alert alert-danger"><h2>No' +
                 ' articles stored for' +
@@ -173,6 +194,7 @@ function getChart(date) {
             $('#chartMessage').show();
             return;
         }
+        // add new clusters to the page
         let i;
         for (i = 0; i < clusters.length; i++) {
             appendCluster(clusters[i], false);
@@ -180,12 +202,19 @@ function getChart(date) {
     })
 }
 
+/**
+ * Adds a single cluster to the page
+ * @param cluster the cluster object to add
+ * @param reclustered boolean true if this cluster is from reclustering
+ */
 function appendCluster(cluster, reclustered) {
     clusterMap.set(cluster.clusterId, cluster);
     const classNum = Math.floor(Math.random() * 4);
+    // add the card for the cluster
     const clusterHtml =
         "<div class='card text-center'>"
-            + "<div id=" + cluster.clusterId + " class='card-header clusHead cluster" + classNum + "'>"
+            + "<div id=" + cluster.clusterId + " class='card-header clusHead cluster" + classNum
+        + "'>"
                 +"<button class='btn btn-primary-outline' type='button' data-toggle='collapse'" +
         " data-target='#collapse" + cluster.clusterId + "'>"
                 + "<h2>" + cluster.headline
@@ -194,6 +223,8 @@ function appendCluster(cluster, reclustered) {
                 + "</div>"
         + "</div>";
     $('#clusters').append(clusterHtml);
+    // we must fill in the articles differently if they were reclustered because we get them from
+    // the JSON, not a db request
     if (reclustered) {
         makeCluster(cluster.clusterId, cluster.articles);
     } else {
@@ -201,6 +232,10 @@ function appendCluster(cluster, reclustered) {
     }
 }
 
+/**
+ * Calls database to get and add articles for a given cluster (real not reclustered)
+ * @param clusterId id of the cluster to add
+ */
 function getClusterRequest(clusterId) {
     $('.articlesWrapper').remove();
     if (clusterId == currentlyOpenClusterId) {
@@ -218,8 +253,14 @@ function getClusterRequest(clusterId) {
     });
 }
 
+/**
+ * Adds the articles in for a cluster card that has already been added
+ * @param clusterId id of the cluster
+ * @param articles all the article objects for each article in the cluster
+ */
 function makeCluster(clusterId, articles) {
     const divId = clusterId + 'articles';
+    // Add html for the tabs within each cluster
     const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
         ' data-parent="#clusters">'
         + '<div class="card-body"><ul class="nav nav-tabs nav-fill" role="tablist">'
@@ -260,34 +301,47 @@ function makeCluster(clusterId, articles) {
     $('#' + clusterId).append(articlesHtml);
     $('.spin' + clusterId).hide();
     $('.diagram' + clusterId).hide();
+    // add click handler for generate visualization button
     $('#generate' + clusterId).click(function() {
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
         const meanRadius = clusterMap.get(clusterId).meanRadius;
         const articleIds = articles.map(a => a.id);
+        // create the visualization
         getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 
     });
     let i;
-    console.log(articles);
+    // loop and add the html for each article
     for (i = 0; i < articles.length; i++) {
         const article = articles[i];
         const timePub = article.timePublished;
-        let articleDate = new Date(Date.UTC(timePub.slice(0, 4), timePub.slice(5, 7) - 1, timePub.slice(8, 10), timePub.slice(11, 13), timePub.slice(14, 16)))
+        // get converted time of publication for each article
+        let articleDate = new Date(Date.UTC(timePub.slice(0, 4), timePub.slice(5, 7) - 1,
+            timePub.slice(8, 10), timePub.slice(11, 13), timePub.slice(14, 16)))
         let cleanSource = cleanSourceName(article.sourceName);
-        let articleHTML = '<li class="list-group-item ' + cleanSource + '"><div id="' + divId + i  + '" class="article ' + '"'
+        // add html for each article
+        let articleHTML = '<li class="list-group-item ' + cleanSource + '"><div id="' + divId + i
+            + '" class="article ' + '"'
             + '> <h3><a href="' + article.url + '" target="_blank">'
             + article.title + '</a></h3>'
             + '<span class="badge badge-info"><span>' + article.sourceName + ' <span class="badge'
             + ' badge-light ml-2">'
-            + articleDate.toLocaleTimeString('en-us', {hour: 'numeric', minute: 'numeric', hour12: true, timeZoneName:'short'})+ '</span></h3></span></div></li>';
+            + articleDate.toLocaleTimeString('en-us', {hour: 'numeric',
+                minute: 'numeric', hour12: true, timeZoneName:'short'})+ '</span></h3></span>'
+            + '</div></li>';
         $('#' + divId).append(articleHTML);
     }
     currentlyOpenClusterId = clusterId;
 }
 
+/**
+ * Given a sourceName, get its clean readable version
+ * @param sourceName non-clean sourcename
+ * @returns {*} clean readable source name
+ */
 function cleanSourceName(sourceName) {
     return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }

@@ -22,7 +22,6 @@ function renderChord(parsed, radiusMap) {
     let maxRadius = Number.MIN_SAFE_INTEGER;
     let minRadius = Number.MAX_SAFE_INTEGER;
     for (let [k, v] of radiusMap) {
-        console.log(k);
         if (v.meanRadius > maxRadius) {
             maxRadius = v.meanRadius;
         } else if (v.meanRadius < minRadius) {
@@ -163,10 +162,12 @@ function wrap(text, width) {
                 tspan.text(line.join(" "));
                 lines++;
                 line = [word];
-                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", lineHeight + "em").text(word);
+                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy",
+                    lineHeight + "em").text(word);
             }
         }
-        text.attr('transform', d => `translate(${getWidth(d, lines, width)},${getHeight(d, lines)})`);
+        text.attr('transform', d => `translate(${getWidth(d, lines, width)},${getHeight(d, 
+            lines)})`);
     });
 }
 
@@ -235,10 +236,8 @@ function interpolateColor(d, color) {
  * @param num
  */
 function getDistance(d, total, pad, num) {
-    console.log(d);
-    console.log(total);
-    const toReturn = ((2* (d.source.endAngle - d.source.startAngle))*total/(2*Math.PI - num*pad)).toFixed(2);
-    console.log(toReturn);
+    const toReturn = ((2* (d.source.endAngle - d.source.startAngle))*total/(2*Math.PI
+        - num*pad)).toFixed(2);
     return toReturn;
 }
 
@@ -320,7 +319,8 @@ function boxPlot(data, point) {
             const interQuantileRange = q3 - q1
             const min = d3.min(d, a => a.radius);
             const max = d3.max(d, a => a.radius);
-            return({q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange, min: min, max: max})
+            return({q1: q1, median: median, q3: q3, interQuantileRange: interQuantileRange,
+                min: min, max: max})
         })
         .entries(data);
 
@@ -388,8 +388,8 @@ function boxPlot(data, point) {
         .data(sumstat)
         .enter()
         .append("rect")
-        .attr("x", function(d){return(x(d.value.q1))}) // console.log(x(d.value.q1)) ;
-        .attr("width", function(d){ return(x(d.value.q3)-x(d.value.q1))}) //console.log(x(d.value.q3)-x(d.value.q1))
+        .attr("x", function(d){return(x(d.value.q1))})
+        .attr("width", function(d){ return(x(d.value.q3)-x(d.value.q1))})
         .attr("y", margin.top)
         .attr("height", y.bandwidth())
         .attr("stroke", "black")
@@ -421,7 +421,8 @@ function boxPlot(data, point) {
         .append("circle")
         .merge(svg)
         .attr("cx", function(d){ return(x(d.radius))})
-        .attr("cy", function(d){ return(  (margin.top + y.bandwidth()/2) - jitterWidth/2 + Math.random()*jitterWidth )})
+        .attr("cy", function(d){ return(  (margin.top + y.bandwidth()/2)
+            - jitterWidth/2 + Math.random()*jitterWidth )})
         .attr("r", 4)
         .style("fill", "black")
         .attr("stroke", "black");
@@ -438,11 +439,3 @@ function boxPlot(data, point) {
         .attr("r", 6)
         .style("fill", "red");
 }
-
-//boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2},
-// {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-//
-// setTimeout(function () {
-//     boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
-//
-// }, 2000);

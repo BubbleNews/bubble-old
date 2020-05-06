@@ -27,7 +27,6 @@ function getClusterDetails(clusterId, clusterMeanRadius, meanRadiusMap, articleI
     // send get request
     $.get(clusterUrl, response => {
         clusterData = JSON.parse(response);
-        console.log(clusterData);
         renderChord(clusterData, meanRadiusMap);
         initializeBarChart(clusterData, clusterIdState, 'all');
     });
@@ -44,16 +43,11 @@ function getEdgeDetails(id1, id2) {
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
         edgeData = parsed.edge;
-        console.log(parsed);
 
         updateBarChart(parsed.edge, 'all');
     });
 }
 
 function updateDashboardByType(type) {
-    // renderChord(clusterData);
     updateBarChart(clusterData, type);
 }
-
-//getClusterDetails(2, [6,58,13,39,63]);
-// getEdgeDetails(6, 58);
