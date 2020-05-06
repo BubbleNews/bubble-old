@@ -25,7 +25,6 @@ public class ClusterParameters {
   public static final int DEFAULT_OFFSET = 0;
   public static final int DEFAULT_HOURS = 24;
 
-
   // date of clusters
   private boolean doInsert;
   // calculating edge weight
@@ -121,8 +120,6 @@ public class ClusterParameters {
     return hours;
   }
 
-
-
   public void setDoInsert(boolean doInsert) {
     this.doInsert = doInsert;
   }
@@ -138,7 +135,6 @@ public class ClusterParameters {
   public void setTitleWeight(double titleWeight) {
     this.titleWeight = titleWeight;
   }
-
 
   public String getYear() {
     return year;
@@ -179,7 +175,6 @@ public class ClusterParameters {
   public void setOffset(int offset) {
     this.offset = offset;
   }
-
 
   public void setNumArticles(int numArticles) {
     this.numArticles = numArticles;
