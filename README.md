@@ -5,7 +5,7 @@ With Bubble we set out to make a site that would show the current most popular n
  show the what was being written about those stories from across the spectrum. Our project allows  
   you to see groupings of related articles on different days to track the news. We also provide a  
    means of understanding why articles have been grouped the way they have.   
-##How to Run  
+## How to Run  
 #### Running the GUI  
 * First compile the code by running **mvn package**  
 * Make sure you have a bubble.db file located in the data folder  
@@ -20,7 +20,7 @@ Unfortunately, we rely on Python 2.7 because the best web scraping library we fo
 prevent this from getting added.
 * Activate the virtual environment and install packages from requirements.txt
 #### Getting the Database  
-* Run `python create_table.py` from the root directory
+*
 #### Add Articles to the Database  
 *  
 #### Cluster Articles in the Database
@@ -50,40 +50,45 @@ stemming) and title and encode it with stop words.
   term frequency and inverse document frequency of the text, titles, and entities of each article. This allows us to calculate edge weights between articles representing their similarity.   
 * Lastly, we run this newly constructed graph through our clustering algorithm to find the final  
  clusters which we store and display on the webpage.  
-## Project Structure  
+## Project Structure: Packages  
 #### API  
 * Handlers  
-    *  
+    * Contains all Spark HTTP request handlers, the structure of the web app.
 * Pipeline  
-    *  
+    *  Classes to load new news from Python server and then trigger clustering
+    of that news.
 * Response  
-  * a  
-  
+  * Easily serializable versions of some of the more complex article and cluster
+  classes.
 #### Bubble  
-*  
+*  Classes for representing information about articles and their relations with
+each other.
 #### Clustering  
-*  
+*  Package containing clustering functionality.
 #### Database  
-* 
+*  Classes interfacing with the Bubble database.
 #### Graph  
-*  
+*  Graph structure interfaces and classes.
 #### Language  
-*
+* Utility classes for removing stop words and processing text, uses Stanford CoreNLP
+for some parts.
 #### Main  
-*
+* Contains main class to run the app.
 #### Similarity
-*
+* Classes pertaining to the similarity measurements between articles.
 #### Python  
 * ## Team Members & Division of Labor  
 * Kshitij Sachan  
   * Scraping articles in Python  
-  * D3.js visualizations of how well articles are clustering together  
+  * D3.js visualizations
 * John Graves  
-  * Clustering articles based on edge weight
-  * D3 visualizations of clustering
+  * Clustering algorithms
+  * D3.js visualizations  
   * Database Maintenance
 * Ben Silverman  
-  * Edge weight calculation via term frequency and inverse document frequency.  
-  * GUI  
+  * Similarity between articles  
+  * Front-end
 * Ian Layzer  
-  * a
+  * Reclustering functionality
+  * Front-end
+  * Pipeline for loading new news
