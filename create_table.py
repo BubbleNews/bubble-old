@@ -1,10 +1,7 @@
 import sqlite3
 
-<<<<<<< HEAD
-PATH_TO_DATABASE = "data/news_data_read_tests.sqlite3"
-=======
-PATH_TO_DATABASE = "data/final_data.db"
->>>>>>> cd987a347b7aa33dd78d5c40b9603631bb6a5c07
+PATH_TO_DATABASE = "data/news_data_write_tests.db"
+
 
 conn = sqlite3.connect(PATH_TO_DATABASE)
 c = conn.cursor()

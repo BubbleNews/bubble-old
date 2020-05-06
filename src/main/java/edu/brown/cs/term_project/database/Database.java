@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Abstract class for connections to database.
+ */
 public abstract class Database {
   private Connection conn;
 

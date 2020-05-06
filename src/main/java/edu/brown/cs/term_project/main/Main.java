@@ -21,7 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static spark.Spark.*;
+import static spark.Spark.externalStaticFileLocation;
+import static spark.Spark.get;
+import static spark.Spark.path;
+import static spark.Spark.port;
 
 /**
  * The Main class of our project. This is where execution begins.
@@ -29,14 +32,16 @@ import static spark.Spark.*;
 public final class Main {
   private static final int DEFAULT_PORT = 4567;
 
-  private static NewsData DATABASE;
+  private static NewsData database;
 
   /**
    * The initial method called when execution begins.
    * @param args An array of command line arguments
+   * @throws SQLException if error setting up database
+   * @throws ClassNotFoundException if class not found
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/news_data_read_tests.sqlite3");
+    database = new NewsData("data/news_data_read_tests.sqlite3");
     new Main(args).run();
   }
 
@@ -76,6 +81,10 @@ public final class Main {
     return DEFAULT_PORT; //return default port if heroku-port isn't set (i.e. on localhost)
   }
 
+  /**
+   * Creates a freemarker engine.
+   * @return the freemarker engine
+   */
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     File templates = new File("src/main/resources/spark/template/freemarker");
@@ -102,28 +111,27 @@ public final class Main {
 
     path("/bubble", () -> {
       // home page endpoint
-      get("/home", new HomeHandler(DATABASE), freeMarker);
-      get("/diagram", new DiagramHandler(DATABASE), freeMarker);
+      get("/home", new HomeHandler(database), freeMarker);
+      get("/diagram", new DiagramHandler(database), freeMarker);
       // api endpoints
       path("/api", () -> {
-        // TODO: add authentication for api calls with before()
         get("/update", (Request request, Response response) -> {
-          return UpdateHandler.handle(request, response, DATABASE);
+          return UpdateHandler.handle(request, response, database);
         });
         get("/chart", (Request request, Response response) -> {
-          return ChartHandler.handle(request, response, DATABASE);
+          return ChartHandler.handle(request, response, database);
         });
         get("/cluster", (Request request, Response response) -> {
-          return ClusterHandler.handle(request, response, DATABASE);
+          return ClusterHandler.handle(request, response, database);
         });
         get("/details", (Request request, Response response) -> {
-          return ClusterDetailHandler.handle(request, response, DATABASE);
+          return ClusterDetailHandler.handle(request, response, database);
         });
         get("/recluster", (Request request, Response response) -> {
-          return ReclusterHandler.handle(request, response, DATABASE);
+          return ReclusterHandler.handle(request, response, database);
         });
         get("/edge", (Request request, Response response) -> {
-          return EdgeHandler.handle(request, response, DATABASE);
+          return EdgeHandler.handle(request, response, database);
         });
       });
     });

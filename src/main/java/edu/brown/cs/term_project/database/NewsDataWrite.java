@@ -23,6 +23,9 @@ public class NewsDataWrite {
   private Connection conn;
   private static final int FINAL_HOUR = 23; // hour to finalize clusters
   private static final int DATE_TRIM_LENGTH = 19; // length to trim datetimes
+  private static final int SEVEN = 7;
+  private static final int EIGHT = 8;
+
 
   /**
    * Constructor.
@@ -220,8 +223,8 @@ public class NewsDataWrite {
     prep.setInt(4, hour);
     prep.setDouble(5, c.getAvgConnections());
     prep.setDouble(6, c.getAvgRadius());
-    prep.setDouble(7, c.getStd());
-    prep.setBoolean(8, finalCluster);
+    prep.setDouble(SEVEN, c.getStd());
+    prep.setBoolean(EIGHT, finalCluster);
     prep.execute();
     prep.close();
     PreparedStatement prep2 = conn.prepareStatement(
@@ -241,6 +244,8 @@ public class NewsDataWrite {
 
   /**
    * Deletes all data from every table.
+   *
+   * @throws SQLException if error deleting data
    */
   public void deleteAllData() throws SQLException {
     PreparedStatement prep = conn.prepareStatement("DELETE FROM articles;");

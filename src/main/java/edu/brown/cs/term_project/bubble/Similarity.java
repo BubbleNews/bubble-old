@@ -26,22 +26,11 @@ public class Similarity implements IEdge<ArticleVertex> {
    * Constructor.
    * @param src the source article vertex
    * @param dest the destination article vertex
-   * @param wordCorpus a text corpus with for words
-   * @param entityCorpus a text corpus for entities
-   * @param titleCorpus a text corpus for title
-   * @param textWeight weight of text distance in total distance calculation
-   * @param entityWeight weight of entity distance in total distance calculation
-   * @param titleWeight weight of title distance in total distance calculation
    */
-  public Similarity(ArticleVertex src, ArticleVertex dest, TextCorpus<ArticleWord,
-      ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus,
-                    TextCorpus<ArticleWord, ArticleVertex> titleCorpus, double textWeight,
-                    double entityWeight, double titleWeight) {
+  public Similarity(ArticleVertex src, ArticleVertex dest) {
     this.src = src;
     this.dest = dest;
-    this.setDistance(entityCorpus, wordCorpus, titleCorpus, textWeight, entityWeight, titleWeight);
   }
-
 
   @Override
   public ArticleVertex getDest() {
@@ -67,16 +56,19 @@ public class Similarity implements IEdge<ArticleVertex> {
    * @param entityWeight weight of entity distance in total distance calculation
    * @param titleWeight weight of title distance in total distance calculation
    */
-  private void setDistance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
+  public void setDistance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<ArticleWord, ArticleVertex> titleCorpus,
                            double textWeight, double entityWeight, double titleWeight) {
     // Should be between 0 and 1, the higher it is, the more highly weighted entities are
     double totalWeight = textWeight + entityWeight + titleWeight;
     final double divideZeroShift = .00000001;
 
-    this.wordDistance = textWeight / totalWeight  * wordCorpus.getSimilarity(this.src, this.dest);
-    this.titleDistance = titleWeight / totalWeight * titleCorpus.getSimilarity(this.src, this.dest);
-    this.entityDistance = entityWeight / totalWeight * entityCorpus.getSimilarity(this.src, this.dest);
+    this.wordDistance =
+        textWeight / totalWeight  * wordCorpus.getSimilarity(this.src, this.dest);
+    this.titleDistance =
+        titleWeight / totalWeight * titleCorpus.getSimilarity(this.src, this.dest);
+    this.entityDistance =
+        entityWeight / totalWeight * entityCorpus.getSimilarity(this.src, this.dest);
 
     this.distance = 1 / (wordDistance + titleDistance + entityDistance + divideZeroShift);
   }

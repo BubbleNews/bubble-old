@@ -1,16 +1,15 @@
 package edu.brown.cs.term_project.clustering;
 
-import edu.brown.cs.term_project.api.pipeline.NewsClusterer;
-import edu.brown.cs.term_project.database.NewsData;
 import spark.QueryParamsMap;
-import spark.Request;
 
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import static java.lang.Double.parseDouble;
 
+/**
+ * Class containing parameters for clustering.
+ */
 public class ClusterParameters {
   // default clustering parameters
   private static Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -41,6 +40,11 @@ public class ClusterParameters {
   private int offset;
   private int hours;
 
+  /**
+   * Default constructor for clustering parameters.
+   * @param hours the hour to get clusters for
+   * @param doInsert whether or not to insert into the database
+   */
   public ClusterParameters(int hours, boolean doInsert) {
     // default clustering parameters
     this.doInsert = doInsert;
@@ -56,6 +60,16 @@ public class ClusterParameters {
     this.hours = hours;
   }
 
+  /**
+   * Another constructor for clustering parameters with more datetime information.
+   * @param year the year string
+   * @param month the month string
+   * @param day the day string
+   * @param isToday whether or not getting clusters for today
+   * @param offset a timezone offset
+   * @param hours the hour to get cluster for
+   * @param doInsert whether or not to insert into the database
+   */
   public ClusterParameters(String year, String month, String day,
                            boolean isToday, int offset, int hours, boolean doInsert) {
     // default clustering parameters
@@ -67,6 +81,11 @@ public class ClusterParameters {
 
   }
 
+  /**
+   * Constructor for getting cluster params from an HTTP request params map.
+   * @param qm the query params map
+   * @param useDate whether or not to use the date
+   */
   public ClusterParameters(QueryParamsMap qm, boolean useDate) {
     this.doInsert = false;
     this.textWeight = parseDouble(qm.value("textWeight"));
@@ -91,95 +110,147 @@ public class ClusterParameters {
 
   }
 
+  /**
+   * Gets doInsert field.
+   * @return doInsert
+   */
   public boolean getDoInsert() {
     return doInsert;
   }
 
+  /**
+   * Gets textWeight parameter for edge calculation.
+   * @return the text weight
+   */
   public double getTextWeight() {
     return textWeight;
   }
 
+  /**
+   * Gets textWeight parameter for edge calculation.
+   * @return the the entity weight
+   */
   public double getEntityWeight() {
     return entityWeight;
   }
 
+  /**
+   * Gets title weight parameter for edge calculation.
+   * @return the the title weight
+   */
   public double getTitleWeight() {
     return titleWeight;
   }
 
+  /**
+   * Gets the number of articles to cluster.
+   * @return the number of clusters parameter
+   */
   public int getNumArticles() {
     return numArticles;
   }
 
+  /**
+   * Gets the string concatenation of the date.
+   * @return the string formatted date
+   */
   public String getDate() {
     return year + "-" + month + "-" + day;
   }
 
+  /**
+   * Gets the hour to cluster.
+   * @return the hour
+   */
   public int getHours() {
     return hours;
   }
 
-  public void setDoInsert(boolean doInsert) {
-    this.doInsert = doInsert;
-  }
-
-  public void setTextWeight(double textWeight) {
-    this.textWeight = textWeight;
-  }
-
-  public void setEntityWeight(double entityWeight) {
-    this.entityWeight = entityWeight;
-  }
-
-  public void setTitleWeight(double titleWeight) {
-    this.titleWeight = titleWeight;
-  }
-
+  /**
+   * Gets the year of the date to cluster.
+   * @return the year
+   */
   public String getYear() {
     return year;
   }
 
+  /**
+   * Sets the year.
+   * @param year the year of the date
+   */
   public void setYear(String year) {
     this.year = year;
   }
 
+  /**
+   * Gets the month to cluster for.
+   * @return the month
+   */
   public String getMonth() {
     return month;
   }
 
+  /**
+   * Sets the month parameter.
+   * @param month the month
+   */
   public void setMonth(String month) {
     this.month = month;
   }
 
+  /**
+   * Gets the day parameter.
+   * @return the day
+   */
   public String getDay() {
     return day;
   }
 
+  /**
+   * Sets the day parameter.
+   * @param day the day
+   */
   public void setDay(String day) {
     this.day = day;
   }
 
+  /**
+   * Gets the isToday parameter.
+   * @return whether or not cluster for today.
+   */
   public boolean isToday() {
     return isToday;
   }
 
+  /**
+   * Sets the today parameter.
+   * @param today whether or not to cluster for today
+   */
   public void setToday(boolean today) {
     isToday = today;
   }
 
+  /**
+   * Gets the offset from utc.
+   * @return the time zone offset in hours
+   */
   public int getOffset() {
     return offset;
   }
 
+  /**
+   * Sets the offset from utc.
+   * @param offset the timezone offset in hours
+   */
   public void setOffset(int offset) {
     this.offset = offset;
   }
 
+  /**
+   * Sets the number of articles to cluster.
+   * @param numArticles the max number of articles
+   */
   public void setNumArticles(int numArticles) {
     this.numArticles = numArticles;
-  }
-
-  public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    ClusterParameters test = new ClusterParameters(24, false);
   }
 }

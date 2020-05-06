@@ -6,6 +6,11 @@ import edu.brown.cs.term_project.graph.INode;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Class for a cluster of nodes.
+ * @param <T> the node type
+ * @param <E> the edge type
+ */
 public class Cluster<T extends INode<E>, E extends IEdge<T>> {
   private int id;
   private T headlineArticleVertex;
@@ -15,6 +20,12 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
   private double avgRadius;
   private double std;
 
+  /**
+   * Constructor for a cluster.
+   * @param id the id of the cluster
+   * @param headlineArticleVertex the 'headline' node of the cluster
+   * @param articles the set of nodes in the cluster
+   */
   public Cluster(Integer id, T headlineArticleVertex, Set<T> articles) {
     this.id = id;
     this.headlineArticleVertex = headlineArticleVertex;
@@ -24,27 +35,51 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
     setAvgRadius();
     setStd();
   }
-  
+
+  /**
+   * Gets the id of a cluster.
+   * @return the id
+   */
   public Integer getId() {
     return id;
   }
-  
+
+  /**
+   * Gets the nodes in a cluster.
+   * @return the nodes
+   */
   public Set<T> getNodes() {
     return articles;
   }
-  
+
+  /**
+   * Gets the size (number of nodes) of a cluster.
+   * @return the size
+   */
   public Integer getSize() {
     return size;
   }
-  
+
+  /**
+   * Gets the average number of edges from a node in the cluster.
+   * @return the average connections
+   */
   public double getAvgConnections() {
     return avgConnections;
   }
-  
+
+  /**
+   * Get the average radius of edges in the cluster.
+   * @return the average radius
+   */
   public double getAvgRadius() {
     return avgRadius;
   }
-  
+
+  /**
+   * Get the standard deviation of radius/edge distance in the cluster.
+   * @return the std
+   */
   public double getStd() {
     return std;
   }
@@ -63,7 +98,7 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
 
   /**
    * Method to add multiple nodes at once to a cluster.
-   * @param cluster
+   * @param cluster add all nodes from another cluster to this cluster
    */
   public void addNodes(Cluster cluster) {
     this.articles.addAll(cluster.getNodes());
@@ -73,6 +108,9 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
     setStd();
   }
 
+  /**
+   * Adjusts the headline node.
+   */
   public void adjustHead() {
     double minRadius = Integer.MAX_VALUE;
     T headNode = null;
@@ -86,6 +124,10 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
     this.headlineArticleVertex = headNode;
   }
 
+  /**
+   * Gets the head node of a cluster.
+   * @return the head node
+   */
   public T getHeadNode() {
     return headlineArticleVertex;
   }
@@ -112,10 +154,16 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
 
   }
 
+  /**
+   * Sets the average number of connections for a cluster to 0.
+   */
   public void setAvgConnections() {
     this.avgConnections = 0;
   }
 
+  /**
+   * Sets the std of connections for a cluster to 0.
+   */
   public void setStd() {
     this.std = 0;
   }

@@ -11,6 +11,11 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for clustering by method 2.
+ * @param <T> the type of the node
+ * @param <S> the type of the edge
+ */
 public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
   private Set<T> nodes;
   private List<S> edges;
@@ -18,6 +23,12 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
   private Set<Cluster<T, S>> clusters;
   private int count = 0;
 
+  /**
+   * Constructor for clustering2.
+   * @param nodes the set of nodes in the graph
+   * @param edges the set of edges in the graph
+   * @param threshold ignore edges with distances above a certain threshold
+   */
   public Clustering2(Set<T> nodes, List<S> edges, double threshold) {
     this.nodes = nodes;
     this.edges = edges;
@@ -49,7 +60,8 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
     // instead of picking just best cluster, could make a queue of top 5 or so, go from there
     // finds optimal clustering with numClusters
     List<Cluster<T, S>> finalClusters = findClusters(clusterNodes, numClusters);
-    System.out.println("MIN: " + Math.min(maxClusters, nodes.size() / 10));
+    final double ten = 10;
+    System.out.println("MIN: " + Math.min(maxClusters, nodes.size() / ten));
     System.out.println("TOTAL CLUSTERS: " + numClusters);
     for (Cluster<T, S> c: finalClusters) {
       c.adjustHead(); // optimzes cluster head
@@ -57,13 +69,13 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
         clusters.add(c); // adds cluster to graphs clusters
       }
       System.out.println("Cluster.java: " + c.getHeadNode().getId() + " size: " + c.getSize());
-      String toPrint = "";
+      StringBuilder toPrint = new StringBuilder("");
       Set<T> clusterNodeSet = c.getNodes();
       for (T n: clusterNodeSet) { // prints clustering
-        toPrint += n.getId();
-        toPrint += " ";
+        toPrint.append(n.getId());
+        toPrint.append(" ");
       }
-      System.out.println(toPrint);
+      System.out.println(toPrint.toString());
     }
     return clusters;
   }
@@ -181,5 +193,4 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
     }
     return tempClusters;
   }
-
 }

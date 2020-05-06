@@ -1,7 +1,5 @@
 package edu.brown.cs.term_project.clustering;
 
-import edu.brown.cs.term_project.clustering.Cluster;
-import edu.brown.cs.term_project.clustering.ClusterMethods;
 import edu.brown.cs.term_project.graph.EdgeComparator;
 import edu.brown.cs.term_project.graph.IEdge;
 import edu.brown.cs.term_project.graph.INode;
@@ -15,9 +13,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
 
-public class OptimalClusterCount<T extends INode<S>, S extends IEdge<T>> {
+/**
+ * Class to get the optimal cluster count for clustering a graph.
+ */
+public final class OptimalClusterCount {
 
+  /**
+   * Constructor for class should not be called.
+   */
+  private OptimalClusterCount() {
+    // not called
+  }
 
+  /**
+   * Gets the optimal number of clusters for a set of nodes.
+   * @param nodes set of nodes.
+   * @param count counter of clusters
+   * @param clusterNodes list of cluster nodes
+   * @param maxClusters max number of clusters
+   * @param <T> type of node
+   * @param <S> type of edges
+   * @return the optimal number of clusters for set of nodes
+   */
   public static <T extends INode<S>, S extends IEdge<T>> int getOptimalCount(
       Set<T> nodes, Integer count, List<T> clusterNodes, Integer maxClusters) {
     double maxDiff = Integer.MIN_VALUE; // value to maximize to find optimal number of clusters
@@ -37,7 +54,8 @@ public class OptimalClusterCount<T extends INode<S>, S extends IEdge<T>> {
       double diff = (prevRadius2 - prevRadius1) / Math.max(prevRadius1 - newRadius, minDenominator);
       //experiment - diff formula
       System.out.println("Diff: " + (i - 1) + " - " + diff);
-      if (i >= Math.min(maxClusters, nodes.size() / 10) && diff > maxDiff) { // if diff is larger
+      final double ten = 10;
+      if (i >= Math.min(maxClusters, nodes.size() / ten) && diff > maxDiff) { // if diff is larger
         // than maxDiff, update
         maxDiff = diff;
         numClusters = i - 1;

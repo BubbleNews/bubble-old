@@ -114,7 +114,10 @@ public final class ClusterDetailHandler {
     for (ArticleVertex a1 : articles) {
       for (ArticleVertex a2 : articles) {
         if (a1.getId() < a2.getId()) {
-          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, titleCorpus,
+          // make edge
+          Similarity tempEdge = new Similarity(a1, a2);
+          // calculate edge distance
+          tempEdge.setDistance(entityCorpus, wordCorpus, titleCorpus,
               textWeight,
               entityWeight, titleWeight);
           tempEdge.setImportance(entityCorpus, wordCorpus, titleCorpus);

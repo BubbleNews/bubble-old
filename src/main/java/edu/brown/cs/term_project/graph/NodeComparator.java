@@ -1,16 +1,19 @@
 package edu.brown.cs.term_project.graph;
 
-
 import java.util.Comparator;
 import java.util.Map;
 
 /**
  * Class comparing Articles based on the distance value in a hash map.
- * @param <N>
+ * @param <N> the type of node
  */
 public class NodeComparator<N extends INode> implements Comparator<N> {
   private Map<Integer, Double> distances;
 
+  /**
+   * Constructor for a node comparator.
+   * @param distances a map of article distances
+   */
   public NodeComparator(Map<Integer, Double> distances) {
     this.distances = distances;
   }

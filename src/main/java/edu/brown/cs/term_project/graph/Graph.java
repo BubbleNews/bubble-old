@@ -10,6 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Class for graph structure.
+ * @param <T> the type of node
+ * @param <S> the type of edge
+ */
 public class Graph<T extends INode<S>, S extends IEdge<T>> {
   private Set<T> nodes;
   private List<S> edges;
@@ -34,6 +39,10 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
     ClusterMethods.setRadiusThreshold(nodes);
   }
 
+  /**
+   * Runs the proper clustering method (1 or 2).
+   * @param method 1 or 2, the clustering method
+   */
   public void runClusters(Integer method) {
     if (method == 1) {
       System.out.println("Clustering Method 1");
@@ -57,6 +66,10 @@ public class Graph<T extends INode<S>, S extends IEdge<T>> {
     this.threshold = threshold;
   }
 
+  /**
+   * Getter for clusters.
+   * @return the clusters from the graph
+   */
   public Set<Cluster<T, S>> getClusters() {
     return clusters;
   }
