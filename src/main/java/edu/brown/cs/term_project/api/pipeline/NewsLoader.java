@@ -14,14 +14,27 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.time.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * A class for loading in new news data by calling python server.
+ */
 public class NewsLoader {
   private NewsData db;
-  String pythonEndpoint;
+  private String pythonEndpoint;
 
+  /**
+   * Constructor for a NewsLoader.
+   * @param db the database to load news into
+   * @param pythonEndpoint the url of the python server
+   */
   public NewsLoader(NewsData db, String pythonEndpoint) {
     this.db = db;
     this.pythonEndpoint = pythonEndpoint;
@@ -33,21 +46,31 @@ public class NewsLoader {
    * @param articlesPerBatch number of articles to retrieve in call
    * @param step number of hours range to search in
    * @param stepBack start scraping articles published this many hours in the past
-   * @throws Exception
+   * @throws Exception if thrown
    */
-  public void executeBatches(int numBatches, int articlesPerBatch, int step, int stepBack) throws Exception {
+  public void executeBatches(
+      int numBatches, int articlesPerBatch, int step, int stepBack) throws Exception {
     Instant endTime = Instant.now().minus(stepBack, ChronoUnit.HOURS);
     Instant startTime = endTime.minus(step, ChronoUnit.HOURS);
     for (int i = 0; i < numBatches; i++) {
-      System.out.println("Batch " + (i + 1) + "/" + numBatches+ ": Getting " + articlesPerBatch + " articles from "
-              + startTime + " to " + endTime);
+      System.out.println("Batch " + (i + 1) + "/" + numBatches + ": Getting "
+          + articlesPerBatch + " articles from "
+          + startTime + " to " + endTime);
       loadArticlesBatch(startTime, endTime, articlesPerBatch);
       endTime = startTime;
       startTime = endTime.minus(step, ChronoUnit.HOURS);
     }
   }
 
-  public void loadArticlesBatch(Instant startTime, Instant endTime, int numArticles) throws Exception {
+  /**
+   * Loads a batch of articles published between a start and end time by calling python server.
+   * @param startTime the earliest time published we want
+   * @param endTime the latest time published we want
+   * @param numArticles the number of articles to load
+   * @throws Exception if thrown
+   */
+  public void loadArticlesBatch(Instant startTime, Instant endTime,
+                                int numArticles) throws Exception {
     // make request
     HashMap<String, String> requestParams = new HashMap<>();
     requestParams.put("startTime", formatDate(startTime));
@@ -68,6 +91,12 @@ public class NewsLoader {
     processJSONArticles(articles);
   }
 
+  /**
+   * Adds parameters to a base url.
+   * @param baseUrl the base url/endpoint
+   * @param params map of parameters to serialize
+   * @return
+   */
   private String addParameters(String baseUrl, HashMap<String, String> params) {
     StringBuilder sb = new StringBuilder(baseUrl);
     sb.append('?');
@@ -81,6 +110,11 @@ public class NewsLoader {
     return sb.toString();
   }
 
+  /**
+   * Formats an instant object in time format News API accepts.
+   * @param date the date object
+   * @return the formatted date string
+   */
   private String formatDate(Instant date) {
     return date.truncatedTo(ChronoUnit.SECONDS).toString().replace("Z", "");
   }
@@ -119,7 +153,8 @@ public class NewsLoader {
       String[] lemmizedText = TextProcessing.lemmatizeText(article.getContent());
       String[] lemmizedTitle = TextProcessing.lemmatizeText(article.getTitle());
 
-      String[] lemmizedTextAndTitle = ObjectArrays.concat(lemmizedTitle, lemmizedText, String.class);
+      String[] lemmizedTextAndTitle =
+          ObjectArrays.concat(lemmizedTitle, lemmizedText, String.class);
       // change the content field of the article object to be the lemmized text
       article.setContent(String.join("~^", lemmizedText));
       System.out.println("Updating database");
@@ -140,9 +175,14 @@ public class NewsLoader {
     db.getDataWrite().updateVocabCounts(occurenceMap);
   }
 
+  /**
+   * Main method for NewsLoader to allow manual loading of News.
+   * @param args user input
+   * @throws Exception
+   */
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"), "http://127.0.0" +
-        ".1:5000/scrape");
+    NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"),
+        "http://127.0.0.1:5000/scrape");
     loader.executeBatches(5, 5, 5, 1);
   }
 }

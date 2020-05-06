@@ -112,9 +112,10 @@ public class NewsClusterer {
   }
 
   /**
-   *
-   * @param complexCluster
-   * @return
+   * Turns a cluster into a simpler representation (ChartCluster) to be sent
+   * to the client.
+   * @param complexCluster a cluster
+   * @return a simplified representation of that cluster
    */
   private ChartCluster clusterToChartCluster(Cluster<ArticleVertex, Similarity> complexCluster) {
     List<Article> simpleArticles = new ArrayList<>();
@@ -126,6 +127,12 @@ public class NewsClusterer {
         complexCluster.getSize(), complexCluster.getAvgRadius(), simpleArticles);
   }
 
+  /**
+   * Main method of NewsClusterer used to carry out manual clustering.
+   * @param args user input
+   * @throws SQLException if thrown
+   * @throws ClassNotFoundException if thrown
+   */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
     ClusterParameters params = new ClusterParameters(24, true);
     NewsClusterer clusterer = new NewsClusterer(new NewsData("data/mock_data.db"));
