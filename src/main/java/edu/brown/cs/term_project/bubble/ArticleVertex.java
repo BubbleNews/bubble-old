@@ -27,6 +27,9 @@ public class ArticleVertex implements INode<Similarity>, IText {
     this.entities = entities;
     this.words = setWords(text, false);
     this.title = setWords(article.getTitle(), true);
+    this.entitiesImportance = null;
+    this.wordsImportance = null;
+    this.titleImportance = null;
   }
 
   @Override
