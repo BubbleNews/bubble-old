@@ -5,8 +5,8 @@ import edu.brown.cs.term_project.similarity.IWord;
 import java.util.Objects;
 
 public class Entity implements IWord {
-  private String entity;
-  private String classType;
+  private final String entity;
+  private final String classType;
 
   public Entity(String entity, String classType) {
     this.entity = entity;

@@ -22,7 +22,9 @@ public final class TextProcessing {
   }
 
   /**
-   * Gets the entity frequencies for a text string.
+   * Gets the entity frequencies for a text string. Ignores entities of the following types because
+   * they aren't useful in calculating similarity between articles:
+   * "NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "ORDINAL", "O"
    * @param articleBody the string text of an article
    * @return a hashmap of entities and the number of times they occurred in an article.
    */
@@ -34,7 +36,7 @@ public final class TextProcessing {
       for (int i = 0; i < entityTypes.size(); i++) {
         String word = sent.word(i);
         String entityType = entityTypes.get(i);
-        if (RemoveStopWords.testWord(word) && !TextProcessing.ignoredEntities.contains(entityType)) {
+        if (!RemoveStopWords.isStopWord(word) && !TextProcessing.ignoredEntities.contains(entityType)) {
           Entity entity = new Entity(word, entityType);
           if (entityFrequencies.containsKey(entity)) {
             entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
@@ -44,16 +46,21 @@ public final class TextProcessing {
         }
       }
     }
-
     return entityFrequencies;
   }
 
-  public static String[] lemmizeText(String text) {
+  /**
+   * Uses the Stanford NLP library to lemmatize an article (this is a more intelligent version
+   * of stemming)
+   * @param text input article
+   * @return array where each word is lemmatized
+   */
+  public static String[] lemmatizeText(String text) {
     List<String> lemmas = new ArrayList<>();
     Document doc = new Document(text.toLowerCase());
     for (Sentence sent : doc.sentences()) {
       for (String s: sent.lemmas()) {
-        if (RemoveStopWords.testWord(s)) {
+        if (!RemoveStopWords.isStopWord(s)) {
           lemmas.add(s);
         }
       }
@@ -77,7 +84,7 @@ public final class TextProcessing {
       if (word.equals("and")) {
         int w = word.length();
       }
-      if (!alreadySeen.contains(word) && RemoveStopWords.testWord(word)) {
+      if (!alreadySeen.contains(word) && !RemoveStopWords.isStopWord(word)) {
         int w = word.length();
         frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
         alreadySeen.add(word);
