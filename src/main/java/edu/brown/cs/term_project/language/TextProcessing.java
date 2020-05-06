@@ -34,7 +34,7 @@ public final class TextProcessing {
       for (int i = 0; i < entityTypes.size(); i++) {
         String word = sent.word(i);
         String entityType = entityTypes.get(i);
-        if (RemoveStopWords.testWord(word) && !TextProcessing.ignoredEntities.contains(entityType)) {
+        if (!RemoveStopWords.isStopWord(word) && !TextProcessing.ignoredEntities.contains(entityType)) {
           Entity entity = new Entity(word, entityType);
           if (entityFrequencies.containsKey(entity)) {
             entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
@@ -44,7 +44,6 @@ public final class TextProcessing {
         }
       }
     }
-
     return entityFrequencies;
   }
 
@@ -53,7 +52,7 @@ public final class TextProcessing {
     Document doc = new Document(text.toLowerCase());
     for (Sentence sent : doc.sentences()) {
       for (String s: sent.lemmas()) {
-        if (RemoveStopWords.testWord(s)) {
+        if (!RemoveStopWords.isStopWord(s)) {
           lemmas.add(s);
         }
       }
@@ -77,7 +76,7 @@ public final class TextProcessing {
       if (word.equals("and")) {
         int w = word.length();
       }
-      if (!alreadySeen.contains(word) && RemoveStopWords.testWord(word)) {
+      if (!alreadySeen.contains(word) && !RemoveStopWords.isStopWord(word)) {
         int w = word.length();
         frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
         alreadySeen.add(word);
