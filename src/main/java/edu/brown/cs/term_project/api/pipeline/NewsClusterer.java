@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class NewsClusterer {
+  private static final int DEFAULT_CLUSTER_METHOD = 1;
+
   private NewsData db;
 
   public NewsClusterer(NewsData db) {
@@ -33,8 +35,8 @@ public class NewsClusterer {
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     // make graph from vertices and cluster
     Graph<ArticleVertex, Similarity> graph = new Graph<>(pulledArticles, edges);
-    // set threshold according to cluster params if params are for reclustering
-    graph.runClusters(params.getClusterMethod());
+
+    graph.runClusters(DEFAULT_CLUSTER_METHOD);
     if (params.getDoInsert()) {
       db.getDataWrite().insertClusters(graph.getClusters());
     }

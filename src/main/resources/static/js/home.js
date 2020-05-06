@@ -50,18 +50,19 @@ $(document).ready(() => {
             clusterMap.clear();
             $('#mainLoader').show();
             let reclusterEndpoint = 'api/recluster';
-            const date = $('#date').val();
+            const date = new Date($('#date').val());
             const isToday = isDateToday(date);
-            reclusterEndpoint += '?serialized' + $('#reclusterParams').serialize();
-            reclusterEndpoint += '?year=' + date.getFullYear();
+            const year = date.getFullYear();
             const originalMonth = date.getMonth() + 1;
             const newMonth = (originalMonth < 10) ? '0' + originalMonth: originalMonth;
-            reclusterEndpoint += ('&month=' + newMonth);
             const originalDay = date.getDate();
             const newDay = (originalMonth < 10) ? '0' + originalDay: originalDay;
-            reclusterEndpoint += ('&day=' + newDay);
-            reclusterEndpoint += '&offset=' + date.getTimezoneOffset() / 60;
-            reclusterEndpoint += '&isToday=' + isToday;
+            const offset = date.getTimezoneOffset() / 60;
+            const serializedClusterParams = $('#reclusterParams').serialize();
+
+            reclusterEndpoint += `?year=${year}&month=${newMonth}&day=${newDay}
+                &offset${offset}&${serializedClusterParams}`;
+
             $.get(reclusterEndpoint, function(data) {
                 const parsed = JSON.parse(data);
                 $('#mainLoader').hide();
@@ -73,6 +74,7 @@ $(document).ready(() => {
                         ' clusters found with these parameters</h2></div>');
                     $('#chartMessage').show();
                 }
+                let i;
                 for (i = 0; i < parsed.clusters.length; i++) {
                     appendCluster(parsed.clusters[i], true);
                 }
@@ -179,6 +181,7 @@ function getChart(date) {
 }
 
 function appendCluster(cluster, reclustered) {
+    clusterMap.set(cluster.clusterId, cluster);
     const classNum = Math.floor(Math.random() * 4);
     const clusterHtml =
         "<div class='card text-center'>"
@@ -241,7 +244,8 @@ function makeCluster(clusterId, articles) {
         + '<span class="sr-only">Loading...</span>'
         + '</div>'
         + '<div class="diagram' + clusterId + '">'
-        + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Entity</button>\n'
+        + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Key' +
+        ' Word</button>'
         + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
         + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
         + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
@@ -257,10 +261,11 @@ function makeCluster(clusterId, articles) {
     $('.spin' + clusterId).hide();
     $('.diagram' + clusterId).hide();
     $('#generate' + clusterId).click(function() {
-        let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
-        getClusterDetails(clusterId, articles.map(a => a.id));
+        const meanRadius = clusterMap.get(clusterId).meanRadius;
+        const articleIds = articles.map(a => a.id);
+        getClusterDetails(clusterId, meanRadius, articleIds);
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 
