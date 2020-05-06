@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * This class represents a textcorpus and allows us to calculate similarity between articles.
  * @param <W> A type that implements IWord
@@ -74,6 +73,11 @@ public class TextCorpus<W extends IWord, T extends IText> {
     return sum;
   }
 
+  /**
+   * Gets the importance map for words in a Text.
+   * @param map a word frequency map
+   * @return the importance map
+   */
   public Map<IWord, Double> getImportanceMap(Map<IWord, Double> map) {
     Map<IWord, Double> importanceMap = new HashMap<>();
     for (IWord w: map.keySet()) {
@@ -81,7 +85,6 @@ public class TextCorpus<W extends IWord, T extends IText> {
     }
     return importanceMap;
   }
-
 
   /**
    * Returns the cosine similarity of two documents. It determines this based on the based in

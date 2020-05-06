@@ -16,6 +16,10 @@ public class DiagramHandler implements TemplateViewRoute {
 
   private NewsData db;
 
+  /**
+   * Constructor for a DiagramHandler.
+   * @param db the database
+   */
   public DiagramHandler(NewsData db) {
     this.db = db;
   }

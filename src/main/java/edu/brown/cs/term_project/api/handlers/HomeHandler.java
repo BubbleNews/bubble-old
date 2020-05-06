@@ -20,6 +20,10 @@ public class HomeHandler implements TemplateViewRoute {
 
   private NewsData db;
 
+  /**
+   * Constructor for handler for home page.
+   * @param db the database
+   */
   public HomeHandler(NewsData db) {
     this.db = db;
   }
@@ -33,6 +37,4 @@ public class HomeHandler implements TemplateViewRoute {
     variables.put("sourceList", sourceList);
     return new ModelAndView(variables, "home.ftl");
   }
-
-
 }

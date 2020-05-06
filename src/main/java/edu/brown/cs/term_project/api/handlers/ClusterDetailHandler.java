@@ -54,11 +54,7 @@ public final class ClusterDetailHandler {
       // get set of articles of cluster with id clusterId
       Set<ArticleVertex> articlesFromCluster =
           db.getDataRead().getArticleVerticesFromArticleIds(serializedIds);
-//        // fill article map
-//        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
-//        for (ArticleVertex a: articlesFromCluster) {
-//          articleMap.put(a.getId(), a);
-//        }
+
       // get edges between articles
       Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster, params);
       Set<Map<IWord, Double>> entityHash = new HashSet<>();
