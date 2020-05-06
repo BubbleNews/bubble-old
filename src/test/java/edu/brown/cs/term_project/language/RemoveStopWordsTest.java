@@ -1,4 +1,4 @@
-package edu.brown.cs.term_project;
+package edu.brown.cs.term_project.language;
 
 import edu.brown.cs.term_project.language.RemoveStopWords;
 import org.junit.After;
