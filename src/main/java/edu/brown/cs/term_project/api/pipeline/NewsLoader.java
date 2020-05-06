@@ -97,7 +97,7 @@ public class NewsLoader {
    * @param params map of parameters to serialize
    * @return
    */
-  private String addParameters(String baseUrl, HashMap<String, String> params) {
+  public String addParameters(String baseUrl, HashMap<String, String> params) {
     StringBuilder sb = new StringBuilder(baseUrl);
     sb.append('?');
     for (String key: params.keySet()) {
@@ -140,7 +140,7 @@ public class NewsLoader {
    * @param jsonArticles a list of articles in the form ArticleJSON∂
    * @throws SQLException if error occurred adding to database
    */
-  private void processJSONArticles(List<Article> jsonArticles) throws SQLException {
+  public void processJSONArticles(List<Article> jsonArticles) throws SQLException {
     System.out.println("-----Scraped " + jsonArticles.size() + " articles-----");
     // keep track of total number of articles each word has occurred in
     HashMap<String, Integer> occurenceMap = new HashMap<>();
@@ -181,8 +181,8 @@ public class NewsLoader {
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"),
+    NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
         "http://127.0.0.1:5000/scrape");
-    loader.executeBatches(5, 5, 5, 1);
+    loader.executeBatches(120, 100, 1, 0);
   }
 }

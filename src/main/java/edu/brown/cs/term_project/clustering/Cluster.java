@@ -74,6 +74,16 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
   }
 
   public void adjustHead() {
+    double minRadius = Integer.MAX_VALUE;
+    T headNode = null;
+    for (T article: articles) {
+      double temp = meanRadiusNode(article);
+      if (temp < minRadius) {
+        minRadius = temp;
+        headNode = article;
+      }
+    }
+    this.headlineArticleVertex = headNode;
   }
 
   public T getHeadNode() {
