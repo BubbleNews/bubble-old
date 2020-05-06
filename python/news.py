@@ -12,8 +12,8 @@ NEWS_API = NewsApiClient(api_key=API_KEY)
 MINIMUM_ARTICLE_CHAR_LENGTH = 650
 # note that this is order-dependent ('s must come before ' and ... comes before ..)
 BAD_CHARS = ['\r', '\n', '"', '`', '\'s', '\'', '...', '..']
-DOMAINS =  'fortune.com,time.com,cnn.com,cbsnews.com,cnbc.com,' \
-                'huffingtonpost.com,msnbc.com,nbcnews.com,usatoday.com,wsj.com,abcnews.go.com,' \
+DOMAINS = 'fortune.com,time.com,cnn.com,cbsnews.com,cnbc.com,' \
+                'huffingtonpost.com,msnbc.com,nbcnews.com,usatoday.com/news/,wsj.com,abcnews.go.com,' \
                 'apnews.com,news.google.com,politico.com,washingtonpost.com,washingtontimes.com' \
                 'latimes.com,nytimes.com,theatlantic.com,npr.org,nypost.com,chicago-tribune.com' \
                 'wired.com,vox.com'

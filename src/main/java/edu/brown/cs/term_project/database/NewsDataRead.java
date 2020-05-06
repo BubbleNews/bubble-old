@@ -11,12 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NewsDataRead {
   private Connection conn;
@@ -71,10 +66,11 @@ public class NewsDataRead {
     }
   }
 
-  public Set<ArticleVertex> getArticleVerticesFromArticleIds(String serializedIdSet) throws SQLException {
-    // build sql statement
+  public Set<ArticleVertex> getArticleVerticesFromArticleIds(String[] articleIDs) throws SQLException {
+    // array -> (id1,id2,...,idn) for SQL
+    String articleIdsSQL = Arrays.toString(articleIDs).replace("[", "(").replace("]", ")");
     String statement = "SELECT id, source, title, url, date_published, text FROM articles "
-        + "WHERE id IN " + serializedIdSet;
+        + "WHERE id IN " + articleIdsSQL;
     PreparedStatement prep = conn.prepareStatement(statement);
     return getArticleVerticesHelper(prep);
   }
@@ -110,15 +106,6 @@ public class NewsDataRead {
         prep.setString(5, timeOffset);
       }
       prep.setInt(6, maxNumArticles);
-      return getArticleVerticesHelper(prep);
-    }
-  }
-
-  public Set<ArticleVertex> getArticlePair(int id1, int id2) throws SQLException {
-    String query = "SELECT id, source, title, url, date_published, text FROM articles WHERE id = ? OR id = ?";
-    try (PreparedStatement prep = conn.prepareStatement(query)) {
-      prep.setInt(1, id1);
-      prep.setInt(2, id2);
       return getArticleVerticesHelper(prep);
     }
   }
@@ -198,7 +185,6 @@ public class NewsDataRead {
 
   /**
    * Gets the clusters for a given day. This will be passed to the front end.
-   *
    * @param date the date to search for (java.util.Date)
    * @param hours the amount to off set the hours
    * @param addDays the amount of days to add to the date passed in

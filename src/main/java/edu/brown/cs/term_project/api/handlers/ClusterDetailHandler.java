@@ -45,15 +45,15 @@ public final class ClusterDetailHandler {
       QueryParamsMap qm = request.queryMap();
       int clusterId = Integer.parseInt(qm.value("clusterId"));
       double clusterMeanRadius = Double.parseDouble(qm.value("clusterMeanRadius"));
-      String serializedIds = qm.value("articleIds")
-          .replace('[', '(')
-          .replace(']', ')');
+      String[] articleIds = qm.value("articleIds")
+          .replace("[", "")
+          .replace("]", "").split(",");
       // create a parameters object from the request parameters
       ClusterParameters params = new ClusterParameters(request.queryMap(), false);
 
       // get set of articles of cluster with id clusterId
       Set<ArticleVertex> articlesFromCluster =
-          db.getDataRead().getArticleVerticesFromArticleIds(serializedIds);
+          db.getDataRead().getArticleVerticesFromArticleIds(articleIds);
 
       // get edges between articles
       Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster, params);

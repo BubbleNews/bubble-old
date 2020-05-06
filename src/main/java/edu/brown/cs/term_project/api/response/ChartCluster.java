@@ -23,6 +23,8 @@ public class ChartCluster {
         this.articles = articles;
     }
 
+    public int getClusterId() { return clusterId; }
+
     public int getSize() {
         return size;
     }
