@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-https://www.nbcnews.com/health/health-news/live-blog/2020-05-04-coronavirus-news-n1199156/ncrd1199191
-=======
-https://www.cbsnews.com/video/white-house-discusses-winding-down-coronavirus-task-force-by-memorial-day/
->>>>>>> cd987a347b7aa33dd78d5c40b9603631bb6a5c07
+https://www.nbcnews.com/health/health-news/live-blog/2020-05-06-coronavirus-news-n1200996

@@ -35,6 +35,7 @@ def get_news(start_date, end_date, num_articles):
     # loop through articles and scrape article text with scraper
     for i, article in enumerate(articles):
         url = article['url']
+        print(url)
         scraped_title, scraped_authors, scraped_text = scrape_text(url)
         # threshold
         if len(scraped_text) < MINIMUM_ARTICLE_CHAR_LENGTH:

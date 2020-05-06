@@ -30,8 +30,8 @@ public class NewsLoader {
   private NewsData db;
   private String pythonEndpoint;
 
-  private static final int NUM_BATCHES = 120;
-  private static final int NUM_ARTICLES_PER_BATCH = 100;
+  private static final int NUM_BATCHES = 4;
+  private static final int NUM_ARTICLES_PER_BATCH = 20;
 
   /**
    * Constructor for a NewsLoader.
@@ -187,6 +187,6 @@ public class NewsLoader {
   public static void main(String[] args) throws Exception {
     NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
         "http://127.0.0.1:5000/scrape");
-    loader.executeBatches(NUM_BATCHES, NUM_ARTICLES_PER_BATCH, 1, 0);
+    loader.executeBatches(NUM_BATCHES, NUM_ARTICLES_PER_BATCH, 3, 0);
   }
 }

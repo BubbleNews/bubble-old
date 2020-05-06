@@ -134,7 +134,7 @@ public class NewsClusterer {
    * @throws ClassNotFoundException if thrown
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    ClusterParameters params = new ClusterParameters(500, true);
+    ClusterParameters params = new ClusterParameters(24, true);
     NewsClusterer clusterer = new NewsClusterer(new NewsData("data/final_data.db"));
     clusterer.clusterArticles(params);
   }
