@@ -76,13 +76,13 @@ public final class EdgeHandler {
       super(status, message);
     }
 
+    /**
+     * Setter for edge.
+     * @param newEdge the new edge to be stored in the response
+     */
     public void setEdge(Similarity newEdge) {
       this.edge = newEdge;
     }
-  }
-
-  public static void main(String[] args) throws Exception {
-
   }
 }
 

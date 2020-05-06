@@ -24,6 +24,7 @@ import java.util.Set;
  */
 public class NewsClusterer {
   private static final int DEFAULT_CLUSTER_METHOD = 1;
+  private static final int NUM_EDGES_TO_PRINT = 25;
   private NewsData db;
 
   /**
@@ -100,7 +101,7 @@ public class NewsClusterer {
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     int size = edges.size();
     for (int i = 0; i < size; i++) {
-      if (i < pulledArticles.size() || i > (size - 25)) {
+      if (i < pulledArticles.size() || i > (size - NUM_EDGES_TO_PRINT)) {
         Similarity tempEdge = edges.get(i);
         System.out.println(tempEdge.getSource().getArticle().getTitle() + " - "
             + tempEdge.getDest().getArticle().getTitle() + " : " + edges.get(i).getDistance());

@@ -30,6 +30,9 @@ public class NewsLoader {
   private NewsData db;
   private String pythonEndpoint;
 
+  private static final int NUM_BATCHES = 120;
+  private static final int NUM_ARTICLES_PER_BATCH = 100;
+
   /**
    * Constructor for a NewsLoader.
    * @param db the database to load news into
@@ -96,7 +99,7 @@ public class NewsLoader {
    * Adds parameters to a base url.
    * @param baseUrl the base url/endpoint
    * @param params map of parameters to serialize
-   * @return
+   * @return a url with parameters attached
    */
   public String addParameters(String baseUrl, HashMap<String, String> params) {
     StringBuilder sb = new StringBuilder(baseUrl);
@@ -179,11 +182,11 @@ public class NewsLoader {
   /**
    * Main method for NewsLoader to allow manual loading of News.
    * @param args user input
-   * @throws Exception
+   * @throws Exception if exception occurs
    */
   public static void main(String[] args) throws Exception {
     NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
         "http://127.0.0.1:5000/scrape");
-    loader.executeBatches(120, 100, 1, 0);
+    loader.executeBatches(NUM_BATCHES, NUM_ARTICLES_PER_BATCH, 1, 0);
   }
 }

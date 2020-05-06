@@ -4,10 +4,19 @@ import edu.brown.cs.term_project.similarity.IWord;
 
 import java.util.Objects;
 
+/**
+ * A class to store entities, which are important key-words the Stanford CoreNLP
+ * library extracts from texts.
+ */
 public class Entity implements IWord {
   private final String entity;
   private final String classType;
 
+  /**
+   * Constructor for an entity.
+   * @param entity the string entity
+   * @param classType the entity class
+   */
   public Entity(String entity, String classType) {
     this.entity = entity;
     this.classType = classType;
@@ -17,6 +26,10 @@ public class Entity implements IWord {
     return entity;
   }
 
+  /**
+   * Gets the entity class type produced by the CoreNLP library.
+   * @return the class type.
+   */
   public String getClassType() {
     return classType;
   }

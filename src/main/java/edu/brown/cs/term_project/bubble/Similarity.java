@@ -1,12 +1,16 @@
 package edu.brown.cs.term_project.bubble;
 
+import edu.brown.cs.term_project.api.response.SimilarityJSON;
 import edu.brown.cs.term_project.graph.IEdge;
 import edu.brown.cs.term_project.similarity.IWord;
 import edu.brown.cs.term_project.similarity.TextCorpus;
 
 import java.util.Map;
 
-
+/**
+ * Class that represents the edge between two articles in a graph by the
+ * similarity between the two articles.
+ */
 public class Similarity implements IEdge<ArticleVertex> {
   private final ArticleVertex src;
   private final ArticleVertex dest;
@@ -18,6 +22,17 @@ public class Similarity implements IEdge<ArticleVertex> {
   private double entityDistance;
   private double titleDistance;
 
+  /**
+   * Constructor.
+   * @param src the source article vertex
+   * @param dest the destination article vertex
+   * @param wordCorpus a text corpus with for words
+   * @param entityCorpus a text corpus for entities
+   * @param titleCorpus a text corpus for title
+   * @param textWeight weight of text distance in total distance calculation
+   * @param entityWeight weight of entity distance in total distance calculation
+   * @param titleWeight weight of title distance in total distance calculation
+   */
   public Similarity(ArticleVertex src, ArticleVertex dest, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus,
                     TextCorpus<ArticleWord, ArticleVertex> titleCorpus, double textWeight,
@@ -43,6 +58,15 @@ public class Similarity implements IEdge<ArticleVertex> {
     return distance;
   }
 
+  /**
+   * Sets the total distance of the edge.
+   * @param wordCorpus a text corpus for words
+   * @param entityCorpus a text corpus for entities
+   * @param titleCorpus a text corpus for title
+   * @param textWeight weight of text distance in total distance calculation
+   * @param entityWeight weight of entity distance in total distance calculation
+   * @param titleWeight weight of title distance in total distance calculation
+   */
   private void setDistance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<ArticleWord, ArticleVertex> titleCorpus,
                            double textWeight, double entityWeight, double titleWeight) {
@@ -57,6 +81,13 @@ public class Similarity implements IEdge<ArticleVertex> {
     this.distance = 1 / (wordDistance + titleDistance + entityDistance + divideZeroShift);
   }
 
+  /**
+   * Sets the importance hash maps in the edge to see how important words and
+   * entities are too the edge weight calculation.
+   * @param wordCorpus a text corpus for words
+   * @param entityCorpus a text corpus for entities
+   * @param titleCorpus a text corpus for title
+   */
   public void setImportance(TextCorpus<Entity, ArticleVertex> entityCorpus, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<ArticleWord, ArticleVertex> titleCorpus) {
     this.entitySim = entityCorpus.getSimilarityHash(src, dest);
@@ -64,19 +95,34 @@ public class Similarity implements IEdge<ArticleVertex> {
     this.titleSim = titleCorpus.getSimilarityHash(src, dest);
   }
 
+  /**
+   * Getter for word similarity map.
+   * @return word similarity map
+   */
   public Map<IWord, Double> getWordSim() {
     return wordSim;
   }
 
+  /**
+   * Getter for entity similarity map.
+   * @return entity similarity map
+   */
   public Map<IWord, Double> getEntitySim() {
     return entitySim;
   }
 
+  /**
+   * Getter for title similarity map.
+   * @return title similarity map
+   */
   public Map<IWord, Double> getTitleSim() {
     return titleSim;
   }
 
-
+  /**
+   * A method that turns a similarity into a similarity JSON.
+   * @return the similarity json representation of the edge
+   */
   public SimilarityJSON toSimilarityJSON() {
     SimilarityJSON sim = new SimilarityJSON(src.getId(), dest.getId(), this.distance,
         this.titleDistance, this.wordDistance, this.entityDistance);
