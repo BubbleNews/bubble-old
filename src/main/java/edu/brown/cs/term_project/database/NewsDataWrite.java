@@ -10,13 +10,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * Class containing all methods that write to the News Database.
  */
 public class NewsDataWrite {
   private Connection conn;
+  private static final int FINAL_HOUR = 23; // hour to finalize clusters
+  private static final int DATE_TRIM_LENGTH = 19; // length to trim datetimes
 
   /**
    * Constructor.
@@ -58,7 +64,7 @@ public class NewsDataWrite {
     String datePublished = article.getTimePublished();
     datePublished = datePublished
         .replace('T', ' ')
-        .substring(0, Math.min(19, datePublished.length()));
+        .substring(0, Math.min(DATE_TRIM_LENGTH, datePublished.length()));
     prep.setString(4, datePublished);
     prep.setString(5, article.getContent());
     prep.setString(6, article.getTitle().replace("\'", ""));
@@ -90,7 +96,7 @@ public class NewsDataWrite {
       int articleId, HashMap<Entity, Integer> entityFrequencyMap) throws SQLException {
     // loop through all entities and insert
     for (Entity entity : entityFrequencyMap.keySet()) {
-        insertEntity(articleId, entity, entityFrequencyMap.get(entity));
+      insertEntity(articleId, entity, entityFrequencyMap.get(entity));
     }
   }
 
@@ -160,7 +166,30 @@ public class NewsDataWrite {
     }
   }
 
-  public void updateArticle(int clusterId, int articleId, boolean finalCluster) throws SQLException {
+  /**
+   * Inserts clusters into the database.
+   * @param clusters the clusters to be inserted
+   * @throws SQLException if thrown
+   */
+  public void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
+    Calendar rightNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    int hour = rightNow.get(Calendar.HOUR_OF_DAY);
+    boolean finalCluster = (hour == FINAL_HOUR);
+    for (Cluster<ArticleVertex, Similarity> c : clusters) {
+      int clusterId = insertCluster(c, hour, finalCluster);
+      for (ArticleVertex a : c.getNodes()) {
+        updateArticle(clusterId, a.getId());
+      }
+    }
+  }
+
+  /**
+   * Updates an article with a new cluster in the article-cluster table.
+   * @param clusterId id of the cluster
+   * @param articleId id of the article
+   * @throws SQLException if error with database
+   */
+  private void updateArticle(int clusterId, int articleId) throws SQLException {
     PreparedStatement prep;
     prep = conn.prepareStatement("INSERT INTO article_cluster (cluster_id, article_id)\n"
         + "VALUES (?, ?);");
@@ -170,23 +199,21 @@ public class NewsDataWrite {
     prep.close();
   }
 
-  public void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
-    Calendar rightNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-    int hour = rightNow.get(Calendar.HOUR_OF_DAY);
-    boolean finalCluster = (hour == 23);
-    for (Cluster<ArticleVertex, Similarity> c : clusters) {
-      int clusterId = insertCluster(c, hour, finalCluster);
-      for (ArticleVertex a : c.getNodes()) {
-        updateArticle(clusterId, a.getId(), finalCluster);
-      }
-    }
-  }
-
-
-
-  public int insertCluster(Cluster<ArticleVertex, Similarity> c, int hour, boolean finalCluster) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("INSERT INTO clusters (head, title, size, day, hour, avg_connections, avg_radius, std, intermediate_cluster)\n"
-        + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
+  /**
+   * Inserts a singular cluster into the database.
+   * @param c the cluster
+   * @param hour the hour of insertion
+   * @param finalCluster whether or not it is a finalized cluster
+   * @return the primary key id of the inserted cluster in the database
+   * @throws SQLException if thrown
+   */
+  @SuppressWarnings("checkstyle:MagicNumber")
+  private int insertCluster(Cluster<ArticleVertex, Similarity> c, int hour,
+                            boolean finalCluster) throws SQLException {
+    PreparedStatement prep = conn.prepareStatement(
+        "INSERT INTO clusters (head, title, size, day, hour, "
+            + "avg_connections, avg_radius, std, intermediate_cluster) "
+            + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
     prep.setInt(1, c.getHeadNode().getId());
     prep.setString(2, c.getHeadNode().getArticle().getTitle());
     prep.setInt(3, c.getSize());
@@ -197,7 +224,8 @@ public class NewsDataWrite {
     prep.setBoolean(8, finalCluster);
     prep.execute();
     prep.close();
-    PreparedStatement prep2 = conn.prepareStatement("SELECT last_insert_rowid()\n"
+    PreparedStatement prep2 = conn.prepareStatement(
+        "SELECT last_insert_rowid()"
         + "FROM clusters\n"
         + "LIMIT 1;");
     ResultSet rs2 = prep2.executeQuery();
@@ -209,5 +237,23 @@ public class NewsDataWrite {
       throw new RuntimeException("Somehow article was not inserted?");
     }
     return lastInsertedId;
+  }
+
+  /**
+   * Deletes all data from every table.
+   */
+  public void deleteAllData() throws SQLException {
+    PreparedStatement prep = conn.prepareStatement("DELETE FROM articles;");
+    prep.execute();
+    prep = conn.prepareStatement("DELETE FROM article_cluster;");
+    prep.execute();
+    prep = conn.prepareStatement("DELETE FROM article_entity;");
+    prep.execute();
+    prep = conn.prepareStatement("DELETE FROM entity;");
+    prep.execute();
+    prep = conn.prepareStatement("DELETE FROM clusters;");
+    prep.execute();
+    prep = conn.prepareStatement("DELETE FROM vocab;");
+    prep.execute();
   }
 }

@@ -241,4 +241,27 @@ public class NewsDataRead {
       }
     }
   }
+
+  /**
+   * Gets an article by title from database.
+   * @param title the article title
+   * @return the article or null if no article with title title in database
+   * @throws SQLException if thrown
+   */
+  public Article getArticleByTitle(String title) throws SQLException {
+    Article toReturn = null;
+    String query = "SELECT id, source, title, url, date_published FROM articles "
+        + "WHERE title = (?)";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setString(1, title);
+      try (ResultSet rs = prep.executeQuery()) {
+        if (rs.next()) {
+          toReturn = new Article(rs.getInt(1),
+              rs.getString(2), rs.getString(3),
+              rs.getString(4), rs.getString(5));
+        }
+      }
+    }
+    return toReturn;
+  }
 }

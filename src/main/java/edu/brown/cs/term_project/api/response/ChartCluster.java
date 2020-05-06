@@ -14,6 +14,14 @@ public class ChartCluster {
   private double meanRadius;
   private List<Article> articles;
 
+  /**
+   * Constructor for a chart cluster.
+   * @param clusterId the id
+   * @param headline the headline article title
+   * @param size size of cluster
+   * @param meanRadius mean radius of cluster
+   * @param articles list of articles
+   */
   public ChartCluster(int clusterId, String headline, int size,
                       double meanRadius, List<Article> articles) {
     this.clusterId = clusterId;
@@ -23,7 +31,19 @@ public class ChartCluster {
     this.articles = articles;
   }
 
+  /**
+   * Getter for size.
+   * @return the cluster size
+   */
   public int getSize() {
     return size;
+  }
+
+  /**
+   * Getter for headline.
+   * @return the headline article title
+   */
+  public String getHeadline() {
+    return headline;
   }
 }
