@@ -1,12 +1,13 @@
 package edu.brown.cs.term_project.similarity;
 
 /**
- * Interface for word classes.
+ * This interface represents a word that can be passed into our TextCorpus.
  */
 public interface IWord {
+
   /**
-   * Getter for the word string represented by the IWord.
-   * @return the word string
+   * This gets the word as a string.
+   * @return the word
    */
   String getWord();
 
