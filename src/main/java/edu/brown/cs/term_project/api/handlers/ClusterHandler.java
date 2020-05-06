@@ -66,6 +66,10 @@ public final class ClusterHandler {
       this.articles = new ArrayList<>();
     }
 
+    /**
+     * Setter for articles.
+     * @param articles the articles to set the articles field to
+     */
     public void setArticles(List<Article> articles) {
       this.articles = articles;
     }

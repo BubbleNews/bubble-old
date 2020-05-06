@@ -41,7 +41,6 @@ public class ClusterParameters {
   private int offset;
   private int hours;
 
-
   public ClusterParameters(int hours, boolean doInsert) {
     // default clustering parameters
     this.doInsert = doInsert;

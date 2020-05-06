@@ -36,44 +36,39 @@ public class NewsDataRead {
    * @throws SQLException if error occurs
    */
   public Set<String> getSources() throws SQLException {
-    Set<String> sources = new HashSet<String>();
-    PreparedStatement prep = conn.prepareStatement("SELECT DISTINCT source from articles");
-    ResultSet rs = prep.executeQuery();
-    while (rs.next()) {
-      sources.add(rs.getString(1));
+    String query = "SELECT DISTINCT source from articles";
+    Set<String> sources = new HashSet<>();
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      try (ResultSet rs = prep.executeQuery()) {
+        while (rs.next()) {
+          sources.add(rs.getString(1));
+        }
+        return sources;
+      }
     }
-    return sources;
   }
 
   public List<Article> getArticlesFromCluster(int clusterId) throws SQLException {
-    // build sql statement
     String statement = "SELECT title, url, date_published, source, id FROM articles a\n"
         + "JOIN article_cluster c ON c.article_id = a.id\n"
         + "WHERE c.cluster_id = ? ORDER BY date_published desc";
-    PreparedStatement prep = conn.prepareStatement(statement);
-    prep.setInt(1, clusterId);
-    ResultSet rs = prep.executeQuery();
     List<Article> articles = new ArrayList<>();
-    while (rs.next()) {
-      String title = rs.getString(1);
-      String url = rs.getString(2);
-      String datePublished = rs.getString(3);
-      String source = rs.getString(4);
-      int id = rs.getInt(5);
-      Article a = new Article(id, source, title, url, datePublished);
-      articles.add(a);
-    }
-    return articles;
-  }
 
-  public Set<ArticleVertex> getArticleVerticesFromCluster(int clusterId) throws SQLException {
-    // build sql statement
-    String statement = "SELECT id, source, title, url, date_published, text FROM articles a\n"
-        + "JOIN article_cluster c ON c.article_id = a.id\n"
-        + "WHERE c.cluster_id = ?";
-    PreparedStatement prep = conn.prepareStatement(statement);
-    prep.setInt(1, clusterId);
-    return getArticleVerticesHelper(prep);
+    try (PreparedStatement prep = conn.prepareStatement(statement)) {
+      prep.setInt(1, clusterId);
+      try (ResultSet rs = prep.executeQuery()) {
+        while (rs.next()) {
+          String title = rs.getString(1);
+          String url = rs.getString(2);
+          String datePublished = rs.getString(3);
+          String source = rs.getString(4);
+          int id = rs.getInt(5);
+          Article a = new Article(id, source, title, url, datePublished);
+          articles.add(a);
+        }
+        return articles;
+      }
+    }
   }
 
   public Set<ArticleVertex> getArticleVerticesFromArticleIds(String serializedIdSet) throws SQLException {
@@ -87,46 +82,45 @@ public class NewsDataRead {
   public Set<ArticleVertex> getArticleVertices(String date, int offset, int hoursBack,
                                                boolean current, boolean positiveOffset,
                                                int maxNumArticles) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
-        + "text FROM articles "
-        + "WHERE date_pulled >= DATETIME(DATETIME(?, ?), ?) AND date_pulled < DATETIME(?,?) "
-        + "ORDER BY date_published "
-        + "LIMIT (?);"
-    );
-    String timeOffset = "";
-    if (positiveOffset) {
-      timeOffset = "+" + offset + " hours";
-    } else {
-      timeOffset = "-" + offset + " hours";
-    }
-    String hourOffset = "-" + hoursBack + " hours";
-    String defaultBack = "+0 hours";
-    if (current) {
-      prep.setString(1, "now");
-      prep.setString(2, defaultBack);
-      prep.setString(3, hourOffset);
-      prep.setString(4, "now");
-      prep.setString(5, defaultBack);
+    String query = "SELECT id, source, title, url, date_published, "
+            + "text FROM articles "
+            + "WHERE date_pulled >= DATETIME(DATETIME(?, ?), ?) AND date_pulled < DATETIME(?,?) "
+            + "ORDER BY date_published "
+            + "LIMIT (?);";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      String timeOffset = "";
+      if (positiveOffset) {
+        timeOffset = "+" + offset + " hours";
+      } else {
+        timeOffset = "-" + offset + " hours";
+      }
+      String hourOffset = "-" + hoursBack + " hours";
+      String defaultBack = "+0 hours";
+      if (current) {
+        prep.setString(1, "now");
+        prep.setString(2, defaultBack);
+        prep.setString(3, hourOffset);
+        prep.setString(4, "now");
+        prep.setString(5, defaultBack);
+      } else {
+        prep.setString(1, date);
+        prep.setString(2, timeOffset);
+        prep.setString(3, hourOffset);
+        prep.setString(4, date);
+        prep.setString(5, timeOffset);
+      }
       prep.setInt(6, maxNumArticles);
-    } else {
-      prep.setString(1, date);
-      prep.setString(2, timeOffset);
-      prep.setString(3, hourOffset);
-      prep.setString(4, date);
-      prep.setString(5, timeOffset);
-      prep.setInt(6, maxNumArticles);
+      return getArticleVerticesHelper(prep);
     }
-    return getArticleVerticesHelper(prep);
   }
 
   public Set<ArticleVertex> getArticlePair(int id1, int id2) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT id, source, title, url, date_published, "
-        + "text "
-        + "FROM articles WHERE id = ? OR id = ?"
-    );
-    prep.setInt(1, id1);
-    prep.setInt(2, id2);
-    return getArticleVerticesHelper(prep);
+    String query = "SELECT id, source, title, url, date_published, text FROM articles WHERE id = ? OR id = ?";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setInt(1, id1);
+      prep.setInt(2, id2);
+      return getArticleVerticesHelper(prep);
+    }
   }
 
   private Set<ArticleVertex> getArticleVerticesHelper(PreparedStatement prep) throws SQLException {
@@ -142,8 +136,8 @@ public class NewsDataRead {
     }
   }
 
-  private Set<ArticleVertex> createArticleVertices(
-      Set<Article> articles, Map<Integer, String> articleText) throws SQLException {
+  private Set<ArticleVertex> createArticleVertices(Set<Article> articles, Map<Integer, String> articleText)
+          throws SQLException {
     Set<ArticleVertex> articleVertices = new HashSet<>();
     for (Article article : articles) {
       articleVertices.add(new ArticleVertex(article, articleText.get(article.getId()),
@@ -153,48 +147,55 @@ public class NewsDataRead {
   }
 
   public Map<ArticleWord, Double> getVocabFreq() throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("Select word, count FROM vocab;");
-    ResultSet rs = prep.executeQuery();
-    Map<ArticleWord, Double> words = new HashMap<>();
-    while (rs.next()) {
-      words.put(new ArticleWord(rs.getString(1)), rs.getDouble(2));
+    String query = "Select word, count FROM vocab;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      try (ResultSet rs = prep.executeQuery()) {
+        Map<ArticleWord, Double> words = new HashMap<>();
+        while (rs.next()) {
+          words.put(new ArticleWord(rs.getString(1)), rs.getDouble(2));
+        }
+        return words;
+      }
     }
-    return words;
   }
 
   public Map<Entity, Double> getEntityFreq() throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("Select entity, class, count FROM entity;");
-    ResultSet rs = prep.executeQuery();
-    Map<Entity, Double> words = new HashMap<>();
-    while (rs.next()) {
-      words.put(new Entity(rs.getString(1), rs.getString(2)),
-          rs.getDouble(3));
+    String query = "Select entity, class, count FROM entity;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+     try (ResultSet rs = prep.executeQuery()) {
+       Map<Entity, Double> words = new HashMap<>();
+       while (rs.next()) {
+         words.put(new Entity(rs.getString(1), rs.getString(2)),
+                 rs.getDouble(3));
+       }
+       return words;
+     }
     }
-    return words;
   }
 
   public Map<IWord, Double> getArticleEntityFreq(Integer articleId) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT entity_class, entity_entity, count\n"
-        + "FROM article_entity\n"
-        + "WHERE article_id = ?;");
-    prep.setInt(1, articleId);
-    ResultSet rs = prep.executeQuery();
-    Map<IWord, Double> articleEntityFreq = new HashMap<>();
-    while (rs.next()) {
-      articleEntityFreq.put(new Entity(rs.getString(2), rs.getString(1)),
-          rs.getDouble(3));
+    String query = "SELECT entity_class, entity_entity, count FROM article_entity WHERE article_id = ?;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setInt(1, articleId);
+      try (ResultSet rs = prep.executeQuery()) {
+        Map<IWord, Double> articleEntityFreq = new HashMap<>();
+        while (rs.next()) {
+          articleEntityFreq.put(new Entity(rs.getString(2), rs.getString(1)), rs.getDouble(3));
+        }
+        return articleEntityFreq;
+      }
     }
-    return articleEntityFreq;
   }
 
-  public Integer getMaxVocabCount() throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT MAX(count) FROM vocab;");
-    ResultSet rs = prep.executeQuery();
-    rs.next();
-    return rs.getInt(1);
+  public int getMaxVocabCount() throws SQLException {
+    String query = "SELECT MAX(count) FROM vocab;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      ResultSet rs = prep.executeQuery();
+      rs.next();
+      return rs.getInt(1);
+    }
   }
 
-  // TODO: Don't test.
   /**
    * Gets the clusters for a given day. This will be passed to the front end.
    *
@@ -206,75 +207,38 @@ public class NewsDataRead {
    */
   public List<ChartCluster> getClusters(String date, int hours, int addDays) throws SQLException {
     String query = "SELECT id, title, size, avg_radius FROM clusters WHERE day = DATE(?, ?) AND hour = ?;";
-    PreparedStatement prep = conn.prepareStatement(query);
-    prep.setString(1, date);
-    String daysToAdd = "+" + addDays + " days";
-    prep.setString(2, daysToAdd);
-    prep.setInt(3, hours);
-    ResultSet rs = prep.executeQuery();
-    List<ChartCluster> clusters = new ArrayList<>();
-    while (rs.next()) {
-      int clusterId = rs.getInt(1);
-      String headline = rs.getString(2);
-      int size = rs.getInt(3);
-      double meanRadius = rs.getDouble(4);
-      List<Article> articles = new ArrayList<>();
-      //articles = getArticlesFromCluster(clusterId);
-      ChartCluster cluster = new ChartCluster(clusterId, headline, size, meanRadius, articles);
-      clusters.add(cluster);
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setString(1, date);
+      String daysToAdd = "+" + addDays + " days";
+      prep.setString(2, daysToAdd);
+      prep.setInt(3, hours);
+      try (ResultSet rs = prep.executeQuery()) {
+        List<ChartCluster> clusters = new ArrayList<>();
+        while (rs.next()) {
+          int clusterId = rs.getInt(1);
+          String headline = rs.getString(2);
+          int size = rs.getInt(3);
+          double meanRadius = rs.getDouble(4);
+          List<Article> articles = new ArrayList<>();
+          clusters.add(new ChartCluster(clusterId, headline, size, meanRadius, articles));
+        }
+        return clusters;
+      }
     }
-    return clusters;
   }
-
 
   public List<ChartCluster> getNewestClusters() throws SQLException {
     String query = "SELECT day, hour FROM clusters ORDER BY day DESC, hour DESC LIMIT 1;";
-    PreparedStatement prep = conn.prepareStatement(query);
-    ResultSet rs = prep.executeQuery();
-    List<ChartCluster> clusters = new ArrayList<>();
-    if (rs.next()) {
-      String day = rs.getString(1);
-      int hour = rs.getInt(2);
-      clusters = getClusters(day, hour, 0);
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      try (ResultSet rs = prep.executeQuery()) {
+        List<ChartCluster> clusters = new ArrayList<>();
+        if (rs.next()) {
+          String day = rs.getString(1);
+          int hour = rs.getInt(2);
+          clusters = getClusters(day, hour, 0);
+        }
+        return clusters;
+      }
     }
-    return clusters;
-  }
-
-  /**
-   * Gets the clusters for a given day. This will be passed to the front end.
-   *
-   * @param clusterId cluster to find
-   * @return double
-   * @throws SQLException only thrown if the database is malformed
-   */
-  public double getClusterMeanRadiusPercentile(Integer clusterId) throws SQLException {
-    final double zeroAdj = 0.001;
-    String query = "SELECT MAX(avg_radius), MIN(avg_radius) FROM clusters;";
-    PreparedStatement prep = conn.prepareStatement(query);
-    ResultSet rs = prep.executeQuery();
-    double max = 0, min = 0;
-    if (rs.next()) {
-      max = rs.getDouble(1);
-      min = rs.getDouble(2);
-    }
-    String query2 = "SELECT avg_radius FROM clusters WHERE id = ?;";
-    PreparedStatement prep2 = conn.prepareStatement(query2);
-    prep2.setInt(1, clusterId);
-    ResultSet rs2 = prep2.executeQuery();
-    double radius = 0;
-    if (rs2.next()) {
-      radius = rs2.getDouble(1);
-    }
-    return (radius - min) / (max - min + zeroAdj);
-  }
-
-  public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//    NewsData db = new NewsData("data/bubble.db");
-//    Set<String> ids = new HashSet<>();
-//    ids.add("1");
-//    ids.add("2");
-//    ids.add("3");
-//    Set<ArticleVertex> articles = db.getDataRead().getArticleVerticesFromArticleIds(ids);
-//    System.out.println(articles);
   }
 }

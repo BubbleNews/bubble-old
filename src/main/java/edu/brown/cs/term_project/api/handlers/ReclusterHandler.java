@@ -12,6 +12,9 @@ import spark.Response;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * A class to handle calls to the /recluster API for reclustering articles.
+ */
 public final class ReclusterHandler {
 
   /**

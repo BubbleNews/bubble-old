@@ -1,21 +1,28 @@
 package edu.brown.cs.term_project.api.handlers;
 
 import com.google.gson.Gson;
-import edu.brown.cs.term_project.bubble.*;
 import edu.brown.cs.term_project.api.response.StandardResponse;
-import edu.brown.cs.term_project.clustering.Cluster;
+import edu.brown.cs.term_project.bubble.ArticleVertex;
+import edu.brown.cs.term_project.bubble.Similarity;
 import edu.brown.cs.term_project.clustering.ClusterParameters;
 import edu.brown.cs.term_project.database.NewsData;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
 
-import java.util.*;
+import java.util.Set;
 
 /**
- * Class for handling requests to the /details API
+ * Class for handling requests to the /details API.
  */
-public class EdgeHandler {
+public final class EdgeHandler {
+
+  /**
+   * Constructor for edge handler - should not be called.
+   */
+  private EdgeHandler() {
+    // not called
+  }
 
   /**
    * Handles a request to the /details API.
@@ -39,12 +46,7 @@ public class EdgeHandler {
         int id2 = Integer.parseInt(a2);
         // get set of articles of cluster with id clusterId
         Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticlePair(id1, id2);
-//        // fill article map
-//        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
-//        for (ArticleVertex a: articlesFromCluster) {
-//          articleMap.put(a.getId(), a);
-//        }
-        // get edges between articles
+        // calculate edges
         Set<Similarity> clusterEdges = ClusterDetailHandler.calculateImportance(db,
             articlesFromCluster, params);
         for (Similarity s: clusterEdges) {

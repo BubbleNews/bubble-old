@@ -7,8 +7,6 @@ import edu.brown.cs.term_project.api.response.ChartResponse;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Response;
-
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,6 +14,8 @@ import java.util.List;
  * A class for handling requests to the /chart API.
  */
 public final class ChartHandler {
+
+  private static final int HOURS_PER_DAY = 24;
 
   /**
    * Constructor - should never be called.
@@ -35,15 +35,14 @@ public final class ChartHandler {
     ChartResponse chartResponse = new ChartResponse(0, "");
     try {
       // get date object
-
       QueryParamsMap qm = request.queryMap();
       String year = qm.value("year");
       String month = qm.value("month");
       String day = qm.value("day");
-      Integer offset = Integer.parseInt(qm.value("offset"));
-      Boolean today = Boolean.parseBoolean(qm.value("isToday"));
+      int offset = Integer.parseInt(qm.value("offset"));
+      boolean today = Boolean.parseBoolean(qm.value("isToday"));
 
-
+      // get clusters for the correct date, adjusting for time zone
       String date = year + "-" + month + "-" + day;
       List<ChartCluster> clusters;
       if (today) {
@@ -51,15 +50,11 @@ public final class ChartHandler {
       } else if (offset > 0) {
         clusters = db.getDataRead().getClusters(date, offset, 1);
       } else {
-        clusters = db.getDataRead().getClusters(date, 24 + offset, 0);
+        clusters = db.getDataRead().getClusters(date, HOURS_PER_DAY + offset, 0);
       }
-
-
-      // query database for clusters from given date
-
       // sort by size
       Comparator<ChartCluster> compareBySize =
-              (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
+          (ChartCluster c1, ChartCluster c2) -> c2.getSize() - c1.getSize();
       clusters.sort(compareBySize);
       // pass to front handler
       chartResponse.setClusters(clusters);
