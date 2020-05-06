@@ -8,11 +8,11 @@ import java.util.List;
  * This class is only used to pass cluster information from the database to the front end.
  */
 public class ChartCluster {
-    private int clusterId;
-    private String headline;
-    private int size;
-    private double meanRadius;
-    private List<Article> articles;
+    private final int clusterId;
+    private final String headline;
+    private final int size;
+    private final double meanRadius;
+    private final List<Article> articles;
 
     public ChartCluster(int clusterId, String headline, int size,
                         double meanRadius, List<Article> articles) {
