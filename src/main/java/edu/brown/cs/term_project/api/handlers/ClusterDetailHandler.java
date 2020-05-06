@@ -4,6 +4,7 @@ import edu.brown.cs.term_project.bubble.Article;
 import edu.brown.cs.term_project.bubble.ArticleVertex;
 import edu.brown.cs.term_project.bubble.ArticleWord;
 import edu.brown.cs.term_project.bubble.Entity;
+import edu.brown.cs.term_project.clustering.ClusterParameters;
 import edu.brown.cs.term_project.database.NewsData;
 import edu.brown.cs.term_project.bubble.Similarity;
 import edu.brown.cs.term_project.similarity.IWord;
@@ -43,24 +44,23 @@ public final class ClusterDetailHandler {
     try {
       QueryParamsMap qm = request.queryMap();
       int clusterId = Integer.parseInt(qm.value("clusterId"));
+      double clusterMeanRadius = Double.parseDouble(qm.value("clusterMeanRadius"));
       String serializedIds = qm.value("articleIds")
           .replace('[', '(')
           .replace(']', ')');
-
-//      ClusterParameters params = new ClusterParameters(qm);
+      // create a parameters object from the request parameters
+      ClusterParameters params = new ClusterParameters(request.queryMap(), false);
 
       // get set of articles of cluster with id clusterId
       Set<ArticleVertex> articlesFromCluster =
           db.getDataRead().getArticleVerticesFromArticleIds(serializedIds);
-//      double meanRadius = db.getDataRead().getClusterMeanRadiusPercentile(clusterId);
-      double meanRadius = 1;
 //        // fill article map
 //        HashMap<Integer, ArticleVertex> articleMap = new HashMap<>();
 //        for (ArticleVertex a: articlesFromCluster) {
 //          articleMap.put(a.getId(), a);
 //        }
       // get edges between articles
-      Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster);
+      Set<Similarity> clusterEdges = calculateImportance(db, articlesFromCluster, params);
       Set<Map<IWord, Double>> entityHash = new HashSet<>();
       Set<Map<IWord, Double>> wordHash = new HashSet<>();
       Set<Map<IWord, Double>> titleHash = new HashSet<>();
@@ -75,7 +75,7 @@ public final class ClusterDetailHandler {
       // put edges in response
       detailResponse.setEdges(clusterEdges);
       detailResponse.setNumVertices(articlesFromCluster.size());
-      detailResponse.setClusterRadius(meanRadius);
+      detailResponse.setClusterRadius(clusterMeanRadius);
       detailResponse.setTotals(aggEntities, aggWords, aggTitle);
       detailResponse.setClusterId(clusterId);
 
@@ -89,14 +89,15 @@ public final class ClusterDetailHandler {
    * Gets a list of similarity edges between every article and every other article in a cluster.
    * @param db the database containing the articles and clusters
    * @param articles the set of articles in the cluster
+   * @param params the cluster parameters
    * @return list of edges between articles
    * @throws SQLException should never be thrown
    */
   public static Set<Similarity> calculateImportance(
-      NewsData db, Set<ArticleVertex> articles) throws SQLException {
-    final double textWeight = 1;
-    final double entityWeight = 1;
-    final double titleWeight = 1;
+      NewsData db, Set<ArticleVertex> articles, ClusterParameters params) throws SQLException {
+    final double textWeight = params.getTextWeight();
+    final double entityWeight = params.getEntityWeight();
+    final double titleWeight = params.getTitleWeight();
     Set<Similarity> edges = new HashSet<>();
     Map<ArticleWord, Double> vocabMap = db.getDataRead().getVocabFreq();
     Map<Entity, Double> entityMap = db.getDataRead().getEntityFreq();

@@ -6,7 +6,7 @@ let clusterIdState;
 let clusterData;
 let edgeData;
 
-function getClusterDetails(clusterId, articleIds) {
+function getClusterDetails(clusterId, clusterMeanRadius, articleIds) {
     // this will be used to select the appropriate svg elements
     clusterIdState = clusterId;
 
@@ -17,7 +17,11 @@ function getClusterDetails(clusterId, articleIds) {
     $('.allBut' + clusterId).click(() => updateDashboardByType('all'));
 
     const serializedArticleIds = JSON.stringify(articleIds);
-    const clusterUrl = `api/details?clusterId=${clusterId}&articleIds=${serializedArticleIds}`;
+    const serializedClusterParams = $('#reclusterParams').serialize();
+
+
+    const clusterUrl = `api/details?clusterId=${clusterId}&clusterMeanRadius=${clusterMeanRadius}
+        &articleIds=${serializedArticleIds}&${serializedClusterParams}`;
 
     clusterIdState = clusterId;
     // send get request
@@ -31,8 +35,11 @@ function getClusterDetails(clusterId, articleIds) {
 
 function getEdgeDetails(id1, id2) {
     let clusterUrl = 'api/edge';
+    const serializedClusterParams = $('#reclusterParams').serialize();
+
     // add id to cluster base url
     clusterUrl += '?id1=' + id1 + '&id2=' + id2;
+    clusterUrl += '&' + serializedClusterParams;
     // send get request
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
@@ -48,5 +55,5 @@ function updateDashboardByType(type) {
     updateBarChart(clusterData, type);
 }
 
-getClusterDetails(2, [6,58,13,39,63]);
+//getClusterDetails(2, [6,58,13,39,63]);
 // getEdgeDetails(6, 58);

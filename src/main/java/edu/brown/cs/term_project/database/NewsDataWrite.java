@@ -10,10 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class containing all methods that write to the News Database.
@@ -174,7 +171,7 @@ public class NewsDataWrite {
   }
 
   public void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
-    Calendar rightNow = Calendar.getInstance();
+    Calendar rightNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     int hour = rightNow.get(Calendar.HOUR_OF_DAY);
     boolean finalCluster = (hour == 23);
     for (Cluster<ArticleVertex, Similarity> c : clusters) {
