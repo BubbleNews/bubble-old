@@ -27,9 +27,16 @@ public class NewsLoader {
     this.pythonEndpoint = pythonEndpoint;
   }
 
+  /**
+   * Gets articles from the python endpoint and stores them in the database.
+   * @param numBatches number of calls to the python endpoint
+   * @param articlesPerBatch number of articles to retrieve in call
+   * @param step number of hours range to search in
+   * @param stepBack start scraping articles published this many hours in the past
+   * @throws Exception
+   */
   public void executeBatches(int numBatches, int articlesPerBatch, int step, int stepBack) throws Exception {
     Instant endTime = Instant.now().minus(stepBack, ChronoUnit.HOURS);
-    Duration hour = Duration.ofHours(1);
     Instant startTime = endTime.minus(step, ChronoUnit.HOURS);
     for (int i = 0; i < numBatches; i++) {
       System.out.println("Batch " + (i + 1) + "/" + numBatches+ ": Getting " + articlesPerBatch + " articles from "
@@ -136,13 +143,6 @@ public class NewsLoader {
   public static void main(String[] args) throws Exception {
     NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"), "http://127.0.0" +
         ".1:5000/scrape");
-//    Date now = new Date();
-//    loader.loadArticlesBatch(dayAgo, now, 10);
-    loader.executeBatches(10, 10, 1, 8);
-//    String[] test = TextProcessing.lemmizeText("Afrobeat Legend Tony Allen, " +
-//        "Fela Kutis Drummer, Has Died At Age 79");
-//    String[] another = new String[]{"hello", "this", "is", "another", "string"};
-//    String[] lemmizedTextAndTitle = ObjectArrays.concat(test, another, String.class);
-//    System.out.println(Arrays.toString(lemmizedTextAndTitle));
+    loader.executeBatches(5, 5, 5, 1);
   }
 }
