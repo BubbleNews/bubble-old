@@ -12,11 +12,19 @@ With Bubble we set out to make a site that would show the current most popular n
 * Run the GUI by typing **./run** into terminal  
 * You can then access the GUI at **http://localhost:4567/bubble/home**  
 #### Installing the Python Virtual Environment  
-* Unfortunately, we rel  
+Unfortunately, we rely on Python 2.7 because the best web scraping library we found in our tests, 
+[Newspaper3K](https://newspaper.readthedocs.io/en/latest/index.html) has a 
+[bug](https://github.com/codelucas/newspaper/issues/485) in the Python3 version.
+* Make a virtual environment (but this needs to be for python2) with the command 
+`virtualenv -p /usr/bin/python2.7 venv`. Make sure to do this outside of the git repo to 
+prevent this from getting added.
+* Activate the virtual environment and install packages from requirements.txt
 #### Getting the Database  
-* #### Add Articles to the Database  
+* Run `python create_table.py` from the root directory
+#### Add Articles to the Database  
 *  
-#### Cluster Articles in the Database  
+#### Cluster Articles in the Database
+* 
 * ## Using the GUI  
 #### Main Page  
 * On the homepage of the website you will see all the most popular headlines of the day.  
