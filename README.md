@@ -25,7 +25,7 @@ prevent this from getting added.
 *  
 #### Cluster Articles in the Database
 * 
-* ## Using the GUI  
+## Using the GUI  
 #### Main Page  
 * On the homepage of the website you will see all the most popular headlines of the day.  
 * You can click on any headline to see all the articles we've grouped into this cluster.  

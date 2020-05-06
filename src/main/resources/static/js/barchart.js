@@ -1,8 +1,10 @@
 export { initializeBarChart, updateBarChart };
 
-//decimal percent of how much cluster to reveal (higher number -> more bars displayed; 1 -> all bars displayed)
+//decimal percent of how much cluster to reveal (higher number -> more bars displayed; 1 -> all
+// bars displayed)
 const numBarsToDisplayThresholdPercent = 0.95;
-// maximum number of bars to show (sometimes less bars than this will be shown depending on thresholdPercent)
+// maximum number of bars to show (sometimes less bars than this will be shown depending on
+// thresholdPercent)
 const maxBars = 20;
 const margin = {left: 60, right: 0, top: 10, bottom: 0};
 const labelPadding = 10;
@@ -79,7 +81,6 @@ function updateBarChart(data, type) {
  * @param type
  */
 function renderBarPlot(words) {
-    console.log(words);
     const x = d3.scaleLinear()
         .domain([0,d3.max(words.map(d => d.value))])
         .range([0, innerWidth]);
@@ -134,7 +135,6 @@ function sliceWords(words) {
         numItems++;
     }
 
-    console.log(`only displaying ${numItems} bars`);
 
     return words.slice(0, Math.min(numItems, maxBars));
 }
@@ -171,7 +171,6 @@ function formatBarPlotData(hashmaps, type) {
     }
 
     data.sort((a,b) => b.value - a.value);
-    console.log(data);
     return sliceWords(data, maxBars);
 }
 
