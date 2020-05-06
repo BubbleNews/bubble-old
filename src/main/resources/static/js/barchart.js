@@ -8,7 +8,7 @@ const numBarsToDisplayThresholdPercent = 0.95;
 const maxBars = 20;
 const margin = {left: 60, right: 0, top: 10, bottom: 0};
 const labelPadding = 10;
-const types = ['entity', 'title', 'text'];
+const types = ['Key Word', 'Title', 'Text'];
 const colors = ['steelblue', 'red', 'orange'];
 const barHeight = 20;
 const dotRadius = 10;
@@ -38,7 +38,7 @@ function initializeBarChart(data, id, type) {
     // make a legend group
     const legend = svg.append('g')
         .attr('class', 'legend')
-        .attr('transform', `translate(${innerWidth - 70},${innerHeight / 2})`)
+        .attr('transform', `translate(${innerWidth - 100},${innerHeight / 2})`)
         .selectAll('myLabels')
         .data(types)
         .enter()
@@ -152,22 +152,22 @@ function formatBarPlotData(hashmaps, type) {
     const data = [];
 
     switch (type) {
-        case 'entity':
+        case 'Key Word':
             addToArray(entities, type, data);
             break;
 
-        case 'text':
+        case 'Text':
             addToArray(text, type, data);
             break;
 
-        case 'title':
+        case 'Title':
             addToArray(title, type, data);
             break;
 
         default:
-            addToArray(entities, 'entity', data);
-            addToArray(text, 'text', data);
-            addToArray(title, 'title', data);
+            addToArray(entities, 'Key Word', data);
+            addToArray(text, 'Text', data);
+            addToArray(title, 'Title', data);
     }
 
     data.sort((a,b) => b.value - a.value);

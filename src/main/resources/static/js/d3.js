@@ -11,9 +11,9 @@ function getClusterDetails(clusterId, clusterMeanRadius, meanRadiusMap, articleI
     clusterIdState = clusterId;
 
     // set up buttons
-    $('.entityBut' + clusterId).click(() => updateDashboardByType('entity'));
-    $('.textBut' + clusterId).click(() => updateDashboardByType('text'));
-    $('.titleBut' + clusterId).click(() => updateDashboardByType('title'));
+    $('.entityBut' + clusterId).click(() => updateDashboardByType('Key Word'));
+    $('.textBut' + clusterId).click(() => updateDashboardByType('Text'));
+    $('.titleBut' + clusterId).click(() => updateDashboardByType('Title'));
     $('.allBut' + clusterId).click(() => updateDashboardByType('all'));
 
     const serializedArticleIds = JSON.stringify(articleIds);
