@@ -175,28 +175,16 @@ public class NewsDataWrite {
     int hour = rightNow.get(Calendar.HOUR_OF_DAY);
     boolean finalCluster = (hour == 23);
     for (Cluster<ArticleVertex, Similarity> c : clusters) {
-      insertCluster(c, hour, finalCluster);
-      int clusterId = getClusterId(c.getHeadNode().getId());
+      int clusterId = insertCluster(c, hour, finalCluster);
       for (ArticleVertex a : c.getNodes()) {
         updateArticle(clusterId, a.getId(), finalCluster);
       }
     }
   }
 
-  private int getClusterId(int head) throws SQLException {
-    PreparedStatement prep = conn.prepareStatement("SELECT id\n"
-        + "FROM clusters \n"
-        + "WHERE head = ?;");
-    prep.setInt(1, head);
-    ResultSet rs = prep.executeQuery();
-    if (rs.next()) {
-      return rs.getInt(1);
-    }
-    throw new NullPointerException();
-  }
 
 
-  public void insertCluster(Cluster<ArticleVertex, Similarity> c, int hour, boolean finalCluster) throws SQLException {
+  public int insertCluster(Cluster<ArticleVertex, Similarity> c, int hour, boolean finalCluster) throws SQLException {
     PreparedStatement prep = conn.prepareStatement("INSERT INTO clusters (head, title, size, day, hour, avg_connections, avg_radius, std, intermediate_cluster)\n"
         + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
     prep.setInt(1, c.getHeadNode().getId());
@@ -209,5 +197,17 @@ public class NewsDataWrite {
     prep.setBoolean(8, finalCluster);
     prep.execute();
     prep.close();
+    PreparedStatement prep2 = conn.prepareStatement("SELECT last_insert_rowid()\n"
+        + "FROM clusters\n"
+        + "LIMIT 1;");
+    ResultSet rs2 = prep2.executeQuery();
+    int lastInsertedId = -1;
+    while (rs2.next()) {
+      lastInsertedId = rs2.getInt(1);
+    }
+    if (lastInsertedId == -1) {
+      throw new RuntimeException("Somehow article was not inserted?");
+    }
+    return lastInsertedId;
   }
 }
