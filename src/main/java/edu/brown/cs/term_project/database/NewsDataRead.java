@@ -76,20 +76,17 @@ public class NewsDataRead {
   }
 
   public Set<ArticleVertex> getArticleVertices(String date, int offset, int hoursBack,
-                                               boolean current, boolean positiveOffset,
+                                               boolean current,
                                                int maxNumArticles) throws SQLException {
     String query = "SELECT id, source, title, url, date_published, "
             + "text FROM articles "
-            + "WHERE date_pulled >= DATETIME(DATETIME(?, ?), ?) AND date_pulled < DATETIME(?,?) "
+            + "WHERE date_published >= DATETIME(DATETIME(?, ?), ?) AND date_published < DATETIME" +
+        "(?,?) "
             + "ORDER BY date_published "
             + "LIMIT (?);";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
       String timeOffset = "";
-      if (positiveOffset) {
-        timeOffset = "+" + offset + " hours";
-      } else {
-        timeOffset = "-" + offset + " hours";
-      }
+        timeOffset = "+" + (offset + 24) + " hours";
       String hourOffset = "-" + hoursBack + " hours";
       String defaultBack = "+0 hours";
       if (current) {
@@ -221,6 +218,22 @@ public class NewsDataRead {
         if (rs.next()) {
           String day = rs.getString(1);
           int hour = rs.getInt(2);
+          clusters = getClusters(day, hour, 0);
+        }
+        return clusters;
+      }
+    }
+  }
+
+  public List<ChartCluster> getClusterByDay(String day) throws SQLException {
+    String query = "SELECT hour FROM clusters WHERE day = DATE(?) ORDER BY hour DESC " +
+        "LIMIT 1;";
+    try (PreparedStatement prep = conn.prepareStatement(query)) {
+      prep.setString(1, day);
+      try (ResultSet rs = prep.executeQuery()) {
+        List<ChartCluster> clusters = new ArrayList<>();
+        if (rs.next()) {
+          int hour = rs.getInt(1);
           clusters = getClusters(day, hour, 0);
         }
         return clusters;

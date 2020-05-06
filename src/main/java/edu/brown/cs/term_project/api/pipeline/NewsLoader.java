@@ -181,8 +181,8 @@ public class NewsLoader {
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"),
+    NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
         "http://127.0.0.1:5000/scrape");
-    loader.executeBatches(5, 5, 5, 1);
+    loader.executeBatches(120, 100, 1, 0);
   }
 }
