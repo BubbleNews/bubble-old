@@ -84,6 +84,7 @@ for some parts.
 * John Graves  
   * Clustering algorithms
   * D3.js visualizations  
+  * Database Maintenance
 * Ben Silverman  
   * Similarity between articles  
   * Front-end

@@ -216,7 +216,7 @@ public class NewsDataWrite {
     PreparedStatement prep = conn.prepareStatement(
         "INSERT INTO clusters (head, title, size, day, hour, "
             + "avg_connections, avg_radius, std, intermediate_cluster) "
-            + "VALUES (?, ?, ?, DATE('now', '-5 days'), ?, ?, ?, ?, ?);");
+            + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
     prep.setInt(1, c.getHeadNode().getId());
     prep.setString(2, c.getHeadNode().getArticle().getTitle());
     prep.setInt(3, c.getSize());
