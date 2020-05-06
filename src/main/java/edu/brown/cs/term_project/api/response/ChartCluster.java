@@ -8,24 +8,48 @@ import java.util.List;
  * This class is only used to pass cluster information from the database to the front end.
  */
 public class ChartCluster {
-    private final int clusterId;
-    private final String headline;
-    private final int size;
-    private final double meanRadius;
-    private final List<Article> articles;
+  private int clusterId;
+  private String headline;
+  private int size;
+  private double meanRadius;
+  private List<Article> articles;
 
-    public ChartCluster(int clusterId, String headline, int size,
-                        double meanRadius, List<Article> articles) {
-        this.clusterId = clusterId;
-        this.headline = headline;
-        this.size = size;
-        this.meanRadius = meanRadius;
-        this.articles = articles;
-    }
+  /**
+   * Constructor for a chart cluster.
+   * @param clusterId the id
+   * @param headline the headline article title
+   * @param size size of cluster
+   * @param meanRadius mean radius of cluster
+   * @param articles list of articles
+   */
+  public ChartCluster(int clusterId, String headline, int size,
+                      double meanRadius, List<Article> articles) {
+    this.clusterId = clusterId;
+    this.headline = headline;
+    this.size = size;
+    this.meanRadius = meanRadius;
+    this.articles = articles;
+  }
 
-    public int getClusterId() { return clusterId; }
+  /**
+   * Getter for cluster id.
+   * @return cluster id
+   */
+  public int getClusterId() { return clusterId; }
 
-    public int getSize() {
-        return size;
-    }
+  /**
+   * Getter for size.
+   * @return the cluster size
+   */
+  public int getSize() {
+    return size;
+  }
+
+  /**
+   * Getter for headline.
+   * @return the headline article title
+   */
+  public String getHeadline() {
+    return headline;
+  }
 }
