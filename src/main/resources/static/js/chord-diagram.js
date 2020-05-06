@@ -34,7 +34,7 @@ function renderChord(parsed, radiusMap) {
     const max = 5/parsed.numVertices;
     const min = .05
     const padAngle = min + (max - min) * radiusPercentile
-    const textWidth = 250;
+    const textWidth = 170;
     let total = 0;
     for (let i = 0; i < parsed.edges.length; i++) {  //loop through the array
         total += parsed.edges[i].totalDistance;  //Do the math!
@@ -90,7 +90,7 @@ function renderChord(parsed, radiusMap) {
         .attr('text-anchor', "middle")
         .append('text')
             .text(d => d.title)
-        .attr("font-size", "25px")
+        .attr("font-size", "18px")
 
     // Wraps text to a specific text width
     group.selectAll('text')
@@ -179,7 +179,7 @@ function wrap(text, width) {
  */
 function getHeight(d, lines) {
         if (Math.cos(d.angle) > 0) {
-            return -25 * Math.cos(d.angle) * (lines);
+            return -20 * Math.cos(d.angle) * (lines);
         } else {
             return -28 * Math.cos(d.angle);
         }
@@ -194,7 +194,7 @@ function getHeight(d, lines) {
  */
 function getWidth(d, lines, textWidth) {
     if (Math.cos(d.angle) > 0) {
-        return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*20*(lines);
+        return Math.sin(d.angle)*(textWidth/2) + Math.sin(d.angle)*Math.cos(d.angle)*12*(lines);
     } else {
         return Math.sin(d.angle) * (textWidth / 2) - + Math.sin(d.angle)*Math.cos(d.angle)*20;
     }
