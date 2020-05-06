@@ -19,15 +19,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Class that directs all clustering of articles in the application.
+ */
 public class NewsClusterer {
   private static final int DEFAULT_CLUSTER_METHOD = 1;
-
   private NewsData db;
 
+  /**
+   * Constructor for a clusterer.
+   * @param db the database storing the articles
+   */
   public NewsClusterer(NewsData db) {
     this.db = db;
   }
 
+  /**
+   * Clusters articles according to the inputted parameters.
+   * @param params an object storing the parameters for clustering
+   * @return a list of chart cluster objects of the clusters
+   * @throws SQLException should never be thrown
+   */
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
     int offset = Math.abs(params.getOffset());
     boolean back = (offset == params.getOffset());
@@ -52,7 +64,15 @@ public class NewsClusterer {
     return chartClusters;
   }
 
-  public List<Similarity> getEdges(Set<ArticleVertex> pulledArticles,
+  /**
+   * Gets the list of edges between every article and every other article in
+   * a set of article vertices.
+   * @param pulledArticles the set of article vertices
+   * @param params clustering parameters
+   * @return the list of edges between every article and every other article
+   * @throws SQLException if error accessing database (should not be thrown)
+   */
+  private List<Similarity> getEdges(Set<ArticleVertex> pulledArticles,
                                    ClusterParameters params) throws SQLException {
     Map<ArticleWord, Double> vocabMap = db.getDataRead().getVocabFreq();
     Map<Entity, Double> entityMap = db.getDataRead().getEntityFreq();
@@ -77,7 +97,7 @@ public class NewsClusterer {
         }
       }
     }
-
+    // sort edges
     edges.sort(Comparator.comparingDouble(Similarity::getDistance));
     int size = edges.size();
     for (int i = 0; i < size; i++) {
@@ -91,6 +111,11 @@ public class NewsClusterer {
     return edges;
   }
 
+  /**
+   *
+   * @param complexCluster
+   * @return
+   */
   private ChartCluster clusterToChartCluster(Cluster<ArticleVertex, Similarity> complexCluster) {
     List<Article> simpleArticles = new ArrayList<>();
     for (ArticleVertex complexArticle: complexCluster.getArticles()) {
