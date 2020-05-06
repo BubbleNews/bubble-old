@@ -5,7 +5,7 @@ With Bubble we set out to make a site that would show the current most popular n
  show the what was being written about those stories from across the spectrum. Our project allows  
   you to see groupings of related articles on different days to track the news. We also provide a  
    means of understanding why articles have been grouped the way they have.   
-##How to Run  
+## How to Run  
 #### Running the GUI  
 * First compile the code by running **mvn package**  
 * Make sure you have a bubble.db file located in the data folder  
