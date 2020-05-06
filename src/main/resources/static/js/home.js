@@ -261,7 +261,6 @@ function makeCluster(clusterId, articles) {
     $('.spin' + clusterId).hide();
     $('.diagram' + clusterId).hide();
     $('#generate' + clusterId).click(function() {
-        let element = $('#visualization' + divId);
         $('#generate' + clusterId).hide();
         $('.spin' + clusterId).show();
         const meanRadius = clusterMap.get(clusterId).meanRadius;
