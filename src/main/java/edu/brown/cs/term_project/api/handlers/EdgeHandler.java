@@ -42,10 +42,9 @@ public final class EdgeHandler {
       if (a1 == null || a1.equals("") || a2 == null || a2.equals("")) {
         detailResponse.setErrorMessage("No cluster id given.");
       } else {
-        int id1 = Integer.parseInt(a1);
-        int id2 = Integer.parseInt(a2);
         // get set of articles of cluster with id clusterId
-        Set<ArticleVertex> articlesFromCluster = db.getDataRead().getArticlePair(id1, id2);
+        Set<ArticleVertex> articlesFromCluster = db.getDataRead()
+                .getArticleVerticesFromArticleIds(new String[] {a1, a2});
         // calculate edges
         Set<Similarity> clusterEdges = ClusterDetailHandler.calculateImportance(db,
             articlesFromCluster, params);
