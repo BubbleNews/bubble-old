@@ -266,7 +266,7 @@ public class NewsDataRead {
    */
   public List<ChartCluster> getClusters(String date, int hours, int addDays) throws SQLException {
     String query = "SELECT id, title, size, avg_radius FROM clusters WHERE day = DATE(?, ?) AND "
-    + "hour = ?;";
+        + "hour = ?;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
       prep.setString(1, date);
       String daysToAdd = "+" + addDays + " days";
