@@ -6,7 +6,7 @@ let clusterIdState;
 let clusterData;
 let edgeData;
 
-function getClusterDetails(clusterId, clusterMeanRadius, articleIds, callback) {
+function getClusterDetails(clusterId, clusterMeanRadius, meanRadiusMap, articleIds, callback) {
     // this will be used to select the appropriate svg elements
     clusterIdState = clusterId;
 
@@ -28,7 +28,7 @@ function getClusterDetails(clusterId, clusterMeanRadius, articleIds, callback) {
     $.get(clusterUrl, response => {
         clusterData = JSON.parse(response);
         console.log(clusterData);
-        renderChord(clusterData);
+        renderChord(clusterData, meanRadiusMap);
         initializeBarChart(clusterData, clusterIdState, 'all');
     });
 }

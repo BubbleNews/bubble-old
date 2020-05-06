@@ -61,7 +61,7 @@ $(document).ready(() => {
             const serializedClusterParams = $('#reclusterParams').serialize();
 
             reclusterEndpoint += `?year=${year}&month=${newMonth}&day=${newDay}
-                &offset${offset}&${serializedClusterParams}`;
+                &offset=${offset}&isToday=${isToday}&${serializedClusterParams}`;
 
             $.get(reclusterEndpoint, function(data) {
                 const parsed = JSON.parse(data);
@@ -265,7 +265,7 @@ function makeCluster(clusterId, articles) {
         $('.spin' + clusterId).show();
         const meanRadius = clusterMap.get(clusterId).meanRadius;
         const articleIds = articles.map(a => a.id);
-        getClusterDetails(clusterId, meanRadius, articleIds);
+        getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
         $('.spin' + clusterId).hide();
         $('.diagram' + clusterId).show();
 

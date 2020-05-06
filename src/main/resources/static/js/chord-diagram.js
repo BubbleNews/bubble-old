@@ -9,7 +9,7 @@ let indices = {};
  * Render the chord diagram
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
  */
-function renderChord(parsed) {
+function renderChord(parsed, radiusMap) {
     const outerRadius = 400;
     const innerRadius = outerRadius - 20;
     const margin = {top:180, left: 300, right: 300, bottom: 180};
@@ -17,10 +17,24 @@ function renderChord(parsed) {
     const width = outerRadius * 2 + margin.left + margin.right;
     const textGap = 20;
 
+
+
+    let maxRadius = Number.MIN_SAFE_INTEGER;
+    let minRadius = Number.MAX_SAFE_INTEGER;
+    for (let [k, v] of radiusMap) {
+        console.log(k);
+        if (v.meanRadius > maxRadius) {
+            maxRadius = v.meanRadius;
+        } else if (v.meanRadius < minRadius) {
+            minRadius = v.meanRadius;
+        }
+    }
+
+    const radiusPercentile = (parsed.clusterRadius-minRadius)/(maxRadius - minRadius);
     const edgeOpacity = 0.67;
     const max = 5/parsed.numVertices;
     const min = .05
-    const padAngle = min + (max - min) * parsed.clusterRadius
+    const padAngle = min + (max - min) * radiusPercentile
     const textWidth = 250;
     let total = 0;
     for (let i = 0; i < parsed.edges.length; i++) {  //loop through the array
@@ -425,7 +439,8 @@ function boxPlot(data, point) {
         .style("fill", "red");
 }
 
-boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
+//boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2},
+// {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
 //
 // setTimeout(function () {
 //     boxPlot([{radius: 5}, {radius: 6}, {radius: 7}, {radius: 5.3}, {radius: 6.6}, {radius: 7.2}, {radius: 4}, {radius: 6.5}, {radius: 7.9}, {radius: 5.1}, {radius: 5.8}, {radius: 7.5}], {radius: 6.5});
