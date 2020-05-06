@@ -80,6 +80,7 @@ for some parts.
 #### Similarity
 * Classes pertaining to the similarity measurements between articles.
 #### Python  
+* Scrapes articles using Newspaper3K library
 * ## Team Members & Division of Labor  
 * Kshitij Sachan  
   * Scraping articles in Python  
