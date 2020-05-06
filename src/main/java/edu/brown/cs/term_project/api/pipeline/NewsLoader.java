@@ -79,6 +79,7 @@ public class NewsLoader {
     String url = addParameters(pythonEndpoint, requestParams);
     // send request
     String pythonResponse = sendGet(url);
+    System.out.println(pythonResponse);
     // parse the response
     Gson gson = new Gson();
     JsonParser parser = new JsonParser();
@@ -181,8 +182,8 @@ public class NewsLoader {
    * @throws Exception
    */
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/mock_data.db"),
+    NewsLoader loader = new NewsLoader(new NewsData("data/news_data_read_tests.sqlite3"),
         "http://127.0.0.1:5000/scrape");
-    loader.executeBatches(5, 5, 5, 1);
+    loader.executeBatches(1, 30, 5, 50);
   }
 }

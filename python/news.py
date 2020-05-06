@@ -13,10 +13,10 @@ MINIMUM_ARTICLE_CHAR_LENGTH = 650
 # note that this is order-dependent ('s must come before ' and ... comes before ..)
 BAD_CHARS = ['\r', '\n', '"', '`', '\'s', '\'', '...', '..']
 DOMAINS = 'fortune.com,time.com,cnn.com,cbsnews.com,cnbc.com,' \
-                'huffingtonpost.com,msnbc.com,nbcnews.com,usatoday.com/news/,wsj.com,abcnews.go.com,' \
-                'apnews.com,news.google.com,politico.com,washingtonpost.com,washingtontimes.com' \
-                'latimes.com,nytimes.com,theatlantic.com,npr.org,nypost.com,chicago-tribune.com' \
-                'wired.com,vox.com'
+          'huffingtonpost.com,msnbc.com,nbcnews.com,usatoday.com/news/,wsj.com,abcnews.go.com,' \
+          'apnews.com,news.google.com,politico.com,washingtonpost.com,washingtontimes.com' \
+          'latimes.com,nytimes.com,theatlantic.com,npr.org,nypost.com,chicago-tribune.com' \
+          'wired.com,vox.com'
 
 
 def get_news(start_date, end_date, num_articles):
@@ -30,7 +30,7 @@ def get_news(start_date, end_date, num_articles):
 
     articles_json = []
     articles = top_headlines['articles']
-    print('Retrieving ' + str(len(articles)) + ' articles between ' + str(start_date)
+    print('Searching for ' + str(len(articles)) + ' articles between ' + str(start_date)
           + ' and ' + str(end_date))
     # loop through articles and scrape article text with scraper
     for i, article in enumerate(articles):
@@ -53,7 +53,7 @@ def make_article_json(article, scraped_title, scraped_authors, scraped_text):
         'sourceName': article['source']['name'],
         'authors': scraped_authors,
         'title': clean_text(scraped_title),
-        'description': clean_text(article['description']),
+        'description': None,
         'url': article['url'],
         'timePublished': article['publishedAt'],
         'content': clean_text(scraped_text)

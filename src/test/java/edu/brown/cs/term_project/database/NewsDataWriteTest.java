@@ -27,7 +27,7 @@ public class NewsDataWriteTest {
 
   @BeforeClass
   public static void setUpOnce() throws SQLException, ClassNotFoundException {
-    db = new NewsData("data/news_data_read_test.sqlite3");
+    db = new NewsData("data/news_data_write_test.sqlite3");
   }
 
   @AfterClass

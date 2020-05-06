@@ -135,7 +135,7 @@ public class NewsClusterer {
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
     ClusterParameters params = new ClusterParameters(500, true);
-    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/for_database_tests.sqlite3"));
+    NewsClusterer clusterer = new NewsClusterer(new NewsData("data/news_data_read_tests.sqlite3"));
     clusterer.clusterArticles(params);
   }
 }

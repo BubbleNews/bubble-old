@@ -67,28 +67,4 @@ public final class TextProcessing {
     }
     return lemmas.toArray(new String[0]);
   }
-
-  /**
-   * Adds to a hashmap keeping track of number of articles a word has appeared in.
-   * @param frequencies the frequency map
-   * @param words a string array of words
-   */
-  public static void updateOccurrenceMap(HashMap<String, Integer> frequencies, String[] words) {
-    Set<String> alreadySeen = new HashSet<>();
-    for (String word: words) {
-      // we are keeping track of number of articles a word has appeared in, so
-      // if we already saw word in this article we can ignore
-      if (word.length() == 1) {
-        int w = word.length();
-      }
-      if (word.equals("and")) {
-        int w = word.length();
-      }
-      if (!alreadySeen.contains(word) && !RemoveStopWords.isStopWord(word)) {
-        int w = word.length();
-        frequencies.put(word, frequencies.getOrDefault(word, 0) + 1);
-        alreadySeen.add(word);
-      }
-    }
-  }
 }

@@ -10,7 +10,7 @@ public class ChartHandlerTest {
   private static NewsData db;
   @Before
   public void setUp() throws SQLException, ClassNotFoundException {
-    db = new NewsData("data/for_database_tests.sqlite3");
+    db = new NewsData("data/news_data_read_test.sqlite3");
   }
   @Test
   public void testHandle() {

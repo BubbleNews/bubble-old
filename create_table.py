@@ -1,6 +1,6 @@
 import sqlite3
 
-PATH_TO_DATABASE = "data/mock_data.db"
+PATH_TO_DATABASE = "data/news_data_read_tests.sqlite3"
 
 conn = sqlite3.connect(PATH_TO_DATABASE)
 c = conn.cursor()

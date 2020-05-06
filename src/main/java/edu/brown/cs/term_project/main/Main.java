@@ -36,7 +36,7 @@ public final class Main {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    DATABASE = new NewsData("data/mock_data.db");
+    DATABASE = new NewsData("data/news_data_read_tests.sqlite3");
     new Main(args).run();
   }
 
