@@ -48,13 +48,14 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
     int numClusters = OptimalClusterCount.getOptimalCount(nodes, count, clusterNodes, maxClusters);
     // instead of picking just best cluster, could make a queue of top 5 or so, go from there
     // finds optimal clustering with numClusters
-    numClusters = 118;
     List<Cluster<T, S>> finalClusters = findClusters(clusterNodes, numClusters);
     System.out.println("MIN: " + Math.min(maxClusters, nodes.size() / 10));
     System.out.println("TOTAL CLUSTERS: " + numClusters);
     for (Cluster<T, S> c: finalClusters) {
       c.adjustHead(); // optimzes cluster head
-      clusters.add(c); // adds cluster to graphs clusters
+      if (c.getAvgRadius() < radiusThreshold) {
+        clusters.add(c); // adds cluster to graphs clusters
+      }
       System.out.println("Cluster.java: " + c.getHeadNode().getId() + " size: " + c.getSize());
       String toPrint = "";
       Set<T> clusterNodeSet = c.getNodes();
