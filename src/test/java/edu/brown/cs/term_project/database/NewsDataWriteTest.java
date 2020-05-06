@@ -9,7 +9,6 @@ import edu.brown.cs.term_project.clustering.Cluster;
 import edu.brown.cs.term_project.similarity.IWord;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,7 +16,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +27,7 @@ public class NewsDataWriteTest {
 
   @BeforeClass
   public static void setUpOnce() throws SQLException, ClassNotFoundException {
-    db = new NewsData("data/news_data_read_test.db");
+    db = new NewsData("data/news_data_read_test.sqlite3");
   }
 
   @AfterClass
