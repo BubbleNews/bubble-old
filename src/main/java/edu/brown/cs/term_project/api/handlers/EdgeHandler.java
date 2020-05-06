@@ -48,7 +48,6 @@ public class EdgeHandler {
         Set<Similarity> clusterEdges = ClusterDetailHandler.calculateImportance(db,
             articlesFromCluster, params);
         for (Similarity s: clusterEdges) {
-
           detailResponse.setEdge(s);
         }
       }

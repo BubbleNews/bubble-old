@@ -268,7 +268,6 @@ public class NewsDataRead {
     return (radius - min) / (max - min + zeroAdj);
   }
 
-
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
 //    NewsData db = new NewsData("data/bubble.db");
 //    Set<String> ids = new HashSet<>();

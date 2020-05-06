@@ -40,7 +40,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
    * @return - distance to dst
    */
   @Override
-  public double getDistance(INode<Similarity> dst) {
+  public double getDistance(INode<Similarity> dst) throws RuntimeException {
     if (dst.equals(this)) {
       return 0;
     } else {
@@ -49,7 +49,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
           return e.getDistance();
         }
       }
-      return -1;
+      throw new RuntimeException("Edge Not Found");
     }
   }
 

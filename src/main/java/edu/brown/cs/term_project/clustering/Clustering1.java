@@ -92,7 +92,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
    * Method to trim data for CreateClusters method. Removes all edges beyond threshold, and any
    * nodes without any edges remaining.
    */
-  public void trimData() {
+  private void trimData() {
     edges = new ArrayList<>(edges); // creates alternative edges to modify
     nodes = new HashSet<>(nodes); // creates alternative nodes to modify
     edges.sort(new EdgeComparator()); // sorts edges by weight
@@ -113,7 +113,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
    * @param node           - node
    * @param expandClusters - map from node id to cluster, must be updated if node is added
    */
-  public void add(Cluster c1, T node, Map<Integer, Cluster<T, S>> expandClusters) {
+  private void add(Cluster c1, T node, Map<Integer, Cluster<T, S>> expandClusters) {
 //    final double minMaxMult = 1.3;
 //    final double maxMaxMult = 2;
 //    final double iterMaxMult = 0.05;
@@ -143,7 +143,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
    * @param articleToClusters - map from node id to cluster, clusters for nodes from smaller
    *                          cluster must be updated if combined
    */
-  public void combine(
+  private void combine(
       Cluster<T, S> c1, Cluster<T, S> c2, Map<Integer, Cluster<T, S>> articleToClusters) {
 //    final double minMaxMult = 1.3;
 //    final double maxMaxMult = 2;
