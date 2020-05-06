@@ -19,18 +19,12 @@ public class ClusterMethodsTest {
   Set<Node> nodes1 = new HashSet<>();
   Set<Node> nodes2 = new HashSet<>();
   Set<Node> nodes = new HashSet<>();
-
   private Node node1;
   private Node node2;
   private Node node3;
   private Node node4;
   private Node node5;
   private Node node6;
-  private Set<Cluster<Node, Edge>> clusters;
-  private double threshold;
-  private Cluster cluster1;
-  private Cluster cluster2;
-  private Cluster cluster3;
 
 
   @Before
@@ -72,21 +66,8 @@ public class ClusterMethodsTest {
     nodes.addAll(nodes2);
     graph = new Graph<>(nodes, edges);
     graph.runClusters(1);
-    clusters = graph.getClusters();
-    cluster1 = new Cluster(1, node1, nodes1);
-    cluster2 = new Cluster(2, node4, nodes2);
-    cluster3 = new Cluster(3, node1, nodes);
-    threshold = getRadiusThreshold(clusters);
   }
 
-
-  public double getRadiusThreshold(Set<Cluster<Node, Edge>> clusters) {
-    Set<Node> allNodes = new HashSet<>();
-    for (Cluster<Node, Edge> c: clusters) {
-      allNodes.addAll(c.getNodes());
-    }
-    return ClusterMethods.setRadiusThreshold(allNodes);
-  }
 
 
 

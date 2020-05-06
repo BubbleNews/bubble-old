@@ -55,8 +55,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
     radiusThreshold = ClusterMethods.setRadiusThreshold(nodes);
     System.out.println("radius_adj: " + radiusThreshold);
     Map<Integer, Cluster<T, S>> tempClusters = new HashMap<>(); // tracks nodes in clusters
-    for (int i = 0; i < edges.size(); i++) {
-      S curr = edges.get(i);
+    for (S curr : edges) {
       T src = curr.getSource();
       T dst = curr.getDest();
       if (tempClusters.containsKey(src.getId()) && tempClusters.containsKey(dst.getId())) {
@@ -69,10 +68,10 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
         add(tempClusters.get(dst.getId()), src, tempClusters);
       } else {
         // if none are clustered, create a cluster with both nodes
-        Set<T> addNodes = new HashSet<T>();
+        Set<T> addNodes = new HashSet<>();
         addNodes.add(src);
         addNodes.add(dst);
-        Cluster newCluster = new Cluster(count, src, addNodes);
+        Cluster<T, S> newCluster = new Cluster<>(count, src, addNodes);
         if (newCluster.getAvgRadius() < radiusThreshold / 3.0) { //experiment
           tempClusters.put(src.getId(), newCluster);
           tempClusters.put(dst.getId(), newCluster);
@@ -86,7 +85,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
         v.adjustHead(); // optimize the head node of the cluster, to make headline most fitting
         clusters.add(v);
         System.out.println("Cluster.java: " + v.getHeadNode().getId() + " size: " + v.getSize());
-        StringBuilder toPrint = new StringBuilder("");
+        StringBuilder toPrint = new StringBuilder();
         Set<T> clusterNodes = v.getNodes();
         for (T n : clusterNodes) { //prints out nodes in cluster
           toPrint.append(n.getId());
@@ -106,7 +105,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
   private void trimData() {
     edges = new ArrayList<>(edges); // creates alternative edges to modify
     nodes = new HashSet<>(nodes); // creates alternative nodes to modify
-    edges.sort(new EdgeComparator()); // sorts edges by weight
+    edges.sort(new EdgeComparator<>()); // sorts edges by weight
     int size = edges.size();
     // removes edges above threshold
     edges = new ArrayList<>(edges.subList(0, (int) Math.floor(size * threshold)));
@@ -124,7 +123,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
    * @param node           - node
    * @param expandClusters - map from node id to cluster, must be updated if node is added
    */
-  private void add(Cluster c1, T node, Map<Integer, Cluster<T, S>> expandClusters) {
+  private void add(Cluster<T, S> c1, T node, Map<Integer, Cluster<T, S>> expandClusters) {
     double oldMean = c1.getAvgRadius();
     double newMean = c1.meanRadiusNode(node);
     double maxMult = Math.max(maxMaxMult - (iterMaxMult * c1.getSize()), minMaxMult); //experiment

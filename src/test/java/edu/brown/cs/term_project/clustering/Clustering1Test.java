@@ -1,15 +1,10 @@
 package edu.brown.cs.term_project.clustering;
 
-import edu.brown.cs.term_project.clustering.Cluster;
-import edu.brown.cs.term_project.clustering.ClusterMethods;
 import edu.brown.cs.term_project.graph.Graph;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import edu.brown.cs.term_project.clustering.Edge;
-import edu.brown.cs.term_project.clustering.Node;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,9 +27,6 @@ public class Clustering1Test {
   private Node node6;
   private Set<Cluster<Node, Edge>> clusters;
   private double threshold;
-  private Cluster cluster1;
-  private Cluster cluster2;
-  private Cluster cluster3;
 
 
   @Before
@@ -78,9 +70,6 @@ public class Clustering1Test {
     graph.runClusters(1);
     clusters = graph.getClusters();
     threshold = getRadiusThreshold(clusters);
-    cluster1 = new Cluster(1, node1, nodes1);
-    cluster2 = new Cluster(2, node4, nodes2);
-    cluster3 = new Cluster(3, node1, nodes);
   }
 
 
@@ -119,7 +108,7 @@ public class Clustering1Test {
   @Test
   public void testCluster1() {
     setUp1();
-    for (Cluster c: clusters) {
+    for (Cluster<Node, Edge> c: clusters) {
       assertTrue(checkClusters(clusters));
     }
     tearDown();

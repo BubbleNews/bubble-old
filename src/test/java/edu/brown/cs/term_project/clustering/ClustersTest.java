@@ -27,10 +27,9 @@ public class ClustersTest {
   private Node node5;
   private Node node6;
   private Set<Cluster<Node, Edge>> clusters;
-  private double threshold;
-  private Cluster cluster1;
-  private Cluster cluster2;
-  private Cluster cluster3;
+  private Cluster<Node, Edge> cluster1;
+  private Cluster<Node, Edge> cluster2;
+  private Cluster<Node, Edge> cluster3;
 
 
   @Before
@@ -73,20 +72,11 @@ public class ClustersTest {
     graph = new Graph<>(nodes, edges);
     graph.runClusters(1);
     clusters = graph.getClusters();
-    cluster1 = new Cluster(1, node1, nodes1);
-    cluster2 = new Cluster(2, node4, nodes2);
-    cluster3 = new Cluster(3, node1, nodes);
-    threshold = getRadiusThreshold(clusters);
+    cluster1 = new Cluster<>(1, node1, nodes1);
+    cluster2 = new Cluster<>(2, node4, nodes2);
+    cluster3 = new Cluster<>(3, node1, nodes);
   }
 
-
-  public double getRadiusThreshold(Set<Cluster<Node, Edge>> clusters) {
-    Set<Node> allNodes = new HashSet<>();
-    for (Cluster<Node, Edge> c: clusters) {
-      allNodes.addAll(c.getNodes());
-    }
-    return ClusterMethods.setRadiusThreshold(allNodes);
-  }
 
 
 
@@ -123,7 +113,7 @@ public class ClustersTest {
   @Test
   public void testAdjustHead() {
     setUp1();
-    for (Cluster c: clusters) {
+    for (Cluster<Node, Edge> c: clusters) {
       assertTrue(c.meanRadiusNode(c.getHeadNode()) <= c.getAvgRadius());
       tearDown();
     }

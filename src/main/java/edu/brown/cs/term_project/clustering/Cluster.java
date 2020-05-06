@@ -100,7 +100,7 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
    * Method to add multiple nodes at once to a cluster.
    * @param cluster add all nodes from another cluster to this cluster
    */
-  public void addNodes(Cluster cluster) {
+  public void addNodes(Cluster<T, E> cluster) {
     this.articles.addAll(cluster.getNodes());
     this.size = articles.size();
     setAvgConnections();
@@ -190,7 +190,7 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
    * @param cluster2 - cluster to combine
    * @return - double representing combined mean radius
    */
-  public double meanRadiusClusters(Cluster cluster2) {
+  public double meanRadiusClusters(Cluster<T, E> cluster2) {
     double sum = 0;
     int count = 0;
     int size2 = cluster2.getNodes().size();
