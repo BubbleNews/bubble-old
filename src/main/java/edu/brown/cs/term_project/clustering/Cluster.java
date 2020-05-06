@@ -83,7 +83,7 @@ public class Cluster<T extends INode<E>, E extends IEdge<T>> {
   /**
    * Method to calculate the average radius of a cluster.
    */
-  public void setAvgRadius() {
+  private void setAvgRadius() {
     double sum = 0;
     int count = 0;
     for (T n1: articles) {

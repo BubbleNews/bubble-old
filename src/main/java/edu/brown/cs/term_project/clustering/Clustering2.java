@@ -72,7 +72,7 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
    * Method to trim data for CreateClusters2 method. Removes all nodes that have no edges below
    * threshold and all edges with either their source or destination deleted.
    */
-  public void trimData() {
+  private void trimData() {
     edges = new ArrayList<>(edges); // creates alternative edges to modify
     nodes = new HashSet<>(nodes); // creates alternative nodes to modify
     edges.sort(new EdgeComparator<>());
@@ -105,7 +105,7 @@ public class Clustering2<T extends INode<S>, S extends IEdge<T>> {
    * @param n - the number of clusters to make
    * @return - list of clutsters
    */
-  public List<Cluster<T, S>> findClusters(List<T> clusterNodes, Integer n) {
+  private List<Cluster<T, S>> findClusters(List<T> clusterNodes, Integer n) {
     List<Cluster<T, S>> tempClusters = new ArrayList<>();
     Set<T> tempNodes = new HashSet<>(nodes);
     for (int i = 0; i < n; i++) { //create n clusters each with one of the clusterNodes in it, add
