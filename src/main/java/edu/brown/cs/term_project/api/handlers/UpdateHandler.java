@@ -40,7 +40,8 @@ public final class UpdateHandler {
     try {
       NewsLoader loadData = new NewsLoader(new NewsData("data/final_data.db"),
             "http://127.0.0.1:5000/scrape");
-      loadData.executeBatches(LOADER_NUMBER_OF_BATCHES, ARTICLES_PER_BATCH, LOADER_TIME_STEP, LOADER_STEP_BACK);
+      loadData.executeBatches(LOADER_NUMBER_OF_BATCHES, ARTICLES_PER_BATCH, LOADER_TIME_STEP,
+          LOADER_STEP_BACK);
       ClusterParameters params = new ClusterParameters(CLUSTER_HOURS, true);
       NewsClusterer clusterer = new NewsClusterer(new NewsData("data/final_data.db"));
       clusterer.clusterArticles(params);
