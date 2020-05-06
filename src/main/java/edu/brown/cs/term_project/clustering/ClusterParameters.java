@@ -74,6 +74,12 @@ public class ClusterParameters {
                            boolean isToday, int offset, int hours, boolean doInsert) {
     // default clustering parameters
     this.doInsert = doInsert;
+    this.year = year;
+    this.month = month;
+    this.day = day;
+    this.isToday = isToday;
+    this.offset = offset;
+    this.hours = hours;
     this.textWeight = DEFAULT_TEXT_WEIGHT;
     this.entityWeight = DEFAULT_ENTITY_WEIGHT;
     this.titleWeight = DEFAULT_TITLE_WEIGHT;

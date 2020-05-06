@@ -138,6 +138,7 @@ public class NewsClusterer {
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
     final int hours = 24;
+    //ClusterParameters params = new ClusterParameters("2020", "05", "01", false, 0, hours, true);
     ClusterParameters params = new ClusterParameters(hours, true);
     NewsClusterer clusterer = new NewsClusterer(new NewsData("data/final_data.db"));
     clusterer.clusterArticles(params);
