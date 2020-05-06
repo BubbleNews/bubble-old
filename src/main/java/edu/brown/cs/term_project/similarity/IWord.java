@@ -1,5 +1,8 @@
 package edu.brown.cs.term_project.similarity;
 
+/**
+ * Interface for word classes.
+ */
 public interface IWord {
 
   String getWord();
