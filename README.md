@@ -79,7 +79,9 @@ stemming) and title and encode it with stop words.
   * Scraping articles in Python  
   * D3.js visualizations of how well articles are clustering together  
 * John Graves  
-  * a  
+  * Clustering articles based on edge weight
+  * D3 visualizations of clustering
+  * Database Maintenance
 * Ben Silverman  
   * Edge weight calculation via term frequency and inverse document frequency.  
   * GUI  
