@@ -62,7 +62,7 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
         addNodes.add(src);
         addNodes.add(dst);
         Cluster newCluster = new Cluster(count, src, addNodes);
-        if (newCluster.getAvgRadius() < radiusThreshold / 3.0) {
+        if (newCluster.getAvgRadius() < radiusThreshold / 3.0) { //experiment
           tempClusters.put(src.getId(), newCluster);
           tempClusters.put(dst.getId(), newCluster);
           count++;

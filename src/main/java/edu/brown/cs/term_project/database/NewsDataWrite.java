@@ -54,7 +54,7 @@ public class NewsDataWrite {
   private int insertArticle(Article article) throws SQLException {
     PreparedStatement prep = conn.prepareStatement(
         "INSERT into articles (source, title, url, date_published, date_pulled,"
-            + " text) SELECT ?, ?, ?, ?, DATETIME('now'), ?"
+            + " text) SELECT ?, ?, ?, ?, DATETIME('now', '-4 hours'), ?"
             + "WHERE NOT EXISTS (SELECT 1 FROM articles WHERE title = ?);"
     );
     prep.setString(1, article.getSourceName());
@@ -172,7 +172,7 @@ public class NewsDataWrite {
    * @throws SQLException if thrown
    */
   public void insertClusters(Set<Cluster<ArticleVertex, Similarity>> clusters) throws SQLException {
-    Calendar rightNow = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    Calendar rightNow = Calendar.getInstance(TimeZone.getTimeZone("EST"));
     int hour = rightNow.get(Calendar.HOUR_OF_DAY);
     boolean finalCluster = (hour == FINAL_HOUR);
     for (Cluster<ArticleVertex, Similarity> c : clusters) {

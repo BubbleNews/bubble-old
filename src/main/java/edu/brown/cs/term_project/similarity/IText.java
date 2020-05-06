@@ -2,6 +2,9 @@ package edu.brown.cs.term_project.similarity;
 
 import java.util.Map;
 
+/**
+ * This interface reprents a text that can be passed into the TextCorpus.
+ */
 public interface IText {
 
   /**
@@ -12,9 +15,9 @@ public interface IText {
   Map<IWord, Double> getFreq(Integer textType);
 
   /**
-   * Gets the importance of each word map for the text.
-   * @param textType the text type (entity, word)
-   * @return the importance map
+   * Gets a map of each word in the text's importance.
+   * @param textType number representing the text type
+   * @return a map of each word in the text's importance
    */
   Map<IWord, Double> getImportance(Integer textType);
 }

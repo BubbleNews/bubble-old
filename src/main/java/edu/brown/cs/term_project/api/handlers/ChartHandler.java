@@ -47,10 +47,8 @@ public final class ChartHandler {
       List<ChartCluster> clusters;
       if (today) {
         clusters = db.getDataRead().getNewestClusters();
-      } else if (offset > 0) {
-        clusters = db.getDataRead().getClusters(date, offset, 1);
       } else {
-        clusters = db.getDataRead().getClusters(date, HOURS_PER_DAY + offset, 0);
+        clusters = db.getDataRead().getClusterByDay(date);
       }
       // sort by size
       Comparator<ChartCluster> compareBySize =
