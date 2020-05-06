@@ -26,7 +26,7 @@ public final class UpdateHandler {
    * @param db the database
    * @return a JSON response with status and message.
    */
-  public static String handle(Request request, Response response, NewsData db) throws Exception {
+  public static String handle(Request request, Response response, NewsData db) {
     StandardResponse updateResponse = new StandardResponse(0, "");
     try {
       updateResponse.setMessage("We are not currently supporting Cron job updating.");

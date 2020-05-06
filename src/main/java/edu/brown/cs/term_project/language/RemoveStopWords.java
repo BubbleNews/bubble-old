@@ -1,14 +1,25 @@
 package edu.brown.cs.term_project.language;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class for removing stop words from articles.
+ */
 public final class RemoveStopWords {
-  private static final Set<String> stopWords = setStopWords();
+  private static final Set<String> STOP_WORDS = setStopWords();
 
-  private RemoveStopWords() {}
+  /**
+   * Constructor should not be called.
+   */
+  private RemoveStopWords() {
+    // should not be called
+  }
+
   /**.
    * Static method to parse a csv from file name.
    * @return Pair containing the filename, and a list of arrays
@@ -35,11 +46,12 @@ public final class RemoveStopWords {
   }
 
   /**
-   * Returns true for words with less than 2 characters and words that are in the hashset of common stop words.
+   * Returns true for words with less than 2 characters and words that are in
+   * the hashset of common stop words.
    * @param word input words
    * @return true if it is a stop word, false otherwise
    */
   public static boolean isStopWord(String word) {
-    return stopWords.contains(word) || word.length() <= 2;
+    return STOP_WORDS.contains(word) || word.length() <= 2;
   }
 }

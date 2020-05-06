@@ -4,12 +4,20 @@ import edu.brown.cs.term_project.similarity.IWord;
 
 import java.util.Objects;
 
+/**
+ * Class for words in the title of an article.
+ */
 public class TitleWord implements IWord {
   private String word;
 
+  /**
+   * Constructor for a titleword.
+   * @param word the string word
+   */
   public TitleWord(String word) {
     this.word = word;
   }
+
   @Override
   public String getWord() {
     return word;

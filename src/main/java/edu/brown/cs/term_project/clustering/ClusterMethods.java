@@ -6,8 +6,17 @@ import edu.brown.cs.term_project.graph.INode;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * Class containing clustering utility methods.
+ */
 public final class ClusterMethods {
 
+  /**
+   * Constructor should never be called.
+   */
+  private ClusterMethods() {
+    // should not be called
+  }
   /**
    * Method to calculate the "total Radius" of a group of clusters. This is not actually the
    * total radius, it is the mean radius multiplied by number of nodes (true total radius would

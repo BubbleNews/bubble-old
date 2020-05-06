@@ -22,12 +22,11 @@ import static org.junit.Assert.assertEquals;
 
 public class NewsDataWriteTest {
 
-  private static final double DELTA = 0.00005;
   private static NewsData db;
 
   @BeforeClass
   public static void setUpOnce() throws SQLException, ClassNotFoundException {
-    db = new NewsData("data/news_data_write_test.sqlite3");
+    db = new NewsData("data/news_data_write_tests.db");
   }
 
   @AfterClass

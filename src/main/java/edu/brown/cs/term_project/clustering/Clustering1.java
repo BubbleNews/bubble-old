@@ -11,6 +11,11 @@ import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for clustering method 1.
+ * @param <T> the type of node in the graph
+ * @param <S> the type of edge in the graph
+ */
 public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
   private Set<T> nodes;
   private List<S> edges;
@@ -23,6 +28,12 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
   private final double iterMaxMult = 0.1;
   private final double tightCluster = 0.5;
 
+  /**
+   * Constructor for clustering1.
+   * @param nodes the set of nodes to be clustered
+   * @param edges the set of edges
+   * @param threshold the distance threshold above which not to consider edges
+   */
   public Clustering1(Set<T> nodes, List<S> edges, double threshold) {
     this.nodes = nodes;
     this.edges = edges;
@@ -75,13 +86,13 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
         v.adjustHead(); // optimize the head node of the cluster, to make headline most fitting
         clusters.add(v);
         System.out.println("Cluster.java: " + v.getHeadNode().getId() + " size: " + v.getSize());
-        String toPrint = "";
+        StringBuilder toPrint = new StringBuilder("");
         Set<T> clusterNodes = v.getNodes();
         for (T n : clusterNodes) { //prints out nodes in cluster
-          toPrint += n.getId();
-          toPrint += " ";
+          toPrint.append(n.getId());
+          toPrint.append(" ");
         }
-        System.out.println(toPrint);
+        System.out.println(toPrint.toString());
       }
     });
     return clusters;
@@ -114,10 +125,6 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
    * @param expandClusters - map from node id to cluster, must be updated if node is added
    */
   private void add(Cluster c1, T node, Map<Integer, Cluster<T, S>> expandClusters) {
-//    final double minMaxMult = 1.3;
-//    final double maxMaxMult = 2;
-//    final double iterMaxMult = 0.05;
-//    final double tightCluster = 0.5;
     double oldMean = c1.getAvgRadius();
     double newMean = c1.meanRadiusNode(node);
     double maxMult = Math.max(maxMaxMult - (iterMaxMult * c1.getSize()), minMaxMult); //experiment
@@ -128,9 +135,11 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
     if (newMean < radiusThreshold && (newMean < maxMult * oldMean || diff2 < 1)) { //add to cluster
       c1.addNode(node);
       expandClusters.put(node.getId(), c1);
-      System.out.println("added: " + node.getId() + " : " + c1.getHeadNode().getId() + " -> " + c1.getSize());
+      System.out.println("added: " + node.getId() + " : "
+          + c1.getHeadNode().getId() + " -> " + c1.getSize());
     } else {
-      System.out.println("Not added: " + node.getId() + " : " + c1.getHeadNode().getId() + " -> " + c1.getSize());
+      System.out.println("Not added: " + node.getId() + " : "
+          + c1.getHeadNode().getId() + " -> " + c1.getSize());
 
     }
   }
@@ -145,10 +154,6 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
    */
   private void combine(
       Cluster<T, S> c1, Cluster<T, S> c2, Map<Integer, Cluster<T, S>> articleToClusters) {
-//    final double minMaxMult = 1.3;
-//    final double maxMaxMult = 2;
-//    final double iterMaxMult = 0.05;
-//    final double tightCluster = 0.5;
     double meanC1 = c1.getAvgRadius();
     double meanC2 = c2.getAvgRadius();
     double newMean = c1.meanRadiusClusters(c2);
@@ -177,14 +182,13 @@ public class Clustering1<T extends INode<S>, S extends IEdge<T>> {
           articleToClusters.replace(a.getId(), c2);
         }
       }
-      System.out.println("combined: " + c1.getHeadNode().getId() + " : " + c2.getHeadNode().getId() + " " +
-          "-> " + c1.getSize() + "/" + c2.getSize());
+      System.out.println("combined: " + c1.getHeadNode().getId() + " : "
+          + c2.getHeadNode().getId() + " "
+          + "-> " + c1.getSize() + "/" + c2.getSize());
     } else {
-      System.out.println("Not combined: " + c1.getHeadNode().getId() + " : " + c2.getHeadNode().getId() + " " +
-          "-> " + c1.getSize() + "/" + c2.getSize());
-
+      System.out.println("Not combined: " + c1.getHeadNode().getId() + " : "
+          + c2.getHeadNode().getId() + " "
+          + "-> " + c1.getSize() + "/" + c2.getSize());
     }
-
   }
-
 }

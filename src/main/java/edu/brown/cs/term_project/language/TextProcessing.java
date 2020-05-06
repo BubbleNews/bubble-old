@@ -1,17 +1,24 @@
 package edu.brown.cs.term_project.language;
 
 import edu.brown.cs.term_project.bubble.Entity;
-import edu.stanford.nlp.simple.*;
+import edu.stanford.nlp.simple.Document;
+import edu.stanford.nlp.simple.Sentence;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Utility class that extracts the entities from an article using the stanford core NLP library.
- * https://stanfordnlp.github.io/CoreNLP/simple.html
+ * Utility class that extracts the entities from an article using the stanford core NLP library
+ * https://stanfordnlp.github.io/CoreNLP/simple.html.
  */
 public final class TextProcessing {
-  private static final Set<String> ignoredEntities = new HashSet<>(
-          Arrays.asList("NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "ORDINAL", "O"));
+  private static final Set<String> IGNORED_ENTITIES = new HashSet<>(
+          Arrays.asList("NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY",
+              "DURATION", "TIME", "ORDINAL", "O"));
 
   /**
    * Private constructor that is only defined because this is a utility class
@@ -24,7 +31,7 @@ public final class TextProcessing {
   /**
    * Gets the entity frequencies for a text string. Ignores entities of the following types because
    * they aren't useful in calculating similarity between articles:
-   * "NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "ORDINAL", "O"
+   * "NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "ORDINAL", "O".
    * @param articleBody the string text of an article
    * @return a hashmap of entities and the number of times they occurred in an article.
    */
@@ -36,7 +43,8 @@ public final class TextProcessing {
       for (int i = 0; i < entityTypes.size(); i++) {
         String word = sent.word(i);
         String entityType = entityTypes.get(i);
-        if (!RemoveStopWords.isStopWord(word) && !TextProcessing.ignoredEntities.contains(entityType)) {
+        if (!RemoveStopWords.isStopWord(word)
+            && !TextProcessing.IGNORED_ENTITIES.contains(entityType)) {
           Entity entity = new Entity(word, entityType);
           if (entityFrequencies.containsKey(entity)) {
             entityFrequencies.replace(entity, entityFrequencies.get(entity) + 1);
@@ -51,7 +59,7 @@ public final class TextProcessing {
 
   /**
    * Uses the Stanford NLP library to lemmatize an article (this is a more intelligent version
-   * of stemming)
+   * of stemming).
    * @param text input article
    * @return array where each word is lemmatized
    */

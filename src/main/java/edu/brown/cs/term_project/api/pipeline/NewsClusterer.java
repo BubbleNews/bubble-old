@@ -88,7 +88,10 @@ public class NewsClusterer {
     for (ArticleVertex a1 : pulledArticles) {
       for (ArticleVertex a2 : pulledArticles) {
         if (a1.getId() < a2.getId()) {
-          Similarity tempEdge = new Similarity(a1, a2, wordCorpus, entityCorpus, titleCorpus,
+          // create edge
+          Similarity tempEdge = new Similarity(a1, a2);
+          // calculate edge distance
+          tempEdge.setDistance(entityCorpus, wordCorpus, titleCorpus,
               params.getTextWeight(),
               params.getEntityWeight(), params.getTitleWeight());
           a1.addEdge(tempEdge);

@@ -35,7 +35,9 @@ public class ChartCluster {
    * Getter for cluster id.
    * @return cluster id
    */
-  public int getClusterId() { return clusterId; }
+  public int getClusterId() {
+    return clusterId;
+  }
 
   /**
    * Getter for size.

@@ -3,6 +3,11 @@ package edu.brown.cs.term_project.database;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Class with connection to the database, contains an instance of a class that
+ * controls reading from the database and an instance of a class that controls
+ * writing to the database.
+ */
 public final class NewsData extends Database {
   private final Connection conn;
   private final NewsDataRead dataRead;
@@ -23,10 +28,18 @@ public final class NewsData extends Database {
     dataWrite = new NewsDataWrite(conn);
   }
 
+  /**
+   * Gets the object with methods to read from the database.
+   * @return the database reader
+   */
   public NewsDataRead getDataRead() {
     return dataRead;
   }
 
+  /**
+   * Gets the object with methods to write to the database.
+   * @return the database writer
+   */
   public NewsDataWrite getDataWrite() {
     return dataWrite;
   }

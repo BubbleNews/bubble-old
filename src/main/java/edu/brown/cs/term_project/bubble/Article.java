@@ -43,8 +43,8 @@ public class Article {
    * @param id id in articles table in the database
    * @param sourceName the name of the source
    * @param title the title
-   * @param url
-   * @param timePublished
+   * @param url the article url
+   * @param timePublished the time published
    */
   public Article(int id, String sourceName, String title, String url, String timePublished) {
     this.id = id;

@@ -1,7 +1,5 @@
 package edu.brown.cs.term_project.graph;
 
-
-
 import java.util.Comparator;
 
 /**
