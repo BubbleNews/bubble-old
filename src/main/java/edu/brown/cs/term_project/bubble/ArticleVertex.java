@@ -97,7 +97,7 @@ public class ArticleVertex implements INode<Similarity>, IText {
     HashMap<IWord, Double> wordMap = new HashMap<>();
     String[] splitWords;
     if (isTitle) {
-      splitWords = TextProcessing.lemmizeText(text);
+      splitWords = TextProcessing.lemmatizeText(text);
     } else {
       splitWords = text.split("~\\^");
     }

@@ -109,8 +109,8 @@ public class NewsLoader {
       HashMap<Entity, Integer> entityFrequencies =
           TextProcessing.getEntityFrequencies(article.getContent());
       // lemmize text and title
-      String[] lemmizedText = TextProcessing.lemmizeText(article.getContent());
-      String[] lemmizedTitle = TextProcessing.lemmizeText(article.getTitle());
+      String[] lemmizedText = TextProcessing.lemmatizeText(article.getContent());
+      String[] lemmizedTitle = TextProcessing.lemmatizeText(article.getTitle());
 
       String[] lemmizedTextAndTitle = ObjectArrays.concat(lemmizedTitle, lemmizedText, String.class);
       // change the content field of the article object to be the lemmized text

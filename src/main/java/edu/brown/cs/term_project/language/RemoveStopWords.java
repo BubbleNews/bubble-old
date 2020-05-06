@@ -10,7 +10,7 @@ public final class RemoveStopWords {
 
   private RemoveStopWords() {}
   /**.
-   * Static method to parse a csv from file name
+   * Static method to parse a csv from file name.
    * @return Pair containing the filename, and a list of arrays
    *      Each item in list is a line
    *      Each element of the array is a string of the csv line, split on commmas
@@ -35,7 +35,7 @@ public final class RemoveStopWords {
   }
 
   /**
-   * Returns true for words with less than 2 characters and words that are in the hashset of common stop words
+   * Returns true for words with less than 2 characters and words that are in the hashset of common stop words.
    * @param word input words
    * @return true if it is a stop word, false otherwise
    */

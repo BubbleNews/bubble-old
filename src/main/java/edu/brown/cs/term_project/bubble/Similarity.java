@@ -18,7 +18,6 @@ public class Similarity implements IEdge<ArticleVertex> {
   private double entityDistance;
   private double titleDistance;
 
-
   public Similarity(ArticleVertex src, ArticleVertex dest, TextCorpus<ArticleWord,
       ArticleVertex> wordCorpus, TextCorpus<Entity, ArticleVertex> entityCorpus,
                     TextCorpus<ArticleWord, ArticleVertex> titleCorpus, double textWeight,

@@ -22,7 +22,9 @@ public final class TextProcessing {
   }
 
   /**
-   * Gets the entity frequencies for a text string.
+   * Gets the entity frequencies for a text string. Ignores entities of the following types because
+   * they aren't useful in calculating similarity between articles:
+   * "NUMBER", "CRIMINAL_CHARGE", "DATE", "MONEY", "DURATION", "TIME", "ORDINAL", "O"
    * @param articleBody the string text of an article
    * @return a hashmap of entities and the number of times they occurred in an article.
    */
@@ -47,7 +49,13 @@ public final class TextProcessing {
     return entityFrequencies;
   }
 
-  public static String[] lemmizeText(String text) {
+  /**
+   * Uses the Stanford NLP library to lemmatize an article (this is a more intelligent version
+   * of stemming)
+   * @param text input article
+   * @return array where each word is lemmatized
+   */
+  public static String[] lemmatizeText(String text) {
     List<String> lemmas = new ArrayList<>();
     Document doc = new Document(text.toLowerCase());
     for (Sentence sent : doc.sentences()) {
