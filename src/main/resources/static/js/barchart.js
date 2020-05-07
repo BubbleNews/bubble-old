@@ -6,7 +6,7 @@ const numBarsToDisplayThresholdPercent = 0.95;
 // maximum number of bars to show (sometimes less bars than this will be shown depending on
 // thresholdPercent)
 const maxBars = 20;
-const margin = {left: 60, right: 0, top: 10, bottom: 0};
+const margin = {left: 60, right: 100, top: 10, bottom: 0};
 const labelPadding = 10;
 const types = ['Key Word', 'Title', 'Text'];
 const colors = ['steelblue', 'red', 'orange'];
@@ -30,8 +30,8 @@ function initializeBarChart(data, id, type) {
     // make svg
     const svg = d3.select("#bar" + id)
         .append("svg")
-        .attr('width', width)
-        .attr('height', height)
+        .attr("preserveAspectRatio", "xMinYMid")
+        .attr("viewBox", [0, 0, width, height])
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
