@@ -410,7 +410,7 @@ function setTutorial() {
             {
                 element: '#question-button',
                 intro: 'If you want to see this tutorial again, click this button. Enjoy!',
-                position: 'right',
+                position: 'left',
             }
         ]
     });
