@@ -2,11 +2,11 @@ export { initializeBarChart, updateBarChart };
 
 //decimal percent of how much cluster to reveal (higher number -> more bars displayed; 1 -> all
 // bars displayed)
-const numBarsToDisplayThresholdPercent = 0.95;
+const numBarsToDisplayThresholdPercent = 0.9;
 // maximum number of bars to show (sometimes less bars than this will be shown depending on
 // thresholdPercent)
 const maxBars = 20;
-const margin = {left: 60, right: 0, top: 10, bottom: 0};
+const margin = {left: 60, right: 100, top: 10, bottom: 0};
 const labelPadding = 10;
 const types = ['Key Word', 'Title', 'Text'];
 const colors = ['steelblue', 'red', 'orange'];
@@ -16,7 +16,7 @@ const distanceBetweenDots = 25;
 const distanceBetweenLabelAndDot = 20;
 
 const width = 500;
-const height = 500;
+const height = 430;
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 
@@ -30,8 +30,8 @@ function initializeBarChart(data, id, type) {
     // make svg
     const svg = d3.select("#bar" + id)
         .append("svg")
-        .attr('width', width)
-        .attr('height', height)
+        .attr("preserveAspectRatio", "xMinYMid")
+        .attr("viewBox", [0, 0, width, height])
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
@@ -63,6 +63,7 @@ function initializeBarChart(data, id, type) {
         .attr('transform', `translate(${margin.left},0)`);
 
     updateBarChart(data, type);
+    $('.spin' + id).hide();
 }
 
 function updateBarChart(data, type) {

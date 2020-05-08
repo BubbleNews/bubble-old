@@ -73,6 +73,7 @@ h1 {
 h2 {
     font-family: 'Helvetica', sans-serif;
     font-size: 1.2em;
+    margin-bottom: 0;
 }
 
 p {
@@ -200,4 +201,52 @@ li > h3 {
 .modal-title {
     font-weight: bold;
     font-size: 1.5em;
+}
+
+.article-card {
+    padding-top: 0;
+}
+
+.modal-content {
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.badge-light {
+    font-size: .85em;
+}
+
+.question-button {
+    background:none;
+    border:none;
+    top: 0;
+    right: 0;
+    position: absolute;
+    padding: 10px;
+}
+
+.question-button:focus {
+    outline:none;
+    box-shadow: none;
+}
+
+.viz-x {
+    top: 10px;
+    right: 10px;
+    position: absolute;
+}
+
+.viz-x:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+a.btn-blue-grey.introjs-button.introjs-disabled {
+    background-color: #f4f4f4 !important;
+    box-shadow: none;
+}
+
+.introjs-tooltip {
+    width: max-content;
 }
