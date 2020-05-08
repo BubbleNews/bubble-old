@@ -1,9 +1,11 @@
 import {getClusterDetails} from './d3.js';
+import Cookies from './js.cookie.mjs';
+
 let currentlyOpenClusterId = null;
-
 const sourceMap = new Map();
-
 const clusterMap = new Map();
+
+const intro = new introJs();
 
 /**
  * Setup the webpage
@@ -100,6 +102,10 @@ $(document).ready(() => {
         addDate();
         dateClickHandler();
     });
+    // set up tutorial
+    setTutorial();
+    // check cookies to see if user is new and show tutorial
+    showTutorialIfNew();
 });
 
 /**
@@ -346,3 +352,54 @@ function cleanSourceName(sourceName) {
     return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }
 
+/**
+ * Sets up a tutorial to introduce new users to Bubble, only showing the tutorial
+ * if the user is new (check cookies).
+ */
+function showTutorialIfNew() {
+    if (!Cookies.get('completedTutorial')) {
+        setTimeout(function() {
+            intro.start();
+        }, 500);
+
+    }
+}
+
+/**
+ * Sets up a tutorial for the user.
+ */
+function setTutorial() {
+    intro.setOption('scrollToElement', false);
+    intro.setOptions({
+        steps: [
+            {
+                element: '#mainWindow',
+                intro: 'Welcome to Bubble! Bubble groups news articles by topic ' +
+                    'to show you the most important headlines of the day. ' +
+                    'Click on one of the topics to see ' +
+                    'articles inside the topic as well as a visualization of the ' +
+                    'grouping.',
+                position: 'top',
+            },
+            {
+                element: '#sourcesWrapper',
+                intro: 'Click a source to hide or show articles from that source.',
+                position: 'top',
+            },
+            {
+                element: '#reclusterWrapper',
+                intro: 'Try regrouping articles by changing our similarity calculation.' +
+                    ' Click \'INFO\' to learn more!',
+                position: 'top',
+            },
+            {
+                element: '#date',
+                intro: 'You can use the date selector to view topics from another day. Enjoy!',
+                position: 'right',
+            }
+        ]
+    });
+    intro.oncomplete(function() {
+        Cookies.set("completedTutorial", true, { expires: 7});
+    });
+}
