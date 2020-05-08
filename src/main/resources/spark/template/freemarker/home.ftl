@@ -136,7 +136,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" tabindex="-1" role="dialog" id="vizModal">
+        <div class="modal fade" tabindex="-1" role="dialog" id="vizInfoModal">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header align-self-center">

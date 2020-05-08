@@ -5,6 +5,8 @@ const sourceMap = new Map();
 
 const clusterMap = new Map();
 
+const vizSet = new Set();
+
 /**
  * Setup the webpage
  */
@@ -53,6 +55,7 @@ $(document).ready(() => {
             event.preventDefault();
             $("#clusters").empty();
             clusterMap.clear();
+            vizSet.clear();
             // show loading wheel
             $('#mainLoader').show();
             let reclusterEndpoint = 'api/recluster';
@@ -116,6 +119,7 @@ $('#date').datepicker();
  * Handler for selecting a new date
  */
 function dateClickHandler() {
+    vizSet.clear();
     // get the date val
     let dateVal = $('#date').val();
     // if mobile datepickers are used, the date is returend in a different format split by dashes
@@ -263,24 +267,21 @@ function makeCluster(clusterId, articles) {
     // Add html for the tabs within each cluster
     const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
         ' data-parent="#clusters">'
-        + '<div class="card-body"><ul class="nav nav-tabs nav-fill" role="tablist">'
-        + '<li class="nav-item"><a class="nav-link active" id="articlesList-tab"' +
-        ' data-toggle="tab" href="#articlesList' + divId + '" role="tab">Articles</a></li>'
-        + '<li class="nav-item"><a class="nav-link" id="visualization-tab"' +
-        ' data-toggle="tab"' +
-        ' href="#visualization' + divId + '" role="tab">Data' +
-        ' Visualization</a></li></ul>'
-        + '<div class="tab-content">'
-
-        + '<div id="articlesList' + divId + '" class="tab-pane fade show active' +
-        ' articlesWrapper"' +
+        + '<div class="card-body article-card">'
+        + '<button type="button" class="btn btn-primary" id="generate' + clusterId +'"' +
+        ' data-toggle="modal" data-target="#vizModal' + divId + '" style="margin-bottom: 15px">'
+        + ' Show Visualization</button>'
+        + '<div id="articlesList' + divId + '" class=" articlesWrapper"' +
         ' role="tabpanel">'
         + '<ul class="list-group list-group-flush" id="' + divId + '">'
         + '</ul></div>'
-        + '<div class="tab-pane fade viz" id="visualization' + divId + '" role="tabpanel">'
-        + '<button type="button" id="generate' + clusterId +'" class="btn btn-primary">' +
-        ' Render' +
-        ' Visualization</button>'
+        + '<div id="visualization' + divId + '">'
+        + '<div class="modal fade" id="vizModal' + divId + '" tabindex="-1" role="dialog">'
+        + '<div class="modal-dialog modal-fluid" role="document">'
+        + '<div class="modal-content">'
+        + '<div class="modal-header align-self-center">'
+        + '<h5 class="modal-title" style="font-weight:bold">Data Visualization</h5></div>'
+        + '<div class="modal-body">'
         + '<div class="spinner-border text-primary spin' + clusterId +'" role="status">'
         + '<span class="sr-only">Loading...</span>'
         + '</div>'
@@ -290,27 +291,33 @@ function makeCluster(clusterId, articles) {
         + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
         + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
         + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
-        + '<div class="chord-chart" id="chord' + clusterId + '"></div>'
+        + '<div class="charts row">'
+        + '<div class="chord-chart col-lg-6" id="chord' + clusterId + '"></div>'
         + '<div class="box-plot" id="box' + clusterId + '"></div>'
-        + '<div class="bar-chart"  id="bar' + clusterId + '"></div>'
+        + '<div class="bar-chart col-lg-6 align-middle"  id="bar' + clusterId + '"></div></div>'
         + '<button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"'
         + 'style="margin-bottom:10px;" data-toggle="modal"'
-        + ' data-target="#vizModal">Info</button></div>'
-        + '</div>'
-        + '</div></div></div>';
+        + ' data-target="#vizInfoModal">Info</button>'
+        + '</div></div>'
+        + '<div class="modal-footer">'
+        + '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>'
+        + '</div></div></div></div>'
+        + '</div></div>';
     $('#' + clusterId).append(articlesHtml);
     $('.spin' + clusterId).hide();
     $('.diagram' + clusterId).hide();
     // add click handler for generate visualization button
     $('#generate' + clusterId).click(function() {
-        $('#generate' + clusterId).hide();
-        $('.spin' + clusterId).show();
-        const meanRadius = clusterMap.get(clusterId).meanRadius;
-        const articleIds = articles.map(a => a.id);
-        // create the visualization
-        getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
-        $('.spin' + clusterId).hide();
-        $('.diagram' + clusterId).show();
+        if (!vizSet.has(clusterId)) {
+            vizSet.add(clusterId);
+            $('.spin' + clusterId).show();
+            const meanRadius = clusterMap.get(clusterId).meanRadius;
+            const articleIds = articles.map(a => a.id);
+            // create the visualization
+            getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
+            $('.spin' + clusterId).hide();
+            $('.diagram' + clusterId).show();
+        }
 
     });
     let i;
