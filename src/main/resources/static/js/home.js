@@ -230,9 +230,9 @@ function appendCluster(cluster, reclustered) {
     // we must fill in the articles differently if they were reclustered because we get them from
     // the JSON, not a db request
     if (reclustered) {
-        makeCluster(cluster.clusterId, cluster.articles);
+        makeCluster(cluster.clusterId, cluster.articles, cluster.headline);
     } else {
-        getClusterRequest(cluster.clusterId);
+        getClusterRequest(cluster.clusterId, cluster.headline);
     }
 }
 
@@ -240,7 +240,7 @@ function appendCluster(cluster, reclustered) {
  * Calls database to get and add articles for a given cluster (real not reclustered)
  * @param clusterId id of the cluster to add
  */
-function getClusterRequest(clusterId) {
+function getClusterRequest(clusterId, headline) {
     $('.articlesWrapper').remove();
     if (clusterId == currentlyOpenClusterId) {
         currentlyOpenClusterId = null;
@@ -253,7 +253,7 @@ function getClusterRequest(clusterId) {
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
         // TODO: do something with parsed cluster response
-        makeCluster(clusterId, parsed.articles);
+        makeCluster(clusterId, parsed.articles, headline);
     });
 }
 
@@ -262,7 +262,7 @@ function getClusterRequest(clusterId) {
  * @param clusterId id of the cluster
  * @param articles all the article objects for each article in the cluster
  */
-function makeCluster(clusterId, articles) {
+function makeCluster(clusterId, articles, headline) {
     const divId = clusterId + 'articles';
     // Add html for the tabs within each cluster
     const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
@@ -280,7 +280,7 @@ function makeCluster(clusterId, articles) {
         + '<div class="modal-dialog modal-fluid" role="document">'
         + '<div class="modal-content">'
         + '<div class="modal-header align-self-center">'
-        + '<h5 class="modal-title" style="font-weight:bold">Data Visualization</h5></div>'
+        + '<h5 class="modal-title" style="font-weight:bold">' + headline + '</h5></div>'
         + '<div class="modal-body">'
         + '<div class="spinner-border text-primary spin' + clusterId +'" role="status">'
         + '<span class="sr-only">Loading...</span>'
