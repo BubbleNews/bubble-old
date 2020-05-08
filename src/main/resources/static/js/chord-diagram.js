@@ -48,10 +48,7 @@ function renderChord(parsed, radiusMap) {
     // Creates svg for chord diagram
     const svg = d3.select("#chord" + parsed.clusterId)
         .append("svg")
-            .attr("id", "mysvg")
             .attr("preserveAspectRatio", "xMinYMid")
-            //.attr("width", width)
-            //.attr("height", height)
             .attr("viewBox", [0, 0, width, height])
         .append('g')
         .attr('transform', `translate(${margin.left + outerRadius},${margin.top + outerRadius})`);
