@@ -3,15 +3,17 @@
     <meta charset="utf-8">
     <title>Bubble</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <link rel="stylesheet" href="../css/introjs.css">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/mdb.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="../css/home.css">
+
 </head>
 <body>
 <div class="header">
     <div id="particles-js"></div>
-    <button class="question-button"><img src="../images/question.png"></button>
+    <button id="question-button" class="question-button"><img src="../images/question.png"></button>
     <div id="titleWrapper">
         <h1>Bubble</h1>
     </div>
@@ -31,9 +33,10 @@
     </div>
 </div>
 
+
 <div class="container" id="graphWrapper">
     <div class="row">
-        <div class="col-lg-2">
+        <div id="sourcesColumn" class="col-lg-2">
             <div id="sourcesWrapper" class="card sticky-top sidePanel">
                 <div class="card-header"><h4>Toggle Sources</h4></div>
                 <div class="card-body" id="sources">
@@ -183,6 +186,8 @@
 <script src="../js/mdb.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://d3js.org/d3.v5.js"></script>
+<script type="module" src="../js/js.cookie.mjs"></script>
+<script type="module" src="../js/intro.js"></script>
 <script type="module" src="../js/chord-diagram.js"></script>
 <script type="module" src="../js/barchart.js"></script>
 <script type="module" src="../js/d3.js"></script>
