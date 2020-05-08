@@ -416,6 +416,9 @@ function setTutorial() {
         ]
     });
     intro.oncomplete(function() {
-        Cookies.set("completedTutorial", true, { expires: 7});
+        Cookies.set("completedTutorial", true, { expires: 365});
     });
+    intro.onexit(function() {
+        Cookies.set("completedTutorial", true, { expires: 365});
+    })
 }
