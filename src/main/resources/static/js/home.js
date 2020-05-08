@@ -398,7 +398,7 @@ function setTutorial() {
             },
             {
                 element: '#reclusterWrapper',
-                intro: 'Try regrouping articles by changing our similarity calculation.' +
+                intro: 'You can try regrouping articles by changing our similarity calculation.' +
                     ' Click \'INFO\' to learn more!',
                 position: 'top',
             },
