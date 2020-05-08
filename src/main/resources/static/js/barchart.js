@@ -63,6 +63,7 @@ function initializeBarChart(data, id, type) {
         .attr('transform', `translate(${margin.left},0)`);
 
     updateBarChart(data, type);
+    $('.spin' + id).hide();
 }
 
 function updateBarChart(data, type) {

@@ -293,15 +293,15 @@ function makeCluster(clusterId, articles, headline) {
         + '<button type="button" class="close viz-x" data-dismiss="modal" aria-label="Close">'
         + '<span aria-hidden="true">&times;</span></button></div>'
         + '<div class="modal-body">'
-        + '<div class="spinner-border text-primary spin' + clusterId +'" role="status">'
-        + '<span class="sr-only">Loading...</span>'
-        + '</div>'
         + '<div class="diagram' + clusterId + '">'
+        + '<div class="row justify-content-md-center">'
         + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Key' +
         ' Word</button>'
         + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
         + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
-        + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
+        + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button></div>'
+        + '<div class="row spinner-border text-primary spin' + clusterId +'" role="status">'
+        + '<span class="sr-only">Loading...</span></div>'
         + '<div class="charts row">'
         + '<div class="chord-chart col-lg-6" id="chord' + clusterId + '"></div>'
         + '<div class="box-plot" id="box' + clusterId + '"></div>'
@@ -326,7 +326,6 @@ function makeCluster(clusterId, articles, headline) {
             const articleIds = articles.map(a => a.id);
             // create the visualization
             getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
-            $('.spin' + clusterId).hide();
             $('.diagram' + clusterId).show();
         }
 
