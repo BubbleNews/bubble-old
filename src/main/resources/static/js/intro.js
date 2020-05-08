@@ -67,15 +67,15 @@
       /* Close introduction when clicking on overlay layer? */
       exitOnOverlayClick: true,
       /* Show step numbers in introduction? */
-      showStepNumbers: true,
+      showStepNumbers: false,
       /* Let user use keyboard to navigate the tour? */
       keyboardNavigation: true,
       /* Show tour control buttons? */
       showButtons: true,
       /* Show tour bullets? */
-      showBullets: true,
+      showBullets: false,
       /* Show tour progress? */
-      showProgress: false,
+      showProgress: true,
       /* Scroll to highlighted element? */
       scrollToElement: true,
       /*
@@ -101,7 +101,7 @@
       /* Adding animation to hints? */
       hintAnimation: true,
       /* additional classes to put on the buttons */
-      buttonClass: "introjs-button"
+      buttonClass: "introjs-button btn btn-sm btn-blue-grey"
     };
   }
 

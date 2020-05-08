@@ -241,3 +241,12 @@ li > h3 {
     outline: none;
     box-shadow: none;
 }
+
+a.btn-blue-grey.introjs-button.introjs-disabled {
+    background-color: #f4f4f4 !important;
+    box-shadow: none;
+}
+
+.introjs-tooltip {
+    width: max-content;
+}

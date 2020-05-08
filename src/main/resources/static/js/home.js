@@ -25,7 +25,6 @@ $(document).ready(() => {
         dateClickHandler();
     });
 
-
     // get current chart
     getChart(new Date());
 
@@ -106,6 +105,7 @@ $(document).ready(() => {
     });
     // set up tutorial
     setTutorial();
+
     // check cookies to see if user is new and show tutorial
     showTutorialIfNew();
     // tutorial click button
