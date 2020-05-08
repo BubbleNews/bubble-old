@@ -1,9 +1,12 @@
 import {getClusterDetails} from './d3.js';
+import Cookies from './js.cookie.mjs';
+
 let currentlyOpenClusterId = null;
-
 const sourceMap = new Map();
-
 const clusterMap = new Map();
+
+const intro = new introJs();
+const vizSet = new Set();
 
 /**
  * Setup the webpage
@@ -21,7 +24,6 @@ $(document).ready(() => {
     $('#dateButton').click(function() {
         dateClickHandler();
     });
-
 
     // get current chart
     getChart(new Date());
@@ -53,6 +55,7 @@ $(document).ready(() => {
             event.preventDefault();
             $("#clusters").empty();
             clusterMap.clear();
+            vizSet.clear();
             // show loading wheel
             $('#mainLoader').show();
             let reclusterEndpoint = 'api/recluster';
@@ -100,6 +103,15 @@ $(document).ready(() => {
         addDate();
         dateClickHandler();
     });
+    // set up tutorial
+    setTutorial();
+
+    // check cookies to see if user is new and show tutorial
+    showTutorialIfNew();
+    // tutorial click button
+    $('#question-button').click(function() {
+        intro.start();
+    })
 });
 
 /**
@@ -116,6 +128,7 @@ $('#date').datepicker();
  * Handler for selecting a new date
  */
 function dateClickHandler() {
+    vizSet.clear();
     // get the date val
     let dateVal = $('#date').val();
     // if mobile datepickers are used, the date is returend in a different format split by dashes
@@ -226,9 +239,9 @@ function appendCluster(cluster, reclustered) {
     // we must fill in the articles differently if they were reclustered because we get them from
     // the JSON, not a db request
     if (reclustered) {
-        makeCluster(cluster.clusterId, cluster.articles);
+        makeCluster(cluster.clusterId, cluster.articles, cluster.headline);
     } else {
-        getClusterRequest(cluster.clusterId);
+        getClusterRequest(cluster.clusterId, cluster.headline);
     }
 }
 
@@ -236,7 +249,7 @@ function appendCluster(cluster, reclustered) {
  * Calls database to get and add articles for a given cluster (real not reclustered)
  * @param clusterId id of the cluster to add
  */
-function getClusterRequest(clusterId) {
+function getClusterRequest(clusterId, headline) {
     $('.articlesWrapper').remove();
     if (clusterId == currentlyOpenClusterId) {
         currentlyOpenClusterId = null;
@@ -249,7 +262,7 @@ function getClusterRequest(clusterId) {
     $.get(clusterUrl, response => {
         const parsed = JSON.parse(response);
         // TODO: do something with parsed cluster response
-        makeCluster(clusterId, parsed.articles);
+        makeCluster(clusterId, parsed.articles, headline);
     });
 }
 
@@ -258,59 +271,63 @@ function getClusterRequest(clusterId) {
  * @param clusterId id of the cluster
  * @param articles all the article objects for each article in the cluster
  */
-function makeCluster(clusterId, articles) {
+function makeCluster(clusterId, articles, headline) {
     const divId = clusterId + 'articles';
     // Add html for the tabs within each cluster
     const articlesHtml = '<div id="collapse' + clusterId + '" class="collapse"' +
         ' data-parent="#clusters">'
-        + '<div class="card-body"><ul class="nav nav-tabs nav-fill" role="tablist">'
-        + '<li class="nav-item"><a class="nav-link active" id="articlesList-tab"' +
-        ' data-toggle="tab" href="#articlesList' + divId + '" role="tab">Articles</a></li>'
-        + '<li class="nav-item"><a class="nav-link" id="visualization-tab"' +
-        ' data-toggle="tab"' +
-        ' href="#visualization' + divId + '" role="tab">Data' +
-        ' Visualization</a></li></ul>'
-        + '<div class="tab-content">'
-
-        + '<div id="articlesList' + divId + '" class="tab-pane fade show active' +
-        ' articlesWrapper"' +
+        + '<div class="card-body article-card">'
+        + '<button type="button" class="btn btn-primary" id="generate' + clusterId +'"' +
+        ' data-toggle="modal" data-target="#vizModal' + divId + '" style="margin-bottom: 15px">'
+        + ' Show Visualization</button>'
+        + '<div id="articlesList' + divId + '" class=" articlesWrapper"' +
         ' role="tabpanel">'
         + '<ul class="list-group list-group-flush" id="' + divId + '">'
         + '</ul></div>'
-        + '<div class="tab-pane fade viz" id="visualization' + divId + '" role="tabpanel">'
-        + '<button type="button" id="generate' + clusterId +'" class="btn btn-primary">' +
-        ' Render' +
-        ' Visualization</button>'
-        + '<div class="spinner-border text-primary spin' + clusterId +'" role="status">'
-        + '<span class="sr-only">Loading...</span>'
-        + '</div>'
+        + '<div id="visualization' + divId + '">'
+        + '<div class="modal fade" id="vizModal' + divId + '" tabindex="-1" role="dialog">'
+        + '<div class="modal-dialog modal-fluid" role="document">'
+        + '<div class="modal-content">'
+        + '<div class="modal-header align-self-center">'
+        + '<h5 class="modal-title" style="font-weight:bold">' + headline + '</h5>'
+        + '<button type="button" class="close viz-x" data-dismiss="modal" aria-label="Close">'
+        + '<span aria-hidden="true">&times;</span></button></div>'
+        + '<div class="modal-body">'
         + '<div class="diagram' + clusterId + '">'
+        + '<div class="row justify-content-md-center">'
         + '<button type="button" class="btn btn-info entityBut' + clusterId + '">Key' +
         ' Word</button>'
         + '<button type="button" class="btn btn-info textBut' + clusterId + '">Text</button>\n'
         + '<button type="button" class="btn btn-info titleBut' + clusterId + '">Title</button>\n'
-        + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button>\n'
-        + '<div class="chord-chart" id="chord' + clusterId + '"></div>'
+        + '<button type="button" class="btn btn-info allBut' + clusterId + '">All</button></div>'
+        + '<div class="row spinner-border text-primary spin' + clusterId +'" role="status">'
+        + '<span class="sr-only">Loading...</span></div>'
+        + '<div class="charts row">'
+        + '<div class="chord-chart col-lg-6" id="chord' + clusterId + '"></div>'
         + '<div class="box-plot" id="box' + clusterId + '"></div>'
-        + '<div class="bar-chart"  id="bar' + clusterId + '"></div>'
+        + '<div class="bar-chart col-lg-6 align-middle"  id="bar' + clusterId + '"></div></div>'
         + '<button type="button" class="btn btn-outline-blue-grey btn-sm waves-effect"'
         + 'style="margin-bottom:10px;" data-toggle="modal"'
-        + ' data-target="#vizModal">Info</button></div>'
-        + '</div>'
-        + '</div></div></div>';
+        + ' data-target="#vizInfoModal">Info</button>'
+        + '</div></div>'
+        + '<div class="modal-footer">'
+        + '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>'
+        + '</div></div></div></div>'
+        + '</div></div>';
     $('#' + clusterId).append(articlesHtml);
     $('.spin' + clusterId).hide();
     $('.diagram' + clusterId).hide();
     // add click handler for generate visualization button
     $('#generate' + clusterId).click(function() {
-        $('#generate' + clusterId).hide();
-        $('.spin' + clusterId).show();
-        const meanRadius = clusterMap.get(clusterId).meanRadius;
-        const articleIds = articles.map(a => a.id);
-        // create the visualization
-        getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
-        $('.spin' + clusterId).hide();
-        $('.diagram' + clusterId).show();
+        if (!vizSet.has(clusterId)) {
+            vizSet.add(clusterId);
+            $('.spin' + clusterId).show();
+            const meanRadius = clusterMap.get(clusterId).meanRadius;
+            const articleIds = articles.map(a => a.id);
+            // create the visualization
+            getClusterDetails(clusterId, meanRadius, clusterMap, articleIds);
+            $('.diagram' + clusterId).show();
+        }
 
     });
     let i;
@@ -346,3 +363,59 @@ function cleanSourceName(sourceName) {
     return sourceName.replace(/[ .,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
 }
 
+/**
+ * Sets up a tutorial to introduce new users to Bubble, only showing the tutorial
+ * if the user is new (check cookies).
+ */
+function showTutorialIfNew() {
+    if (!Cookies.get('completedTutorial')) {
+        setTimeout(function() {
+            intro.start();
+        }, 500);
+
+    }
+}
+
+/**
+ * Sets up a tutorial for the user.
+ */
+function setTutorial() {
+    intro.setOption('scrollToElement', false);
+    intro.setOptions({
+        steps: [
+            {
+                element: '#mainWindow',
+                intro: 'Welcome to Bubble! Bubble groups news articles by topic ' +
+                    'to show you the most important headlines of the day. ' +
+                    'Click on one of the topics to see ' +
+                    'articles inside the topic as well as a visualization of the ' +
+                    'grouping.',
+                position: 'top',
+            },
+            {
+                element: '#sourcesWrapper',
+                intro: 'Click a source to hide or show articles from that source.',
+                position: 'top',
+            },
+            {
+                element: '#reclusterWrapper',
+                intro: 'You can try regrouping articles by changing our similarity calculation.' +
+                    ' Click \'INFO\' to learn more!',
+                position: 'top',
+            },
+            {
+                element: '#date',
+                intro: 'You can use the date selector to view topics from another day.',
+                position: 'right',
+            },
+            {
+                element: '#question-button',
+                intro: 'If you want to see this tutorial again, click this button. Enjoy!',
+                position: 'left',
+            }
+        ]
+    });
+    intro.oncomplete(function() {
+        Cookies.set("completedTutorial", true, { expires: 7});
+    });
+}
