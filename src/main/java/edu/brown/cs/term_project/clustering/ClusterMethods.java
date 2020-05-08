@@ -78,7 +78,7 @@ public final class ClusterMethods {
     System.out.println("mean Radius: " + graphMeanRadius);
     final double normalGraphMeanRadius = 11; //experiment
     final double percentCurrent = 1; //experiment - how much to use current graph in threshold
-    final double percentFullGraph = 1000; //experiment -- how many times tighter clusters should be
+    final double percentFullGraph = 1200; //experiment -- how many times tighter clusters should be
     // than normal graph
     return (percentCurrent * graphMeanRadius + (1 - percentCurrent) * normalGraphMeanRadius)
         / percentFullGraph;

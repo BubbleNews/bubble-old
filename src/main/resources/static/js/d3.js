@@ -27,7 +27,7 @@ function getClusterDetails(clusterId, clusterMeanRadius, meanRadiusMap, articleI
     // send get request
     $.get(clusterUrl, response => {
         clusterData = JSON.parse(response);
-        renderChord(clusterData, meanRadiusMap);
+        setTimeout(() => renderChord(clusterData, meanRadiusMap), 3);
         initializeBarChart(clusterData, clusterIdState, 'all');
     });
 }

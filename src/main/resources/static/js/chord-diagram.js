@@ -5,6 +5,8 @@ export { renderChord };
 // map from article ID -> index in matrix array
 let indices = {};
 
+
+
 /**
  * Render the chord diagram
  * @param parsed - data includes list of edges, number of nodes, cluster percentile
@@ -53,6 +55,11 @@ function renderChord(parsed, radiusMap) {
         .append('g')
         .attr('transform', `translate(${margin.left + outerRadius},${margin.top + outerRadius})`);
 
+    let tooltip = d3.select("#chord" + parsed.clusterId)     // HINT: div id for div containing scatterplot
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
     // make inner flowy bits
     const chords = d3.chord()
         .padAngle(padAngle)
@@ -67,16 +74,44 @@ function renderChord(parsed, radiusMap) {
     const color = d3.scaleOrdinal(d3.schemeCategory10);
     const ribbon = d3.ribbon().radius(innerRadius);
 
+    let mouseover = function(d) {
+        //let color_span = `<span style="color: black;">`;
+        let html = `${labels(d, titles).title}`;
+
+        tooltip.html(html)
+            .style("left", `${(d3.event.pageX)}px`)
+            .style("top", `${(d3.event.pageY) - margin.top}px`)   // OPTIONAL for students
+            //.style("box-shadow", `2px 2px 5px ${colorScale(colorValue(d))}`)
+            .style("background-color", "white")
+            .style("text-align", "center")
+            .style("font-weight", "bold")
+            .transition()
+            .duration(200)
+            .style("opacity", 0.9)
+    };
+
+
+    // Mouseout function to hide the tool on exit
+    let mouseout = function (d) {
+        // Set opacity back to 0 to hide
+        tooltip.transition()
+            .duration(200)
+            .style("opacity", 0);
+    };
+
+
     // group for the actual chord diagram elements
     const group = svg.selectAll('g')
         .data(chords.groups)
         .join('g')
 
-    // make outer article nodes
+    // // make outer article nodes
     group.append('path')
         .attr('fill', d => color(d.index))
         .attr('stroke', d => d3.rgb(color(d.index)).darker())
         .attr('d', arc);
+        // .on("mouseover", mouseover) // HINT: Pass in the mouseover and mouseout functions here
+        // .on("mouseout", mouseout);
 
     // display article titles
     group.selectAll('g')
@@ -88,6 +123,13 @@ function renderChord(parsed, radiusMap) {
         .append('text')
             .text(d => d.title)
         .attr("font-size", "18px")
+
+    // group.selectAll('g')
+    //     .data(d => labels(d, titles))
+    //     .on("mouseover", mouseover) // HINT: Pass in the mouseover and mouseout functions here
+    //     .on("mouseout", mouseout);
+
+
 
     // Wraps text to a specific text width
     group.selectAll('text')
