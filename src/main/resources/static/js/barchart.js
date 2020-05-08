@@ -2,7 +2,7 @@ export { initializeBarChart, updateBarChart };
 
 //decimal percent of how much cluster to reveal (higher number -> more bars displayed; 1 -> all
 // bars displayed)
-const numBarsToDisplayThresholdPercent = 0.95;
+const numBarsToDisplayThresholdPercent = 0.9;
 // maximum number of bars to show (sometimes less bars than this will be shown depending on
 // thresholdPercent)
 const maxBars = 20;
@@ -16,7 +16,7 @@ const distanceBetweenDots = 25;
 const distanceBetweenLabelAndDot = 20;
 
 const width = 500;
-const height = 500;
+const height = 430;
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 
