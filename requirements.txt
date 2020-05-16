@@ -13,7 +13,7 @@ newsapi-python==0.2.6
 newspaper==0.0.8
 nltk==3.0.0
 Pillow==2.6.1
-requests==2.4.3
+requests==2.20.0
 six==1.8.0
 stevedore==1.0.0
 urllib3==1.25.9
