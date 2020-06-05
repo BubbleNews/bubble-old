@@ -14,6 +14,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import spark.Request;
 import spark.Response;
+import spark.servlet.SparkApplication;
 import spark.template.freemarker.FreeMarkerEngine;
 import freemarker.template.Configuration;
 
@@ -29,7 +30,7 @@ import static spark.Spark.port;
 /**
  * The Main class of our project. This is where execution begins.
  */
-public final class Main {
+public final class Main implements SparkApplication {
   private static final int DEFAULT_PORT = 4567;
 
   private static NewsData database;
@@ -106,6 +107,12 @@ public final class Main {
     port(getHerokuAssignedPort());
     externalStaticFileLocation("src/main/resources/static");
     // Spark.exception(Exception.class, new ExceptionPrinter());
+
+    this.init();
+  }
+
+  @Override
+  public void init() {
 
     FreeMarkerEngine freeMarker = createEngine();
 

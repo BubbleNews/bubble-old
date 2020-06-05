@@ -8,7 +8,7 @@
   <!-- artifactId is used to name the specific project -->
   <artifactId>bubble</artifactId>
   <!-- type of file you want to output -->
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <!-- Version of your project -->
   <version>1.0</version>
 
@@ -147,8 +147,61 @@
 
   <!-- Build section -->
   <build>
+    <!-- added for gcp -->
+<!--    <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>-->
     <plugins>
-
+      <!-- GCP App Engine -->
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>appengine-maven-plugin</artifactId>
+        <version>2.2.0</version>
+        <configuration>
+          <projectId>bubble-277622</projectId>
+          <version>1</version>
+        </configuration>
+      </plugin>
+      <!-- adding war plugin to build web-inf folder -->
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.1.0</version>
+      </plugin>
+      <!-- adding manifest for gcp -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-a-jar</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- compile with all dependencies for gcp -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
       <!-- Maven compiler plugin for compiling Java 11 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
