@@ -31,7 +31,7 @@ import static spark.Spark.port;
  * The Main class of our project. This is where execution begins.
  */
 public final class Main implements SparkApplication {
-  private static final int DEFAULT_PORT = 4567;
+  private static final int DEFAULT_PORT = 8080;
 
   private static NewsData database;
 
@@ -42,7 +42,7 @@ public final class Main implements SparkApplication {
    * @throws ClassNotFoundException if class not found
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-    database = new NewsData("data/final_data.db");
+//    database = new NewsData("data/final_data.db");
     new Main(args).run();
   }
 
