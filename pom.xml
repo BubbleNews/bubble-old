@@ -1,4 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!--Make sure modelVersion is 4.0.0 -->
@@ -8,30 +12,19 @@
   <!-- artifactId is used to name the specific project -->
   <artifactId>bubble</artifactId>
   <!-- type of file you want to output -->
-  <packaging>war</packaging>
+<!--  <packaging>jar</packaging>-->
   <!-- Version of your project -->
   <version>1.0</version>
 
   <!-- Defines UTF-8 encoding -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <!-- Dependencies section for libraries put all of your libraries in here -->
   <dependencies>
-<!--    For GCP-->
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>1.9.78</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
 
     <!--
         stanford-nlp library is used to extract entities from text.
@@ -170,40 +163,61 @@
         <version>2.2.0</version>
         <configuration>
           <projectId>bubble-277622</projectId>
-          <version>1</version>
+          <artifact>${project.build.directory}/bubble-1.0-jar-with-dependencies.jar</artifact>
+          <version>bubble</version>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
+          <arguments>
+            <argument>-jar</argument>
+            <argument>${app.stage.stagingDirectory}/bubble-1.0-jar-with-dependencies.jar</argument>
+          </arguments>
         </configuration>
       </plugin>
       <!-- adding war plugin to build web-inf folder -->
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.1.0</version>
-      </plugin>
+<!--      <plugin>-->
+<!--        <artifactId>maven-war-plugin</artifactId>-->
+<!--        <version>3.1.0</version>-->
+<!--      </plugin>-->
       <!-- adding manifest for gcp -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.1</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-a-jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <version>3.1.1</version>-->
+<!--        <configuration>-->
+<!--          <archive>-->
+<!--            <manifest>-->
+<!--              <addClasspath>true</addClasspath>-->
+<!--              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>-->
+<!--            </manifest>-->
+<!--          </archive>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>make-a-jar</id>-->
+<!--            <phase>compile</phase>-->
+<!--            <goals>-->
+<!--              <goal>jar</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
       <!-- compile with all dependencies for gcp -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <archive>
             <manifest>

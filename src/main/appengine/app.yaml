@@ -1,19 +1,17 @@
+
 runtime: java11
-inbound_services:
-- warmup
-derived_file_type:
-- java_precompiled
-threadsafe: True
-auto_id_policy: default
-api_version: 'user_defined'
+#inbound_services:
+#- warmup
+#derived_file_type:
+#- java_precompiled
+#threadsafe: True
+#auto_id_policy: default
+#api_version: '1.0'
+#
+#handlers:
+#- url: /.*
+#env: standard
 
-handlers:
-- url: /.*
-  script: unused
-  login: optional
-  secure: optional
-env: standard
-
-skip-files:
-  - app.yaml
-  - target/appengine-staging/WEB-INF/lib/staqnford-corenlp-3.9.2-models.jar
+#skip-files:
+#  - app.yaml
+#  - target/appengine-staging/WEB-INF/lib/staqnford-corenlp-3.9.2-models.jar
