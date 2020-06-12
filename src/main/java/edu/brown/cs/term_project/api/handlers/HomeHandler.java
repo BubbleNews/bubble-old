@@ -25,8 +25,8 @@ public class HomeHandler implements TemplateViewRoute {
 
   @Override
   public ModelAndView handle(Request request, Response response) throws Exception {
-//    Set<String> sources = db.getDataRead().getSources();
-    Set<String> sources = new HashSet<>();
+    Set<String> sources = db.getDataRead().getSources();
+//    Set<String> sources = new HashSet<>();
     List<String> sourceList = new ArrayList<>(sources);
     Collections.sort(sourceList);
     Map<String, Object> variables = new HashMap<>();

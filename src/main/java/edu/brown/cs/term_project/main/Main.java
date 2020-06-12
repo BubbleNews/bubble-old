@@ -39,7 +39,7 @@ public final class Main implements SparkApplication {
    * @throws ClassNotFoundException if class not found
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//    database = new NewsData("data/final_data.db");
+    database = new NewsData("data/final_data.db");
     new Main(args).run();
   }
 

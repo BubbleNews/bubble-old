@@ -21,7 +21,9 @@ public abstract class Database {
   public Database(String filename) throws SQLException, ClassNotFoundException {
     // setup sql connection to given file
     Class.forName("org.sqlite.JDBC");
-    String urlToDB = "jdbc:sqlite:" + filename;
+//    String urlToDB = "jdbc:sqlite:" + filename;
+    // for gcp below
+    String urlToDB = "jdbc:sqlite::resource:" + filename;
     this.conn = DriverManager.getConnection(urlToDB);
   }
 
