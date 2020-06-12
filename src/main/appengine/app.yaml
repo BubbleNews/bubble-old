@@ -6,12 +6,14 @@ derived_file_type:
 threadsafe: True
 auto_id_policy: default
 api_version: 'user_defined'
+
 handlers:
 - url: /.*
   script: unused
   login: optional
   secure: optional
 env: standard
+
 skip-files:
   - app.yaml
   - target/appengine-staging/WEB-INF/lib/stanford-corenlp-3.9.2-models.jar
