@@ -16,4 +16,4 @@ env: standard
 
 skip-files:
   - app.yaml
-  - target/appengine-staging/WEB-INF/lib/stanford-corenlp-3.9.2-models.jar
+  - target/appengine-staging/WEB-INF/lib/staqnford-corenlp-3.9.2-models.jar

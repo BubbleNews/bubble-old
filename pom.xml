@@ -19,6 +19,19 @@
 
   <!-- Dependencies section for libraries put all of your libraries in here -->
   <dependencies>
+<!--    For GCP-->
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <version>1.9.78</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
 
     <!--
         stanford-nlp library is used to extract entities from text.
