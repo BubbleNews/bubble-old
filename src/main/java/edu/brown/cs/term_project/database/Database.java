@@ -21,15 +21,16 @@ public abstract class Database {
    */
   public Database(String filename) throws SQLException, ClassNotFoundException {
     // setup sql connection to given file
-    Class.forName("com.mysql.jdbc.Driver");
+    Class.forName("com.mysql.cj.jdbc.Driver");
 //    String urlToDB = "jdbc:sqlite:" + filename;
     // for gcp below
     //String urlToDB = "jdbc:sqlite::resource:" + filename;
-    //this.conn = DriverManager.getConnection("jdbc:mysql://bubble-277622:us-east1:bubble-news" +
-//        "-database"
-//            + "user=root&password=benianjohnkshitij");
-    this.conn = DriverManager.getConnection("jdbc:mysql://35.243.149.133/Bubble?"
-        + "user=root&password=benianjohnkshitij");
+    this.conn = DriverManager.getConnection(
+        "jdbc:mysql:///Bubble?cloudSqlInstance=bubble-277622:us-east1:bubble-news" +
+            "-database&socketFactory=com.google.cloud.sql.mysql" +
+            ".SocketFactory&user=root&password=benianjohnkshitij");
+//    this.conn = DriverManager.getConnection("jdbc:mysql://35.243.149.133/Bubble",
+//        "root", "benianjohnkshitij");
   }
 
   /**

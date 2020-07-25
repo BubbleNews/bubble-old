@@ -86,7 +86,6 @@ public final class Main implements SparkApplication {
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
     //File templates = new File("src/main/resources/spark/template/freemarker");
-//    File templates = new File("spark/template/freemarker");
 //    try {
 //      config.setDirectoryForTemplateLoading(templates);
 //    } catch (IOException ioe) {
