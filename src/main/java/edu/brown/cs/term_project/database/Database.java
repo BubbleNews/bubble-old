@@ -25,8 +25,11 @@ public abstract class Database {
 //    String urlToDB = "jdbc:sqlite:" + filename;
     // for gcp below
     //String urlToDB = "jdbc:sqlite::resource:" + filename;
-    this.conn = DriverManager.getConnection("jdbc:mysql://bubble-277622:us-east1:bubble-news-database"
-            + "user=root&password=benianjohnkshitij");
+    //this.conn = DriverManager.getConnection("jdbc:mysql://bubble-277622:us-east1:bubble-news" +
+//        "-database"
+//            + "user=root&password=benianjohnkshitij");
+    this.conn = DriverManager.getConnection("jdbc:mysql://35.243.149.133/Bubble?"
+        + "user=root&password=benianjohnkshitij");
   }
 
   /**
