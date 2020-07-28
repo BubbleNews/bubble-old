@@ -265,12 +265,11 @@ public class NewsDataRead {
    * @throws SQLException only thrown if the database is malformed
    */
   public List<ChartCluster> getClusters(String date, int hours, int addDays) throws SQLException {
-    String query = "SELECT id, title, size, avg_radius FROM clusters WHERE day = DATE(?, ?) AND "
-        + "hour = ?;";
+    String query = "SELECT id, title, size, avg_radius FROM clusters WHERE day = DATE_ADD(?, " +
+        "INTERVAL ? DAY) AND hour = ?;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
       prep.setString(1, date);
-      String daysToAdd = "+" + addDays + " days";
-      prep.setString(2, daysToAdd);
+      prep.setInt(2, addDays);
       prep.setInt(3, hours);
       try (ResultSet rs = prep.executeQuery()) {
         List<ChartCluster> clusters = new ArrayList<>();
