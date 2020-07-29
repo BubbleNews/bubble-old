@@ -1,9 +1,10 @@
 import flask
 from news import get_news, DOMAINS
 from flask import request
+import os
 import json
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+
 
 
 @app.route('/scrape', methods=['GET'])
@@ -17,5 +18,6 @@ def scrape():
 def get_sources():
     return DOMAINS
 
-
-app.run()
+if __name__ == '__main__':
+    print(os.environ.get('PORT', 8080))
+    app.run(debug = True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
