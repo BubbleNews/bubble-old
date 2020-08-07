@@ -22,16 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static spark.Spark.externalStaticFileLocation;
-import static spark.Spark.get;
-import static spark.Spark.path;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 /**
  * The Main class of our project. This is where execution begins.
  */
 public final class Main implements SparkApplication {
-  private static final int DEFAULT_PORT = 4567;
+  private static final int DEFAULT_PORT = 8080;
 
   private static NewsData database;
 
@@ -88,14 +85,16 @@ public final class Main implements SparkApplication {
    */
   private static FreeMarkerEngine createEngine() {
     Configuration config = new Configuration();
-    File templates = new File("src/main/resources/spark/template/freemarker");
-    try {
-      config.setDirectoryForTemplateLoading(templates);
-    } catch (IOException ioe) {
-      System.out.printf("ERROR: Unable use %s for template loading.%n",
-              templates);
-      System.exit(1);
-    }
+    //File templates = new File("src/main/resources/spark/template/freemarker");
+//    try {
+//      config.setDirectoryForTemplateLoading(templates);
+//    } catch (IOException ioe) {
+//      System.out.printf("ERROR: Unable use %s for template loading.%n",
+//              templates);
+//      System.out.print(ioe.getMessage());
+//      System.exit(1);
+//    }
+    config.setClassForTemplateLoading(FreeMarkerEngine.class, "");
     return new FreeMarkerEngine(config);
   }
 
@@ -104,8 +103,15 @@ public final class Main implements SparkApplication {
    * @param port - port to go to
    */
   private void runSparkServer(int port) {
-    port(getHerokuAssignedPort());
-    externalStaticFileLocation("src/main/resources/static");
+//    port(getHerokuAssignedPort());
+    port(port);
+//    if (localhost) {
+//      externalStaticFileLocation("src/main/resources/static");
+//    } else {
+//      staticFiles.location("/");
+//    }
+    staticFiles.location("static/");
+    // externalStaticFileLocation("src/main/resources/static");
     // Spark.exception(Exception.class, new ExceptionPrinter());
 
     this.init();
@@ -115,7 +121,7 @@ public final class Main implements SparkApplication {
   public void init() {
 
     FreeMarkerEngine freeMarker = createEngine();
-
+    redirect.get("/", "/bubble/home");
     path("/bubble", () -> {
       // home page endpoint
       get("/home", new HomeHandler(database), freeMarker);

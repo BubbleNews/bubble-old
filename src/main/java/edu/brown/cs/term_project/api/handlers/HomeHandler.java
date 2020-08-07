@@ -6,12 +6,7 @@ import spark.Request;
 import spark.Response;
 import spark.TemplateViewRoute;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class that handles delivering home page HTML to user.
@@ -31,6 +26,7 @@ public class HomeHandler implements TemplateViewRoute {
   @Override
   public ModelAndView handle(Request request, Response response) throws Exception {
     Set<String> sources = db.getDataRead().getSources();
+//    Set<String> sources = new HashSet<>();
     List<String> sourceList = new ArrayList<>(sources);
     Collections.sort(sourceList);
     Map<String, Object> variables = new HashMap<>();
