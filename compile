@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [[ $* == *--clean* ]]; then
+  mvn clean package -D skipTests -D skipAssembly
+elif [[ $* == *--gcp* ]]; then
+  mvn clean package -D skipTests
+else
+  mvn package -D skipTests -D skipAssembly
+fi

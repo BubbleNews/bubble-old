@@ -121,7 +121,7 @@ public final class Main implements SparkApplication {
   public void init() {
 
     FreeMarkerEngine freeMarker = createEngine();
-
+    redirect.get("/", "/bubble/home");
     path("/bubble", () -> {
       // home page endpoint
       get("/home", new HomeHandler(database), freeMarker);

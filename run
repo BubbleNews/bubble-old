@@ -4,7 +4,7 @@
 # We use $(ls target/*.jar) instead of target/stars-1.0.jar so that
 # this script can be reused in other projects more easily.
 
-TARGET=$(ls target/*.jar 2>/dev/null)
+TARGET=$(ls target/bubble-1.0.jar 2>/dev/null)
 if [ -z "$TARGET" ]; then
     echo "No jar file in target/, try 'mvn package'".
     exit 1

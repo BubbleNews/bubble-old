@@ -237,6 +237,8 @@
           </execution>
         </executions>
         <configuration>
+          <!-- switch to false or comment out to compile for gcp -->
+<!--          <skipAssembly>true</skipAssembly>-->
           <archive>
             <manifest>
               <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
