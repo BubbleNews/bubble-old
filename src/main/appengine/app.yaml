@@ -1,0 +1,27 @@
+
+runtime: java11
+
+#inbound_services:
+#- warmup
+#derived_file_type:
+#- java_precompiled
+#threadsafe: True
+#auto_id_policy: default
+#api_version: '1.0'
+#
+#handlers:
+#- url: /.*
+#env: standard
+
+#skip-files:
+#  - app.yaml
+#  - target/appengine-staging/WEB-INF/lib/staqnford-corenlp-3.9.2-models.jar
+
+handlers:
+  - url: /static
+    static_dir: /
+
+  - url: /.*
+    secure: always
+    redirect_http_response_code: 301
+    script: auto

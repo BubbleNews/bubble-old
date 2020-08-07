@@ -1,4 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 
   <!--Make sure modelVersion is 4.0.0 -->
@@ -8,13 +12,15 @@
   <!-- artifactId is used to name the specific project -->
   <artifactId>bubble</artifactId>
   <!-- type of file you want to output -->
-  <packaging>jar</packaging>
+<!--  <packaging>jar</packaging>-->
   <!-- Version of your project -->
   <version>1.0</version>
 
   <!-- Defines UTF-8 encoding -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
 
   <!-- Dependencies section for libraries put all of your libraries in here -->
@@ -143,12 +149,97 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>3.1.0</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java
+     for connecting to cloudsql-->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.21</version>
+    </dependency>
+
+    <!-- also for connecting to cloudsql-->
+    <dependency>
+      <groupId>com.google.cloud.sql</groupId>
+      <artifactId>mysql-socket-factory-connector-j-8</artifactId>
+      <version>1.0.16</version>
+    </dependency>
+
   </dependencies>
+
+
 
   <!-- Build section -->
   <build>
+    <!-- added for gcp -->
+<!--    <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>-->
     <plugins>
-
+      <!-- GCP App Engine -->
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>appengine-maven-plugin</artifactId>
+        <version>2.2.0</version>
+        <configuration>
+          <projectId>bubble-277622</projectId>
+          <artifact>${project.build.directory}/bubble-1.0-jar-with-dependencies.jar</artifact>
+          <version>bubble</version>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
+          <arguments>
+            <argument>-jar</argument>
+            <argument>${app.stage.stagingDirectory}/bubble-1.0-jar-with-dependencies.jar</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <!-- adding war plugin to build web-inf folder -->
+<!--      <plugin>-->
+<!--        <artifactId>maven-war-plugin</artifactId>-->
+<!--        <version>3.1.0</version>-->
+<!--      </plugin>-->
+<!--       adding manifest for gcp -->
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <version>3.1.1</version>-->
+<!--        <configuration>-->
+<!--          <archive>-->
+<!--            <manifest>-->
+<!--              <addClasspath>true</addClasspath>-->
+<!--              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>-->
+<!--            </manifest>-->
+<!--          </archive>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+      <!-- compile with all dependencies for gcp -->
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- switch to false or comment out to compile for gcp -->
+<!--          <skipAssembly>true</skipAssembly>-->
+          <archive>
+            <manifest>
+              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
       <!-- Maven compiler plugin for compiling Java 11 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

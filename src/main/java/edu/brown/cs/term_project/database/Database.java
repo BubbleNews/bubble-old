@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public abstract class Database {
   private Connection conn;
 
+  //TODO: Remove filename from this function
   /**
    * A constructor to setup connection to SQLDatabase. Sets up for querying the sql database and
    * error checks the file.
@@ -20,9 +21,16 @@ public abstract class Database {
    */
   public Database(String filename) throws SQLException, ClassNotFoundException {
     // setup sql connection to given file
-    Class.forName("org.sqlite.JDBC");
-    String urlToDB = "jdbc:sqlite:" + filename;
-    this.conn = DriverManager.getConnection(urlToDB);
+    Class.forName("com.mysql.cj.jdbc.Driver");
+//    String urlToDB = "jdbc:sqlite:" + filename;
+    // for gcp below
+    //String urlToDB = "jdbc:sqlite::resource:" + filename;
+    this.conn = DriverManager.getConnection(
+        "jdbc:mysql:///Bubble?cloudSqlInstance=bubble-277622:us-east1:bubble-news" +
+            "-database&socketFactory=com.google.cloud.sql.mysql" +
+            ".SocketFactory&user=root&password=benianjohnkshitij");
+//    this.conn = DriverManager.getConnection("jdbc:mysql://35.243.149.133/Bubble",
+//        "root", "benianjohnkshitij");
   }
 
   /**
