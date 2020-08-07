@@ -202,7 +202,7 @@
 <!--        <artifactId>maven-war-plugin</artifactId>-->
 <!--        <version>3.1.0</version>-->
 <!--      </plugin>-->
-      <!-- adding manifest for gcp -->
+<!--       adding manifest for gcp -->
 <!--      <plugin>-->
 <!--        <groupId>org.apache.maven.plugins</groupId>-->
 <!--        <artifactId>maven-jar-plugin</artifactId>-->
@@ -215,15 +215,6 @@
 <!--            </manifest>-->
 <!--          </archive>-->
 <!--        </configuration>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>make-a-jar</id>-->
-<!--            <phase>compile</phase>-->
-<!--            <goals>-->
-<!--              <goal>jar</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
 <!--      </plugin>-->
       <!-- compile with all dependencies for gcp -->
       <plugin>
