@@ -185,8 +185,12 @@ public class NewsLoader {
    * @throws Exception if exception occurs
    */
   public static void main(String[] args) throws Exception {
-    NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
-        "http://127.0.0.1:5000/scrape");
+    // for local
+//    NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
+//        "http://127.0.0.1:5000/scrape");
+    // for python in cloud run
+        NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
+        "https://bubble-python-api-deeweadyma-ue.a.run.app//scrape");
     loader.executeBatches(NUM_BATCHES, NUM_ARTICLES_PER_BATCH, 2, 24);
   }
 }

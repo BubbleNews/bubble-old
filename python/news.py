@@ -5,11 +5,15 @@ import re
 from newspaper import Article
 from newspaper.article import ArticleException
 from newsapi import NewsApiClient
+import time
+import re
 
 # key for accessing google news api
 API_KEY = '77d7cb4756d44e13aea4a50d033d27e3'
 NEWS_API = NewsApiClient(api_key=API_KEY)
 MINIMUM_ARTICLE_CHAR_LENGTH = 650
+BAD_FILE_EXTENSIONS = ['.mp4']
+BASE_PATTERN = '[0-9A-Za-z-\\.@:%_\+~#=/]*'
 # note that this is order-dependent ('s must come before ' and ... comes before ..)
 BAD_CHARS = ['\r', '\n', '"', '`', '\'s', '\'', '...', '..']
 DOMAINS = 'fortune.com,time.com,cnn.com,cbsnews.com,cnbc.com,' \
@@ -33,9 +37,23 @@ def get_news(start_date, end_date, num_articles):
     print('Searching for ' + str(len(articles)) + ' articles between ' + str(start_date)
           + ' and ' + str(end_date))
     # loop through articles and scrape article text with scraper
+    print('Searching for ' + str(len(articles)) + ' articles between ' + str(start_date)
+          + ' and ' + str(end_date))
+    start = time.time()
+
     for i, article in enumerate(articles):
         url = article['url']
         print(url)
+
+        article_was_bad = False
+        for extension in BAD_FILE_EXTENSIONS:
+            pattern = BASE_PATTERN + extension
+            if re.match(pattern, url):
+                article_was_bad = True
+                break
+        if article_was_bad:
+            print('Article file type not allowed')
+            continue
         scraped_title, scraped_authors, scraped_text = scrape_text(url)
         # threshold
         if len(scraped_text) < MINIMUM_ARTICLE_CHAR_LENGTH:
@@ -46,6 +64,8 @@ def get_news(start_date, end_date, num_articles):
         else:
             articles_json.append(
                 make_article_json(article, scraped_title, scraped_authors, scraped_text))
+    end = time.time()
+    print('Scraped ' + str(num_articles) + ' artcles in ' + str(end - start) + ' seconds')
     return json.dumps(articles_json)
 
 
