@@ -114,30 +114,38 @@ public class NewsDataRead {
   public Set<ArticleVertex> getArticleVertices(String date, int offset, int hoursBack,
                                                boolean current,
                                                int maxNumArticles) throws SQLException {
+    String nowString = "?";
+    if (current) {
+      nowString = "NOW()";
+    }
     String query = "SELECT id, source, title, url, date_published, "
             + "text FROM articles "
-            + "WHERE date_published >= DATETIME(DATETIME(?, ?), ?) AND date_published < DATETIME"
-            + "(?,?) "
+            + "WHERE date_published >= DATE_SUB(DATE_ADD(" + nowString + ", INTERVAL ? HOUR), " +
+        "INTERVAL ? " +
+        "HOUR)" +
+        " " +
+        "AND date_published < " +
+        "DATE_ADD"
+            + "(" + nowString + ", INTERVAL ? HOUR) "
             + "ORDER BY date_published "
-            + "LIMIT (?);";
+            + "LIMIT ?;";
     try (PreparedStatement prep = conn.prepareStatement(query)) {
-      String timeOffset = "+" + (offset + HOURS_PER_DAY) + " hours";
-      String hourOffset = "-" + hoursBack + " hours";
-      String defaultBack = "+0 hours";
+      int timeOffset = offset + HOURS_PER_DAY;
+      int defaultBack = 0;
       if (current) {
-        prep.setString(1, "now");
-        prep.setString(2, defaultBack);
-        prep.setString(3, hourOffset);
-        prep.setString(4, "now");
-        prep.setString(5, defaultBack);
+        prep.setInt(1, defaultBack);
+        prep.setInt(2, hoursBack);
+        prep.setInt(3, defaultBack);
+        prep.setInt(4, maxNumArticles);
       } else {
         prep.setString(1, date);
-        prep.setString(2, timeOffset);
-        prep.setString(3, hourOffset);
+        prep.setInt(2, timeOffset);
+        prep.setInt(3, hoursBack);
         prep.setString(4, date);
-        prep.setString(5, timeOffset);
+        prep.setInt(5, timeOffset);
+        prep.setInt(6, maxNumArticles);
       }
-      prep.setInt(6, maxNumArticles);
+      System.out.println(prep);
       return getArticleVerticesHelper(prep);
     }
   }

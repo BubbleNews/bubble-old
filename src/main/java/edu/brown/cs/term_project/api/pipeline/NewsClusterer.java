@@ -44,7 +44,7 @@ public class NewsClusterer {
   public List<ChartCluster> clusterArticles(ClusterParameters params) throws SQLException {
     final int offset = 4;
     Set<ArticleVertex> pulledArticles = db.getDataRead().getArticleVertices(
-        params.getDate(), offset, params.getHours(), params.isToday(),
+        params.getDate(), params.getOffset(), params.getHours(), params.isToday(),
         params.getNumArticles());
     List<Similarity> edges = getEdges(pulledArticles, params);
     // sort edges
@@ -138,7 +138,7 @@ public class NewsClusterer {
    */
   public static void main(String[] args) throws SQLException, ClassNotFoundException {
     final int hours = 24;
-    ClusterParameters params = new ClusterParameters("2020", "05", "07", false, 0, hours, true);
+    ClusterParameters params = new ClusterParameters("2020", "08", "10", false, -6, hours, true);
     //ClusterParameters params = new ClusterParameters(hours, true);
     NewsClusterer clusterer = new NewsClusterer(new NewsData("data/final_data.db"));
     clusterer.clusterArticles(params);

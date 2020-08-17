@@ -182,7 +182,7 @@
         <configuration>
           <projectId>bubble-277622</projectId>
           <artifact>${project.build.directory}/bubble-1.0-jar-with-dependencies.jar</artifact>
-          <version>bubble</version>
+          <version>bubble-flex</version>
         </configuration>
       </plugin>
       <plugin>
@@ -203,19 +203,20 @@
 <!--        <version>3.1.0</version>-->
 <!--      </plugin>-->
 <!--       adding manifest for gcp -->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-jar-plugin</artifactId>-->
-<!--        <version>3.1.1</version>-->
-<!--        <configuration>-->
-<!--          <archive>-->
-<!--            <manifest>-->
-<!--              <addClasspath>true</addClasspath>-->
-<!--              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>-->
-<!--            </manifest>-->
-<!--          </archive>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>edu.brown.cs.term_project.main.Main</mainClass>
+                <classpathPrefix>dependency/</classpathPrefix>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
       <!-- compile with all dependencies for gcp -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

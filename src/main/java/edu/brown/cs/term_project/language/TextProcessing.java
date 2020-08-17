@@ -54,6 +54,10 @@ public final class TextProcessing {
         }
       }
     }
+    // checking memory used by stanford nlp
+    Runtime runtime = Runtime.getRuntime();
+    System.out.println(runtime.totalMemory());
+    System.out.println(runtime.freeMemory());
     return entityFrequencies;
   }
 

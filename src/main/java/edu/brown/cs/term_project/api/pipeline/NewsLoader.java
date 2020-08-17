@@ -31,7 +31,7 @@ public class NewsLoader {
   private String pythonEndpoint;
 
   private static final int NUM_BATCHES = 9;
-  private static final int NUM_ARTICLES_PER_BATCH = 80;
+  private static final int NUM_ARTICLES_PER_BATCH = 10;
 
   /**
    * Constructor for a NewsLoader.
@@ -80,6 +80,7 @@ public class NewsLoader {
     requestParams.put("endTime", formatDate(endTime));
     requestParams.put("numArticles", Integer.toString(numArticles));
     String url = addParameters(pythonEndpoint, requestParams);
+//    System.out.println(url);
     // send request
     String pythonResponse = sendGet(url);
     System.out.println(pythonResponse);
@@ -190,7 +191,7 @@ public class NewsLoader {
 //        "http://127.0.0.1:5000/scrape");
     // for python in cloud run
         NewsLoader loader = new NewsLoader(new NewsData("data/final_data.db"),
-        "https://bubble-python-api-deeweadyma-ue.a.run.app//scrape");
+        "https://bubble-python-api-deeweadyma-ue.a.run.app/scrape");
     loader.executeBatches(NUM_BATCHES, NUM_ARTICLES_PER_BATCH, 2, 24);
   }
 }

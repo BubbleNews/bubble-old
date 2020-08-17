@@ -57,7 +57,7 @@ public class NewsDataWrite {
   private int insertArticle(Article article) throws SQLException {
     PreparedStatement prep = conn.prepareStatement(
         "INSERT into articles (source, title, url, date_published, date_pulled,"
-            + " text) SELECT ?, ?, ?, ?, DATETIME('now', '-4 hours'), ?"
+            + " text) SELECT ?, ?, ?, ?, DATE_SUB(NOW(), INTERVAL 4 HOUR), ?"
             + "WHERE NOT EXISTS (SELECT 1 FROM articles WHERE title = ?);"
     );
     prep.setString(1, article.getSourceName());
@@ -70,11 +70,12 @@ public class NewsDataWrite {
         .substring(0, Math.min(DATE_TRIM_LENGTH, datePublished.length()));
     prep.setString(4, datePublished);
     prep.setString(5, article.getContent());
-    prep.setString(6, article.getTitle().replace("\'", ""));
+    prep.setString(6, article.getTitle().replace("\'", "")
+      .substring(0, Math.min(98, article.getTitle().length())));
     prep.execute();
     prep.close();
     // get id of article
-    prep = conn.prepareStatement("SELECT last_insert_rowid()\n"
+    prep = conn.prepareStatement("SELECT LAST_INSERT_ID()\n"
         + "FROM articles\n"
         + "LIMIT 1;");
     ResultSet rs = prep.executeQuery();
@@ -115,7 +116,7 @@ public class NewsDataWrite {
    */
   private void insertEntity(int articleId, Entity entity, int numOccurrences) throws SQLException {
     // insert literal entity word into the entity table if it hasn't been seen before
-    PreparedStatement prep = conn.prepareStatement("INSERT OR IGNORE INTO entity (class, entity, "
+    PreparedStatement prep = conn.prepareStatement("INSERT IGNORE INTO entity (class, entity, "
         + "count) VALUES (?, ?, 0);");
     prep.setString(1, entity.getClassType());
     prep.setString(2, entity.getWord());
@@ -153,7 +154,7 @@ public class NewsDataWrite {
     for (String word : vocabOccurrenceMap.keySet()) {
       // if word is not in vocab table, insert then update, else ignore then update
       PreparedStatement prep = conn.prepareStatement(
-          "    INSERT OR IGNORE INTO vocab (word, count)"
+          "    INSERT IGNORE INTO vocab (word, count)"
               + "    VALUES (?, 0);"
       );
       prep.setString(1, word);
@@ -216,9 +217,10 @@ public class NewsDataWrite {
     PreparedStatement prep = conn.prepareStatement(
         "INSERT INTO clusters (head, title, size, day, hour, "
             + "avg_connections, avg_radius, std, intermediate_cluster) "
-            + "VALUES (?, ?, ?, DATE('now'), ?, ?, ?, ?, ?);");
+            + "VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?);");
     prep.setInt(1, c.getHeadNode().getId());
-    prep.setString(2, c.getHeadNode().getArticle().getTitle());
+    prep.setString(2, String.format("%1.98s", c.getHeadNode().getArticle().getTitle()));
+    System.out.println(String.format("%1.98s", c.getHeadNode().getArticle().getTitle()).length());
     prep.setInt(3, c.getSize());
     prep.setInt(4, hour);
     prep.setDouble(5, c.getAvgConnections());
@@ -228,7 +230,7 @@ public class NewsDataWrite {
     prep.execute();
     prep.close();
     PreparedStatement prep2 = conn.prepareStatement(
-        "SELECT last_insert_rowid()"
+        "SELECT LAST_INSERT_ID()"
         + "FROM clusters\n"
         + "LIMIT 1;");
     ResultSet rs2 = prep2.executeQuery();

@@ -15,8 +15,8 @@ import spark.Response;
  * cron job.
  */
 public final class UpdateHandler {
-  private static final int ARTICLES_PER_BATCH = 100;
-  private static final int LOADER_NUMBER_OF_BATCHES = 1;
+  private static final int ARTICLES_PER_BATCH = 10;
+  private static final int LOADER_NUMBER_OF_BATCHES = 10;
   private static final int LOADER_STEP_BACK = 0;
   private static final int LOADER_TIME_STEP = 1;
   private static final int CLUSTER_HOURS = 24;
@@ -39,7 +39,7 @@ public final class UpdateHandler {
     StandardResponse updateResponse = new StandardResponse(0, "");
     try {
       NewsLoader loadData = new NewsLoader(new NewsData("data/final_data.db"),
-            "http://127.0.0.1:5000/scrape");
+          "https://bubble-python-api-deeweadyma-ue.a.run.app/scrape");
       loadData.executeBatches(LOADER_NUMBER_OF_BATCHES, ARTICLES_PER_BATCH, LOADER_TIME_STEP,
           LOADER_STEP_BACK);
       ClusterParameters params = new ClusterParameters(CLUSTER_HOURS, true);
