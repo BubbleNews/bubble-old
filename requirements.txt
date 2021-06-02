@@ -16,7 +16,7 @@ Pillow==2.6.1
 requests==2.4.3
 six==1.8.0
 stevedore==1.0.0
-urllib3==1.25.9
+urllib3==1.26.5
 virtualenv==1.11.6
 virtualenv-clone==0.2.5
 virtualenvwrapper==4.3.1
