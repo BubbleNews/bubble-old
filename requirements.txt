@@ -12,7 +12,7 @@ MarkupSafe==0.23
 newsapi-python==0.2.6
 newspaper==0.0.8
 nltk==3.0.0
-Pillow==2.6.1
+Pillow==9.0.0
 requests==2.4.3
 six==1.8.0
 stevedore==1.0.0
